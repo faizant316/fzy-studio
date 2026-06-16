@@ -9,21 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink:        "#0c0a09",
-        cream:      "#f5f0e8",
-        gold:       "#c9a66b",
-        "gold-soft": "#e2cb98",
-        "gold-deep": "#a87e3c",
-        "border-dark": "#1c1c1c",
-        muted:      "#8c857c",
+        bg:        "#ffffff",
+        "bg-warm": "#f3f0ea",
+        ink:       "#0a0a0a",
+        "ink-soft": "#2a2a2a",
+        gray:      "#6b6b6b",
+        line:      "#e6e2da",
       },
       fontFamily: {
-        sans:    ["var(--font-inter)"],
-        display: ["var(--font-playfair)", "Georgia", "serif"],
-        mono:    ["var(--font-jetbrains-mono)"],
-      },
-      fontSize: {
-        hero: "clamp(56px, 9vw, 150px)",
+        sans:    ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
     },
   },
