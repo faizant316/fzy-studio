@@ -33,11 +33,10 @@ export default function Nav() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "1.1rem clamp(1.25rem, 4vw, 3rem)",
-        background: scrolled ? "rgba(255,255,255,0.82)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: scrolled ? "1px solid var(--line)" : "1px solid transparent",
-        transition: "background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease",
+        padding: "1rem clamp(1.1rem, 2.4vw, 1.75rem)",
+        background: "transparent",
+        backdropFilter: scrolled ? "blur(8px)" : "none",
+        transition: "backdrop-filter 0.4s ease",
       }}
     >
       <button

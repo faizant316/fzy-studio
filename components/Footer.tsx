@@ -4,7 +4,7 @@ const PORTFOLIO_URL = "https://faizantariq.dev";
 
 export default function Footer() {
   return (
-    <footer style={{ background: "var(--bg-warm-2)", padding: "clamp(2.5rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3rem) 2.5rem" }}>
+    <footer className="grain" style={{ background: "var(--bg-warm-2)", padding: "clamp(2.5rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3rem) 2.5rem" }}>
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <div className="hairline" style={{ background: "var(--line-strong)", marginBottom: "2.5rem" }} />
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "2rem", alignItems: "flex-start" }}>

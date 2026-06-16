@@ -57,6 +57,7 @@ export default function Work() {
   return (
     <section
       id="work"
+      className="grain"
       style={{
         background: "var(--bg-warm)",
         padding: "clamp(5rem, 11vw, 9rem) clamp(1.25rem, 4vw, 3rem)",

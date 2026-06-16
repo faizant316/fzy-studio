@@ -52,8 +52,9 @@ export default function ContactReveal() {
     <motion.section
       id="contact"
       ref={ref}
+      className="grain"
       style={{
-        y, position: "relative", zIndex: 3,
+        y, position: "relative", zIndex: 3, overflow: "hidden",
         marginTop: "clamp(-2rem, -4vw, -4rem)",
         background: "var(--bg-warm-2)",
         borderTopLeftRadius: "clamp(1.5rem, 4vw, 3rem)",
