@@ -11,7 +11,7 @@ const fade = (delay: number) => ({
   transition: { duration: 0.8, delay, ease },
 });
 
-const WORDS = ["booking platforms.", "client dashboards.", "payment systems.", "real businesses."];
+const WORDS = ["platforms.", "dashboards.", "bookings.", "automations."];
 
 export default function Statement() {
   return (
