@@ -1,11 +1,38 @@
 "use client";
-import { motion } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
+
+  // Cursor-reactive gold spotlight (desktop fine-pointer only)
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 50, damping: 18, mass: 0.6 });
+  const sy = useSpring(my, { stiffness: 50, damping: 18, mass: 0.6 });
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    mx.set(r.width * 0.62);
+    my.set(r.height * 0.4);
+
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    const onMove = (e: PointerEvent) => {
+      const rect = el.getBoundingClientRect();
+      mx.set(e.clientX - rect.left);
+      my.set(e.clientY - rect.top);
+    };
+    el.addEventListener("pointermove", onMove, { passive: true });
+    return () => el.removeEventListener("pointermove", onMove);
+  }, [mx, my]);
+
   return (
     <section
+      ref={ref}
       className="grain"
       style={{
         position: "relative",
@@ -17,15 +44,37 @@ export default function Hero() {
         overflow: "hidden",
       }}
     >
-      {/* Gold glow */}
+      {/* Aurora: slow-drifting warm gold glows */}
       <div
-        className="glow-gold breathe"
+        className="aurora-a"
+        aria-hidden
         style={{
-          position: "absolute",
-          top: "-12%", right: "-8%",
-          width: "60vw", height: "60vw",
-          maxWidth: 820, maxHeight: 820,
-          zIndex: 0, pointerEvents: "none",
+          position: "absolute", top: "-12%", right: "-6%",
+          width: "48vw", height: "48vw", maxWidth: 720, maxHeight: 720,
+          borderRadius: "50%", zIndex: 0, pointerEvents: "none",
+          background: "radial-gradient(circle, rgba(168,126,60,0.20), rgba(168,126,60,0) 66%)",
+        }}
+      />
+      <div
+        className="aurora-b"
+        aria-hidden
+        style={{
+          position: "absolute", bottom: "-16%", left: "-10%",
+          width: "42vw", height: "42vw", maxWidth: 620, maxHeight: 620,
+          borderRadius: "50%", zIndex: 0, pointerEvents: "none",
+          background: "radial-gradient(circle, rgba(201,166,107,0.12), rgba(201,166,107,0) 66%)",
+        }}
+      />
+
+      {/* Cursor-reactive spotlight */}
+      <motion.div
+        aria-hidden
+        style={{
+          position: "absolute", top: 0, left: 0,
+          width: 540, height: 540, marginLeft: -270, marginTop: -270,
+          x: sx, y: sy, zIndex: 1, pointerEvents: "none",
+          mixBlendMode: "screen",
+          background: "radial-gradient(circle, rgba(226,203,152,0.14), rgba(226,203,152,0) 64%)",
         }}
       />
       {/* Faint grid lines */}

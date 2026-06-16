@@ -90,6 +90,18 @@ body {
 }
 .breathe { animation: breathe 9s ease-in-out infinite; }
 
+/* ── Aurora: slow-drifting warm gold glows behind the hero ── */
+@keyframes auroraDriftA {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(6%, -8%) scale(1.14); }
+}
+@keyframes auroraDriftB {
+  0%, 100% { transform: translate(0, 0) scale(1.08); }
+  50%      { transform: translate(-7%, 7%) scale(1); }
+}
+.aurora-a { animation: auroraDriftA 18s ease-in-out infinite; will-change: transform; }
+.aurora-b { animation: auroraDriftB 23s ease-in-out infinite; will-change: transform; }
+
 /* ── Marquee ── */
 @keyframes marquee-left {
   from { transform: translateX(0); }
@@ -159,5 +171,6 @@ body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .marquee-track, .slow-spin, .breathe, .shimmer-line, .pulse-dot { animation: none !important; }
+  .marquee-track, .slow-spin, .breathe, .shimmer-line, .pulse-dot,
+  .aurora-a, .aurora-b { animation: none !important; }
 }
