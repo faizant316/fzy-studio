@@ -10,65 +10,69 @@ export default function Hero() {
       style={{
         position: "relative",
         minHeight: "100svh",
-        display: "grid",
-        gridTemplateRows: "auto 1fr auto",
+        display: "flex",
         padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)",
         background: "var(--bg)",
         overflow: "hidden",
       }}
     >
-      {/* Top: tiny eyebrow */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.15, ease }}
+      <div
+        className="hero-grid"
+        style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr", gap: "clamp(2rem, 4vw, 3rem)", width: "100%" }}
       >
-        <span className="eyebrow">Web Development Studio</span>
-      </motion.div>
-
-      {/* Middle: animated FZY, right-aligned, vertically centered */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", minHeight: 0 }}>
-        <Wordmark className="hero-mark" />
-      </div>
-
-      {/* Bottom-left: headline + CTAs */}
-      <div style={{ position: "relative", zIndex: 2, maxWidth: "16ch" }}>
-        <h1 className="display" style={{ fontSize: "clamp(2.4rem, 6.2vw, 5.6rem)", color: "var(--ink)" }}>
-          {["From idea", "to live platform."].map((line, i) => (
-            <span key={line} style={{ display: "block", overflow: "hidden", paddingBottom: "0.04em" }}>
-              <motion.span
-                style={{ display: "block" }}
-                initial={{ y: "110%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.9, delay: 0.4 + i * 0.12, ease }}
-              >
-                {line}
-              </motion.span>
-            </span>
-          ))}
-        </h1>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.78, ease }}
-          style={{ marginTop: "clamp(1.5rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.75rem" }}
-        >
-          <button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} className="pill-solid">
-            Start a Project
-            <span style={{ fontSize: "0.85rem" }}>↗</span>
-          </button>
-          <button
-            onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
-            className="link-line"
-            style={{ background: "none", border: "none", cursor: "pointer", padding: "0.4rem 0", fontSize: "1rem", color: "var(--ink-soft)" }}
+        {/* Left: eyebrow (top) + headline & CTA (bottom) */}
+        <div className="hero-left" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", minWidth: 0 }}>
+          <motion.span
+            className="eyebrow"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15, ease }}
           >
-            View our work
-          </button>
-        </motion.div>
+            Web Development Studio
+          </motion.span>
+
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <h1 className="display" style={{ fontSize: "clamp(2.3rem, 4.4vw, 4.4rem)", color: "var(--ink)", lineHeight: 1.0 }}>
+              {["From idea", "to live platform."].map((line, i) => (
+                <motion.span
+                  key={line}
+                  style={{ display: "block" }}
+                  initial={{ opacity: 0, y: 26 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.85, delay: 0.4 + i * 0.12, ease }}
+                >
+                  {line}
+                </motion.span>
+              ))}
+            </h1>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.74, ease }}
+              style={{ marginTop: "clamp(1.5rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.75rem" }}
+            >
+              <button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} className="pill-solid">
+                Start a Project
+                <span style={{ fontSize: "0.85rem" }}>↗</span>
+              </button>
+              <button
+                onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
+                className="link-line"
+                style={{ background: "none", border: "none", cursor: "pointer", padding: "0.4rem 0", fontSize: "1rem", color: "var(--ink-soft)" }}
+              >
+                View our work
+              </button>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Right: animated FZY */}
+        <div className="hero-right" style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 }}>
+          <Wordmark />
+        </div>
       </div>
 
-      {/* Scroll hint */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -79,8 +83,11 @@ export default function Hero() {
       </motion.div>
 
       <style>{`
-        @media (max-width: 760px) {
-          .hero-mark { opacity: 0.9; }
+        @media (min-width: 880px) {
+          .hero-grid { grid-template-columns: 1fr 1fr !important; align-items: stretch; }
+        }
+        @media (max-width: 879px) {
+          .hero-right { order: -1; justify-content: flex-start !important; }
         }
       `}</style>
     </section>
