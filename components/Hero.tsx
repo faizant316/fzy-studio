@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import Wordmark from "./Wordmark";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -9,57 +10,37 @@ export default function Hero() {
       style={{
         position: "relative",
         minHeight: "100svh",
-        display: "flex",
-        flexDirection: "column",
-        padding: "clamp(7rem, 12vh, 9rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3.5rem)",
+        display: "grid",
+        gridTemplateRows: "auto 1fr auto",
+        padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)",
         background: "var(--bg)",
         overflow: "hidden",
       }}
     >
-      {/* Eyebrow top-left */}
+      {/* Top: tiny eyebrow */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.15, ease }}
       >
         <span className="eyebrow">Web Development Studio</span>
-        <span className="eyebrow" style={{ marginLeft: "0.9rem", color: "var(--gray)" }}>Sacramento, CA</span>
       </motion.div>
 
-      {/* Oversized FZY wordmark, right side */}
-      <motion.div
-        aria-hidden
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.4, delay: 0.3, ease }}
-        style={{
-          position: "absolute",
-          right: "clamp(1rem, 3vw, 3rem)",
-          top: "50%",
-          transform: "translateY(-50%)",
-          fontWeight: 600,
-          letterSpacing: "-0.04em",
-          lineHeight: 0.8,
-          fontSize: "clamp(8rem, 26vw, 26rem)",
-          color: "var(--ink)",
-          opacity: 0.05,
-          userSelect: "none",
-          pointerEvents: "none",
-        }}
-      >
-        FZY
-      </motion.div>
+      {/* Middle: animated FZY, right-aligned, vertically centered */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", minHeight: 0 }}>
+        <Wordmark className="hero-mark" />
+      </div>
 
-      {/* Headline + CTA, bottom-left */}
-      <div style={{ marginTop: "auto", position: "relative", zIndex: 2, maxWidth: "20ch" }}>
-        <h1 className="display" style={{ fontSize: "clamp(2.6rem, 7.5vw, 7rem)", color: "var(--ink)" }}>
-          {["We build the platforms", "businesses run on."].map((line, i) => (
-            <span key={line} style={{ display: "block", overflow: "hidden", paddingBottom: "0.02em" }}>
+      {/* Bottom-left: headline + CTAs */}
+      <div style={{ position: "relative", zIndex: 2, maxWidth: "16ch" }}>
+        <h1 className="display" style={{ fontSize: "clamp(2.4rem, 6.2vw, 5.6rem)", color: "var(--ink)" }}>
+          {["From idea", "to live platform."].map((line, i) => (
+            <span key={line} style={{ display: "block", overflow: "hidden", paddingBottom: "0.04em" }}>
               <motion.span
                 style={{ display: "block" }}
                 initial={{ y: "110%" }}
                 animate={{ y: 0 }}
-                transition={{ duration: 0.9, delay: 0.35 + i * 0.12, ease }}
+                transition={{ duration: 0.9, delay: 0.4 + i * 0.12, ease }}
               >
                 {line}
               </motion.span>
@@ -68,10 +49,10 @@ export default function Hero() {
         </h1>
 
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.75, ease }}
-          style={{ marginTop: "clamp(1.5rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5rem" }}
+          transition={{ duration: 0.7, delay: 0.78, ease }}
+          style={{ marginTop: "clamp(1.5rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.75rem" }}
         >
           <button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} className="pill-solid">
             Start a Project
@@ -91,11 +72,17 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        style={{ position: "absolute", bottom: "clamp(2rem, 5vh, 3.5rem)", right: "clamp(1.25rem, 4vw, 3rem)", zIndex: 2 }}
+        transition={{ delay: 1.1, duration: 0.8 }}
+        style={{ position: "absolute", bottom: "clamp(2rem, 5vh, 3rem)", right: "clamp(1.25rem, 4vw, 3rem)", zIndex: 2 }}
       >
-        <span className="eyebrow" style={{ fontSize: "0.66rem", color: "var(--gray)" }}>Scroll ↓</span>
+        <span className="eyebrow" style={{ fontSize: "0.64rem", color: "var(--gray)" }}>Scroll ↓</span>
       </motion.div>
+
+      <style>{`
+        @media (max-width: 760px) {
+          .hero-mark { opacity: 0.9; }
+        }
+      `}</style>
     </section>
   );
 }
