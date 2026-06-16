@@ -26,9 +26,9 @@ export default function SectionHeading({
           className="font-display"
           style={{
             fontWeight: 700,
-            fontSize: "clamp(2rem, 4.5vw, 3.6rem)",
-            lineHeight: 1.02,
-            letterSpacing: "-0.035em",
+            fontSize: "clamp(2.1rem, 4.8vw, 3.8rem)",
+            lineHeight: 1.05,
+            letterSpacing: "-0.012em",
             color: "var(--cream)",
           }}
         >

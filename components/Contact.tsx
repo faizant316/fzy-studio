@@ -66,7 +66,7 @@ export default function Contact() {
           <SectionHeading
             index="(04)"
             eyebrow="Start a project"
-            title={<>Let&rsquo;s build the <span className="text-gold-grad">real version.</span></>}
+            title={<>Let&rsquo;s build the <span className="text-gold-grad serif-italic">real version.</span></>}
             intro="Tell us what you're running and where it's getting stuck. We'll come back within 24 hours with a clear next step."
           />
           <Reveal delay={0.2}>
@@ -95,7 +95,7 @@ export default function Contact() {
               </p>
             </div>
           ) : (
-            <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "1.8rem" }}>
+            <form onSubmit={submit} className="glass" style={{ display: "flex", flexDirection: "column", gap: "1.8rem", padding: "clamp(1.5rem, 3.5vw, 2.6rem)", borderRadius: 18 }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
                 <div>
                   <label style={labelStyle}>Name *</label>

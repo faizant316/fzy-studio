@@ -19,7 +19,7 @@ export default function Hero() {
     >
       {/* Gold glow */}
       <div
-        className="glow-gold"
+        className="glow-gold breathe"
         style={{
           position: "absolute",
           top: "-12%", right: "-8%",
@@ -54,25 +54,25 @@ export default function Hero() {
         <h1
           className="font-display"
           style={{
-            fontWeight: 800,
+            fontWeight: 700,
             fontSize: "clamp(2.9rem, 8vw, 8rem)",
-            lineHeight: 0.95,
-            letterSpacing: "-0.04em",
+            lineHeight: 1.0,
+            letterSpacing: "-0.015em",
             color: "var(--cream)",
-            maxWidth: "16ch",
+            maxWidth: "15ch",
           }}
         >
           {["We build web platforms", "for businesses that", "mean business."].map((line, i) => (
-            <span key={line} style={{ display: "block", overflow: "hidden" }}>
+            <span key={line} style={{ display: "block", overflow: "hidden", paddingBottom: "0.04em" }}>
               <motion.span
                 style={{ display: "block" }}
                 initial={{ y: "110%" }}
                 animate={{ y: 0 }}
-                transition={{ duration: 0.9, delay: 0.2 + i * 0.1, ease }}
+                transition={{ duration: 0.95, delay: 0.2 + i * 0.1, ease }}
               >
                 {i === 2 ? (
                   <>
-                    mean <span className="text-gold-grad">business.</span>
+                    mean <span className="text-gold-grad serif-italic">business.</span>
                   </>
                 ) : (
                   line

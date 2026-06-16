@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Syne } from "next/font/google";
+import { Inter, JetBrains_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-export const viewport: Viewport = { themeColor: "#0a0a0a" };
+export const viewport: Viewport = { themeColor: "#0c0a09" };
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,11 +18,13 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
-const syne = Syne({
+// Classic Elegant pairing (ui-ux-pro-max): Playfair Display headings + Inter body.
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-syne",
+  variable: "--font-playfair",
   display: "swap",
-  weight: ["400", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
 });
 
 const SITE = "https://fzystudio.dev";
@@ -55,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${syne.variable} antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${playfair.variable} antialiased`}
       >
         {children}
       </body>

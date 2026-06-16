@@ -34,7 +34,7 @@ export default function Work() {
       <SectionHeading
         index="(02)"
         eyebrow="Selected work"
-        title={<>Platforms that <span className="text-gold-grad">go to work.</span></>}
+        title={<>Platforms that <span className="text-gold-grad serif-italic">go to work.</span></>}
         intro="A look at what end-to-end delivery looks like. Every project below was designed, engineered, and shipped by the studio."
       />
 
@@ -76,14 +76,14 @@ export default function Work() {
                   className="font-display"
                   style={{
                     fontSize: "clamp(2.4rem, 6vw, 4.5rem)",
-                    fontWeight: 800,
-                    letterSpacing: "-0.04em",
-                    lineHeight: 0.95,
-                    color: "rgba(245,240,235,0.92)",
+                    fontWeight: 700,
+                    letterSpacing: "-0.015em",
+                    lineHeight: 1.0,
+                    color: "rgba(245,240,235,0.94)",
                     position: "relative", zIndex: 2,
                   }}
                 >
-                  Makeup<br />by Roko
+                  Makeup<br /><span className="serif-italic">by Roko</span>
                 </span>
                 <span
                   style={{

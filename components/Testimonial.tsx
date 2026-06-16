@@ -12,10 +12,11 @@ export default function Testimonial() {
           <p
             className="font-display"
             style={{
-              fontWeight: 600,
-              fontSize: "clamp(1.5rem, 3.4vw, 2.6rem)",
-              lineHeight: 1.32,
-              letterSpacing: "-0.025em",
+              fontWeight: 500,
+              fontStyle: "italic",
+              fontSize: "clamp(1.55rem, 3.5vw, 2.7rem)",
+              lineHeight: 1.34,
+              letterSpacing: "-0.01em",
               color: "var(--cream)",
               marginTop: "1rem",
             }}

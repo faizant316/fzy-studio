@@ -34,7 +34,7 @@ export default function Process() {
       <SectionHeading
         index="(03)"
         eyebrow="How we work"
-        title={<>A process built on <span className="text-gold-grad">clarity.</span></>}
+        title={<>A process built on <span className="text-gold-grad serif-italic">clarity.</span></>}
         intro="No black boxes, no endless revisions. Four phases, clear deliverables, and a platform you understand at every step."
       />
 

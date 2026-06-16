@@ -32,7 +32,7 @@ export default function Services() {
       <SectionHeading
         index="(01)"
         eyebrow="What we do"
-        title={<>End to end, <span className="text-gold-grad">under one roof.</span></>}
+        title={<>End to end, <span className="text-gold-grad serif-italic">under one roof.</span></>}
         intro="From the first wireframe to the live deployment, FZY owns the whole build. You work with one studio, not a chain of freelancers."
       />
 
@@ -47,17 +47,16 @@ export default function Services() {
         {services.map((s, i) => (
           <Reveal key={s.no} delay={i * 0.08}>
             <div
+              className="glass"
               style={{
                 position: "relative",
                 height: "100%",
                 padding: "2.2rem 2rem 2.4rem",
-                border: "1px solid var(--line)",
                 borderRadius: 18,
-                background: "linear-gradient(180deg, rgba(245,240,235,0.025), rgba(245,240,235,0))",
-                transition: "border-color 0.35s ease, transform 0.35s ease",
+                transition: "border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(201,169,106,0.35)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--line)"; e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(201,166,107,0.4)"; e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 24px 60px -28px rgba(201,166,107,0.3)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--line)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
             >
               <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--gold)" }}>{s.no}</span>
               <h3
