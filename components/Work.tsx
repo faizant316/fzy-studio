@@ -70,8 +70,7 @@ export default function Work() {
         transition={{ duration: 0.8, ease }}
         style={{ textAlign: "center", marginBottom: "clamp(2.5rem, 5vw, 4rem)" }}
       >
-        <span className="eyebrow">Selected Work</span>
-        <h2 className="display" style={{ fontSize: "clamp(2.2rem, 5.5vw, 4.5rem)", color: "var(--ink)", marginTop: "1rem" }}>
+        <h2 className="display" style={{ fontSize: "clamp(2.2rem, 5.5vw, 4.5rem)", color: "var(--ink)" }}>
           Platforms we&rsquo;ve built
         </h2>
       </motion.div>
