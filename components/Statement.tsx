@@ -17,8 +17,8 @@ export default function Statement() {
   return (
     <section id="studio" style={{ background: "var(--bg)", padding: "clamp(5rem, 12vw, 10rem) clamp(1.25rem, 4vw, 3rem)" }}>
       <div className="statement-grid" style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: "clamp(2.5rem, 5vw, 5rem)" }}>
-        <motion.h2 {...fade(0)} className="display" style={{ fontSize: "clamp(2rem, 4.4vw, 3.7rem)", color: "var(--ink)", maxWidth: "16ch" }}>
-          We design and build{" "}
+        <motion.h2 {...fade(0)} className="display" style={{ fontSize: "clamp(2rem, 4.4vw, 3.7rem)", color: "var(--ink)", maxWidth: "20ch" }}>
+          <span style={{ display: "block" }}>We design and build</span>
           <Typewriter words={WORDS} />
         </motion.h2>
 
@@ -57,13 +57,13 @@ function Typewriter({ words }: { words: string[] }) {
     } else {
       timer.current = setTimeout(() => {
         setText(deleting ? full.slice(0, text.length - 1) : full.slice(0, text.length + 1));
-      }, deleting ? 38 : 70);
+      }, deleting ? 58 : 72);
     }
     return () => clearTimeout(timer.current);
   }, [text, deleting, wordIdx, words, reduce]);
 
   return (
-    <span style={{ color: "var(--ink)" }}>
+    <span style={{ color: "var(--ink)", display: "block", minHeight: "1em" }}>
       {text}
       <span
         aria-hidden
