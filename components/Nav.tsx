@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { HERO_VIDEO } from "./heroConfig";
 import { lenisScrollTo } from "./lenis";
+import Brand from "./Brand";
 
 const links = [
   { label: "Work", id: "work" },
@@ -24,7 +25,6 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const brandColor = overHero ? "#fff" : "var(--ink)";
   const linkColor = overHero ? "rgba(255,255,255,0.82)" : "var(--ink-soft)";
 
   const go = (id: string) => lenisScrollTo("#" + id);
@@ -45,13 +45,7 @@ export default function Nav() {
         background: "transparent",
       }}
     >
-      <button
-        onClick={() => lenisScrollTo(0)}
-        aria-label="FZY home"
-        style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontWeight: 600, fontSize: "1rem", letterSpacing: "0.24em", color: brandColor, transition: "color 0.4s ease" }}
-      >
-        FZY
-      </button>
+      <Brand />
 
       <div style={{ display: "flex", alignItems: "center", gap: "clamp(1rem, 2.2vw, 2.25rem)" }}>
         {links.map((l) => (

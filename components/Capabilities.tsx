@@ -81,13 +81,13 @@ export default function Capabilities() {
         ))}
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 820px) {
           .cap-row { grid-template-columns: minmax(0,1fr) !important; gap: 1rem !important; }
           .cap-row > div:first-child { flex-direction: column; gap: 0.5rem !important; }
           .cap-arrow { display: none !important; }
         }
-      `}</style>
+      ` }} />
     </section>
   );
 }

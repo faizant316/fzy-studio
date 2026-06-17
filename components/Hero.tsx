@@ -86,15 +86,9 @@ export default function Hero() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(10,10,10,0.42) 0%, rgba(10,10,10,0.12) 20%, rgba(10,10,10,0.12) 48%, rgba(10,10,10,0.72) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(105deg, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0) 55%)" }} />
 
-        <div className="hero-grid" style={{ ...gridStyle, position: "relative", zIndex: 2 }}>
-          <div className="hero-left" style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", minWidth: 0 }}>
-            <Headline light />
-          </div>
-          <div className="hero-right" style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 }}>
-            <Wordmark light outline />
-          </div>
+        <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", minWidth: 0 }}>
+          <Headline light />
         </div>
-        <HeroStyles />
       </section>
     );
   }
