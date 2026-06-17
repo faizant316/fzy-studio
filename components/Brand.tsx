@@ -46,8 +46,8 @@ export default function Brand() {
         FZY
       </span>
 
-      {/* Large lockup — absolute overlay, grows down into the hero. A luxe
-          one-liner: italic "Web" / "Development" flanking the bold FZY. */}
+      {/* Large lockup — absolute overlay, grows down into the hero. Bold FZY
+          with a small italic "Web Development" line tucked beneath it. */}
       <span
         aria-hidden
         style={{
@@ -55,8 +55,9 @@ export default function Brand() {
           left: 0,
           top: "-0.04em",
           display: "flex",
-          alignItems: "center",
-          gap: "clamp(0.55rem, 1vw, 0.95rem)",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: "0.45rem",
           whiteSpace: "nowrap",
           transformOrigin: "left top",
           transform: big ? "scale(1)" : "scale(0.42)",
@@ -66,11 +67,10 @@ export default function Brand() {
           color,
         }}
       >
-        <span style={flank}>Web</span>
         <span style={{ fontWeight: 700, fontSize: "clamp(3.4rem, 6vw, 5rem)", letterSpacing: "-0.03em", lineHeight: 0.9, textShadow: "0 2px 22px rgba(0,0,0,0.35)" }}>
           FZY
         </span>
-        <span style={flank}>Development</span>
+        <span style={{ ...flank, paddingLeft: "0.14em" }}>Web Development</span>
       </span>
     </button>
   );
@@ -85,7 +85,7 @@ const btn: React.CSSProperties = {
   padding: 0,
 };
 
-// Small italic words flanking the wordmark — quiet, refined, high-end.
+// Small italic tagline under the wordmark — quiet, refined, high-end.
 const flank: React.CSSProperties = {
   fontStyle: "italic",
   fontWeight: 400,
