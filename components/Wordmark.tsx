@@ -13,10 +13,9 @@ const letterV = {
   visible: { y: 0, transition: { duration: 1.0, ease } },
 };
 
-// Staggered mask-reveal of FZY. `frosted` renders filled, milky glass letters
-// (used over the video hero) — the footage reads softly through them with a
-// crisp rim and a soft halo; otherwise a filled wordmark with a slow sheen.
-export default function Wordmark({ className, light = false, frosted = false }: { className?: string; light?: boolean; frosted?: boolean }) {
+// Staggered mask-reveal of FZY — a filled wordmark with a slow sheen. Used on
+// the clean (non-video) hero; the video hero uses the liquid-glass <Brand/>.
+export default function Wordmark({ className, light = false }: { className?: string; light?: boolean }) {
   const reduce = useReducedMotion();
   const letters = ["F", "Z", "Y"];
 
@@ -31,19 +30,6 @@ export default function Wordmark({ className, light = false, frosted = false }: 
     fontSize: "clamp(5rem, 16vw, 14rem)",
   };
 
-  // Frosted glass: a translucent fill lets the video glow through, a faint rim
-  // gives the glyphs definition, and a soft halo reads as blurred glass depth.
-  const fillRGB = light ? "255,255,255" : "10,10,10";
-  const frostedType: React.CSSProperties = {
-    ...sizing,
-    color: `rgba(${fillRGB},${light ? 0.2 : 0.14})`,
-    WebkitTextFillColor: `rgba(${fillRGB},${light ? 0.2 : 0.14})`,
-    WebkitTextStroke: `1px rgba(${fillRGB},${light ? 0.4 : 0.28})`,
-    textShadow: light
-      ? "0 0 1px rgba(255,255,255,0.55), 0 6px 38px rgba(255,255,255,0.22)"
-      : "0 0 1px rgba(10,10,10,0.4), 0 6px 30px rgba(10,10,10,0.1)",
-  };
-
   const fillType: React.CSSProperties = {
     ...sizing,
     backgroundImage: `linear-gradient(105deg, ${base} 0%, ${base} 40%, ${sheen} 50%, ${base} 60%, ${base} 100%)`,
@@ -55,10 +41,10 @@ export default function Wordmark({ className, light = false, frosted = false }: 
     animation: "fzy-sheen 7s ease-in-out infinite",
   };
 
-  const type = frosted ? frostedType : fillType;
+  const type = fillType;
 
   if (reduce) {
-    const staticStyle = frosted ? frostedType : { ...sizing, color: base, WebkitTextFillColor: base };
+    const staticStyle = { ...sizing, color: base, WebkitTextFillColor: base };
     return (
       <div className={className} style={{ display: "flex", justifyContent: "center" }}>
         <span style={staticStyle}>FZY</span>

@@ -6,10 +6,10 @@ import { lenisScrollTo } from "./lenis";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-function Headline({ light }: { light: boolean }) {
+function Headline({ light, id }: { light: boolean; id?: string }) {
   const color = light ? "#fff" : "var(--ink)";
   return (
-    <div style={{ position: "relative", zIndex: 2 }}>
+    <div id={id} style={{ position: "relative", zIndex: 2 }}>
       <h1 className="display" style={{ fontSize: "clamp(2.3rem, 4.4vw, 4.4rem)", color, lineHeight: 1.0 }}>
         {["From idea", "to live platform."].map((line, i) => (
           <motion.span
@@ -79,7 +79,7 @@ export default function Hero() {
   // ── Video mode (Neuralink-style full-bleed background) ──
   if (HERO_VIDEO) {
     return (
-      <section style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0a", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)" }}>
+      <section id="hero" style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0a", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)" }}>
         <video autoPlay muted loop playsInline poster={HERO_POSTER || undefined} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}>
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
@@ -87,7 +87,7 @@ export default function Hero() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(105deg, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0) 55%)" }} />
 
         <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", minWidth: 0 }}>
-          <Headline light />
+          <Headline light id="hero-copy" />
         </div>
       </section>
     );
