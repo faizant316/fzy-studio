@@ -4,5 +4,8 @@
 // When HERO_VIDEO is set, the hero switches to the full-bleed Neuralink-style
 // video treatment automatically (and the nav text goes white over it).
 // Leave both empty to show the clean white hero with the animated FZY wordmark.
-export const HERO_VIDEO = "";
-export const HERO_POSTER = "";
+// NOTE: hero.mp4 is a TEMPORARY placeholder (Makeup by Roko client footage) so
+// we can preview the video-hero treatment. Replace with screen-recordings of the
+// platforms in motion when ready, then keep these paths.
+export const HERO_VIDEO = "/hero.mp4";
+export const HERO_POSTER = "/hero-poster.jpg";
