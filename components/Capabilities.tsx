@@ -14,8 +14,20 @@ export default function Capabilities() {
   const [hover, setHover] = useState<number | null>(null);
 
   return (
-    <section id="capabilities" style={{ background: "var(--bg)", padding: "clamp(5rem, 11vw, 9rem) clamp(1.25rem, 4vw, 3rem)" }}>
-      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+    <section
+      id="capabilities"
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 0,
+        background: "var(--bg)",
+        minHeight: "100svh",
+        display: "flex",
+        alignItems: "center",
+        padding: "clamp(5rem, 10vw, 7rem) clamp(1.25rem, 4vw, 3rem)",
+      }}
+    >
+      <div style={{ maxWidth: 1180, margin: "0 auto", width: "100%" }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

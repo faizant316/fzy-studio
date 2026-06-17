@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -10,6 +10,7 @@ type Tier = {
   price: string;
   tagline: string;
   budget: string;
+  gradient: string;
   includes: string[];
   featured?: boolean;
 };
@@ -20,6 +21,7 @@ const tiers: Tier[] = [
     price: "from $1.5k",
     tagline: "A fast, polished marketing site that earns trust and converts.",
     budget: "< $2k",
+    gradient: "linear-gradient(180deg, #cdd5cd 0%, #93a395 60%, #5d6c60 100%)",
     includes: [
       "Custom design, built mobile-first",
       "Up to ~5 sections, no templates",
@@ -34,6 +36,7 @@ const tiers: Tier[] = [
     tagline: "A full custom web app: booking, dashboards, auth, and payments.",
     budget: "$5k-$10k",
     featured: true,
+    gradient: "linear-gradient(180deg, #ddcfc3 0%, #b1907d 60%, #79594c 100%)",
     includes: [
       "Everything in Landing",
       "User accounts + admin dashboard",
@@ -48,6 +51,7 @@ const tiers: Tier[] = [
     price: "Let's talk",
     tagline: "Multi-feature platforms and ongoing product partnerships.",
     budget: "$10k+",
+    gradient: "linear-gradient(180deg, #ccd1d9 0%, #8b94a2 60%, #58616f 100%)",
     includes: [
       "Scoped to your exact workflow",
       "Multi-role, multi-feature platforms",
@@ -74,11 +78,7 @@ const focus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => (
 const blur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => (e.currentTarget.style.borderColor = "var(--line-strong)");
 
 export default function ContactReveal() {
-  const ref = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 58%"] });
-  const y = useTransform(scrollYProgress, [0, 1], [110, 0]);
-
   const [form, setForm] = useState({ name: "", email: "", project: "", budget: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [openTier, setOpenTier] = useState<number | null>(null);
@@ -87,7 +87,7 @@ export default function ContactReveal() {
   const startWith = (t: Tier) => {
     setForm((f) => ({ ...f, budget: t.budget }));
     setOpenTier(null);
-    setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 60);
+    setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -105,56 +105,51 @@ export default function ContactReveal() {
   };
 
   return (
-    <motion.section
+    <section
       id="contact"
-      ref={ref}
       className="grain"
       style={{
-        y, position: "relative", zIndex: 3, overflow: "hidden",
-        marginTop: "clamp(-2.5rem, -5vw, -5rem)",
+        position: "relative", zIndex: 1, overflow: "hidden",
         background: "var(--bg-warm-2)",
         borderTopLeftRadius: "clamp(1.75rem, 4.5vw, 3.5rem)",
         borderTopRightRadius: "clamp(1.75rem, 4.5vw, 3.5rem)",
+        boxShadow: "0 -26px 60px -34px rgba(0,0,0,0.22)",
         padding: "clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem)",
       }}
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-        {/* Header */}
-        <div style={{ textAlign: "center", maxWidth: "22ch", margin: "0 auto" }}>
-          <span className="eyebrow">Start a Project</span>
-          <h2 className="display" style={{ fontSize: "clamp(2.4rem, 6vw, 5rem)", color: "var(--ink)", marginTop: "1rem" }}>
-            Let&rsquo;s build yours
-          </h2>
-        </div>
+        {/* Minimal heading */}
+        <h2 className="display" style={{ textAlign: "center", fontSize: "clamp(2.2rem, 5vw, 4rem)", color: "var(--ink)", marginBottom: "clamp(2.5rem, 5vw, 4rem)" }}>
+          Let&rsquo;s build
+        </h2>
 
-        {/* Large tier cards */}
-        <div className="tiers" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "clamp(0.85rem, 1.6vw, 1.4rem)", margin: "clamp(2.5rem, 5vw, 4rem) auto clamp(3rem, 6vw, 5rem)" }}>
+        {/* Large gradient tier cards */}
+        <div className="tiers" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "clamp(0.85rem, 1.6vw, 1.4rem)", marginBottom: "clamp(3.5rem, 7vw, 6rem)" }}>
           {tiers.map((t, i) => (
             <button
               key={t.name}
               onClick={() => setOpenTier(i)}
               style={{
-                textAlign: "left", cursor: "pointer", font: "inherit",
-                display: "flex", flexDirection: "column",
-                minHeight: "clamp(280px, 30vw, 380px)",
-                padding: "clamp(1.75rem, 3vw, 2.5rem)",
-                borderRadius: 20,
-                border: t.featured ? "1px solid var(--ink)" : "1px solid var(--line-strong)",
-                background: t.featured ? "var(--bg)" : "rgba(255,255,255,0.35)",
-                transition: "transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease",
+                position: "relative", overflow: "hidden", border: "none", padding: 0, cursor: "pointer",
+                borderRadius: 22, minHeight: "clamp(420px, 56vh, 600px)",
+                background: t.gradient,
+                display: "flex", flexDirection: "column", justifyContent: "flex-end",
+                textAlign: "left", outline: t.featured ? "2px solid var(--ink)" : "none", outlineOffset: "-2px",
+                transition: "transform 0.45s ease, box-shadow 0.45s ease",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = "0 30px 60px -34px rgba(0,0,0,0.3)"; e.currentTarget.style.borderColor = "var(--ink)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = t.featured ? "var(--ink)" : "var(--line-strong)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-8px)"; e.currentTarget.style.boxShadow = "0 36px 70px -34px rgba(0,0,0,0.45)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
             >
-              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "0.5rem" }}>
-                <span className="display" style={{ fontSize: "clamp(1.5rem, 2.4vw, 2rem)", color: "var(--ink)", letterSpacing: "-0.02em" }}>{t.name}</span>
-                <span className="eyebrow" style={{ color: "var(--gray)" }}>{t.price}</span>
+              {/* legibility scrim */}
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.42) 100%)" }} />
+              <span style={{ position: "absolute", top: "1.5rem", left: "1.5rem", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.82)" }}>{t.price}</span>
+
+              <div style={{ position: "relative", zIndex: 1, padding: "clamp(1.5rem, 3vw, 2.25rem)" }}>
+                <h3 className="display" style={{ fontSize: "clamp(1.9rem, 3.2vw, 2.8rem)", color: "#fff", letterSpacing: "-0.02em", marginBottom: "1.25rem" }}>{t.name}</h3>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.3rem", borderRadius: 100, border: "1px solid rgba(255,255,255,0.6)", color: "#fff", fontSize: "0.9rem", fontWeight: 500 }}>
+                  View details <span aria-hidden>↗</span>
+                </span>
               </div>
-              <p style={{ marginTop: "1rem", fontSize: "clamp(0.95rem, 1.2vw, 1.05rem)", lineHeight: 1.55, color: "var(--gray)" }}>{t.tagline}</p>
-              <span style={{ marginTop: "auto", paddingTop: "1.75rem", display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", fontWeight: 500, color: "var(--ink)" }}>
-                View details
-                <span aria-hidden>↗</span>
-              </span>
             </button>
           ))}
         </div>
@@ -231,7 +226,7 @@ export default function ContactReveal() {
         @media (min-width: 920px) { .contact-grid { grid-template-columns: 0.6fr 1fr !important; } }
         @media (max-width: 720px) { .tiers { grid-template-columns: 1fr !important; } }
       `}</style>
-    </motion.section>
+    </section>
   );
 }
 
