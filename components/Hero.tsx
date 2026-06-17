@@ -28,87 +28,92 @@ function Headline({ light }: { light: boolean }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.74, ease }}
-        style={{ marginTop: "clamp(1.5rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.75rem" }}
+        style={{ marginTop: "clamp(1.5rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1rem" }}
       >
         <button
           onClick={() => lenisScrollTo("#contact")}
           className="pill-solid"
           style={light ? { background: "#fff", color: "#0a0a0a", borderColor: "#fff" } : undefined}
         >
-          Start a Project
+          Let&rsquo;s build
           <span style={{ fontSize: "0.85rem" }}>↗</span>
         </button>
-        <button
-          onClick={() => lenisScrollTo("#work")}
-          className="link-line"
-          style={{ background: "none", border: "none", cursor: "pointer", padding: "0.4rem 0", fontSize: "1rem", color: light ? "rgba(255,255,255,0.85)" : "var(--ink-soft)" }}
-        >
-          View our work
-        </button>
+        <OutlinePill light={light} onClick={() => lenisScrollTo("#work")}>View our work</OutlinePill>
       </motion.div>
     </div>
   );
 }
 
+function OutlinePill({ light, onClick, children }: { light: boolean; onClick: () => void; children: React.ReactNode }) {
+  const border = light ? "rgba(255,255,255,0.55)" : "var(--line-strong)";
+  const color = light ? "#fff" : "var(--ink)";
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: "inline-flex", alignItems: "center", gap: "0.55rem",
+        padding: "0.85rem 1.6rem", borderRadius: 100,
+        border: `1px solid ${border}`, background: "transparent", color,
+        fontSize: "0.92rem", fontWeight: 500, cursor: "pointer",
+        transition: "background 0.3s ease, color 0.3s ease, border-color 0.3s ease",
+      }}
+      onMouseEnter={(e) => { e.currentTarget.style.background = light ? "#fff" : "var(--ink)"; e.currentTarget.style.color = light ? "#0a0a0a" : "#fff"; e.currentTarget.style.borderColor = light ? "#fff" : "var(--ink)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = color; e.currentTarget.style.borderColor = border; }}
+    >
+      {children}
+      <span style={{ fontSize: "0.8rem" }}>↗</span>
+    </button>
+  );
+}
+
+const gridStyle: React.CSSProperties = { flex: 1, display: "grid", gridTemplateColumns: "1fr", gap: "clamp(2rem, 4vw, 3rem)", width: "100%" };
+
+const HeroStyles = () => (
+  <style>{`
+    @media (min-width: 880px) { .hero-grid { grid-template-columns: 1fr 1fr !important; align-items: stretch; } }
+    @media (max-width: 879px) { .hero-right { order: -1; justify-content: flex-start !important; } }
+  `}</style>
+);
+
 export default function Hero() {
   // ── Video mode (Neuralink-style full-bleed background) ──
   if (HERO_VIDEO) {
     return (
-      <section style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0a" }}>
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={HERO_POSTER || undefined}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
-        >
+      <section style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0a", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)" }}>
+        <video autoPlay muted loop playsInline poster={HERO_POSTER || undefined} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}>
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
-        {/* Scrims so the nav (top) and headline (bottom-left) read over the footage */}
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(10,10,10,0.42) 0%, rgba(10,10,10,0.12) 20%, rgba(10,10,10,0.12) 48%, rgba(10,10,10,0.72) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(105deg, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0) 55%)" }} />
 
-        <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2.5rem, 6vh, 4rem)" }}>
-          <Headline light />
+        <div className="hero-grid" style={{ ...gridStyle, position: "relative", zIndex: 2 }}>
+          <div className="hero-left" style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", minWidth: 0 }}>
+            <Headline light />
+          </div>
+          <div className="hero-right" style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 }}>
+            <Wordmark light />
+          </div>
         </div>
+        <HeroStyles />
       </section>
     );
   }
 
   // ── Default: clean white hero with the animated FZY ──
   return (
-    <section
-      style={{
-        position: "relative",
-        minHeight: "100svh",
-        display: "flex",
-        padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)",
-        background: "var(--bg)",
-        overflow: "hidden",
-      }}
-    >
-      <div className="hero-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr", gap: "clamp(2rem, 4vw, 3rem)", width: "100%" }}>
+    <section style={{ position: "relative", minHeight: "100svh", display: "flex", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)", background: "var(--bg)", overflow: "hidden" }}>
+      <div className="hero-grid" style={gridStyle}>
         <div className="hero-left" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", minWidth: 0 }}>
           <motion.span className="eyebrow" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15, ease }}>
             Web Development Studio
           </motion.span>
           <Headline light={false} />
         </div>
-
         <div className="hero-right" style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 }}>
           <Wordmark />
         </div>
       </div>
-
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.8 }} style={{ position: "absolute", bottom: "clamp(2rem, 5vh, 3rem)", right: "clamp(1.25rem, 4vw, 3rem)", zIndex: 2 }}>
-        <span className="eyebrow" style={{ fontSize: "0.64rem", color: "var(--gray)" }}>Scroll ↓</span>
-      </motion.div>
-
-      <style>{`
-        @media (min-width: 880px) { .hero-grid { grid-template-columns: 1fr 1fr !important; align-items: stretch; } }
-        @media (max-width: 879px) { .hero-right { order: -1; justify-content: flex-start !important; } }
-      `}</style>
+      <HeroStyles />
     </section>
   );
 }

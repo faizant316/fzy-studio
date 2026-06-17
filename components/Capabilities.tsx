@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const items = [
-  { no: "01", title: "Web Platforms", body: "Full-stack platforms built from scratch. Booking systems, client portals, and admin workspaces engineered to handle real volume." },
-  { no: "02", title: "Booking & Automation", body: "The operations layer that runs a business on autopilot. Calendars, payment tracking, and automated email so nothing slips." },
-  { no: "03", title: "Design & Brand", body: "Interfaces with the polish clients expect. Every screen designed mobile-first, considered down to the detail." },
+  { no: "01", title: "Web Platforms", body: "Full-stack platforms built from scratch, engineered to handle real volume.", tags: ["Next.js", "Supabase", "Auth & roles"] },
+  { no: "02", title: "Booking & Automation", body: "The operations layer that runs a business on autopilot, so nothing slips.", tags: ["Calendars", "Payments", "Automated email"] },
+  { no: "03", title: "Design & Brand", body: "Interfaces with the polish clients expect, designed down to the detail.", tags: ["UI/UX", "Mobile-first", "Motion"] },
 ];
 
 export default function Capabilities() {
@@ -66,7 +66,14 @@ export default function Capabilities() {
                 <span className="eyebrow" style={{ color: hover === idx ? "var(--ink)" : "var(--gray-light)", transition: "color 0.3s ease" }}>{it.no}</span>
                 <h3 className="display" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.5rem)", color: "var(--ink)", letterSpacing: "-0.025em" }}>{it.title}</h3>
               </div>
-              <p className="cap-body" style={{ fontSize: "clamp(1rem, 1.3vw, 1.1rem)", lineHeight: 1.6, color: "var(--gray)", maxWidth: "46ch", justifySelf: "end" }}>{it.body}</p>
+              <div className="cap-body" style={{ maxWidth: "46ch", justifySelf: "end" }}>
+                <p style={{ fontSize: "clamp(1rem, 1.3vw, 1.1rem)", lineHeight: 1.6, color: "var(--gray)" }}>{it.body}</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem", marginTop: "1.1rem" }}>
+                  {it.tags.map((t) => (
+                    <span key={t} style={{ fontSize: "0.72rem", letterSpacing: "0.02em", padding: "0.3rem 0.8rem", borderRadius: 100, border: "1px solid var(--line-strong)", color: "var(--ink-soft)" }}>{t}</span>
+                  ))}
+                </div>
+              </div>
               <span className="cap-arrow" aria-hidden style={{ fontSize: "1.3rem", color: "var(--ink)", opacity: hover === idx ? 1 : 0, transform: hover === idx ? "translateX(0)" : "translateX(-8px)", transition: "opacity 0.35s ease, transform 0.35s ease" }}>↗</span>
             </div>
             <div className="hairline" />

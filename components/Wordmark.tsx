@@ -13,11 +13,14 @@ const letterV = {
   visible: { y: 0, transition: { duration: 1.0, ease } },
 };
 
-// Staggered mask-reveal of the FZY letters, plus a slow light sheen that sweeps
-// across the type so the mark feels alive instead of static. Minimal + premium.
-export default function Wordmark({ className }: { className?: string }) {
+// Staggered mask-reveal of FZY plus a slow light sheen. `light` renders it white
+// (for use over the dark video hero); otherwise near-black on the white hero.
+export default function Wordmark({ className, light = false }: { className?: string; light?: boolean }) {
   const reduce = useReducedMotion();
   const letters = ["F", "Z", "Y"];
+
+  const base = light ? "#ffffff" : "#0a0a0a";
+  const sheen = light ? "#bdbdbd" : "#6a6a6a";
 
   const type: React.CSSProperties = {
     display: "inline-block",
@@ -25,7 +28,7 @@ export default function Wordmark({ className }: { className?: string }) {
     letterSpacing: "-0.05em",
     lineHeight: 0.8,
     fontSize: "clamp(5rem, 17vw, 15rem)",
-    backgroundImage: "linear-gradient(105deg, #0a0a0a 0%, #0a0a0a 40%, #6a6a6a 50%, #0a0a0a 60%, #0a0a0a 100%)",
+    backgroundImage: `linear-gradient(105deg, ${base} 0%, ${base} 40%, ${sheen} 50%, ${base} 60%, ${base} 100%)`,
     backgroundSize: "230% 100%",
     WebkitBackgroundClip: "text",
     backgroundClip: "text",
@@ -37,7 +40,7 @@ export default function Wordmark({ className }: { className?: string }) {
   if (reduce) {
     return (
       <div className={className} style={{ display: "flex", justifyContent: "center" }}>
-        <span style={{ ...type, animation: "none", backgroundImage: "none", color: "var(--ink)", WebkitTextFillColor: "var(--ink)" }}>FZY</span>
+        <span style={{ ...type, animation: "none", backgroundImage: "none", color: base, WebkitTextFillColor: base }}>FZY</span>
       </div>
     );
   }
@@ -53,9 +56,6 @@ export default function Wordmark({ className }: { className?: string }) {
         @keyframes fzy-sheen {
           0% { background-position: 135% 0; }
           55%, 100% { background-position: -35% 0; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          [data-fzy-sheen] { animation: none !important; }
         }
       `}</style>
     </motion.div>
