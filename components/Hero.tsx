@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import Wordmark from "./Wordmark";
 import { HERO_VIDEO, HERO_POSTER } from "./heroConfig";
+import { lenisScrollTo } from "./lenis";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -30,7 +31,7 @@ function Headline({ light }: { light: boolean }) {
         style={{ marginTop: "clamp(1.5rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.75rem" }}
       >
         <button
-          onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() => lenisScrollTo("#contact")}
           className="pill-solid"
           style={light ? { background: "#fff", color: "#0a0a0a", borderColor: "#fff" } : undefined}
         >
@@ -38,7 +39,7 @@ function Headline({ light }: { light: boolean }) {
           <span style={{ fontSize: "0.85rem" }}>↗</span>
         </button>
         <button
-          onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() => lenisScrollTo("#work")}
           className="link-line"
           style={{ background: "none", border: "none", cursor: "pointer", padding: "0.4rem 0", fontSize: "1rem", color: light ? "rgba(255,255,255,0.85)" : "var(--ink-soft)" }}
         >

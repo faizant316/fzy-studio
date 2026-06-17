@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { HERO_VIDEO } from "./heroConfig";
+import { lenisScrollTo } from "./lenis";
 
 const links = [
   { label: "Work", id: "work" },
@@ -28,7 +29,7 @@ export default function Nav() {
   const brandColor = overHero ? "#fff" : "var(--ink)";
   const linkColor = overHero ? "rgba(255,255,255,0.82)" : "var(--ink-soft)";
 
-  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const go = (id: string) => lenisScrollTo("#" + id);
 
   return (
     <motion.nav
@@ -49,7 +50,7 @@ export default function Nav() {
       }}
     >
       <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => lenisScrollTo(0)}
         aria-label="FZY home"
         style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontWeight: 600, fontSize: "1rem", letterSpacing: "0.24em", color: brandColor, transition: "color 0.4s ease" }}
       >

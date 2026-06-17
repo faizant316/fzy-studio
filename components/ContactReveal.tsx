@@ -2,6 +2,7 @@
 import { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { lenisScrollTo, lenisStop, lenisStart } from "./lenis";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -87,7 +88,7 @@ export default function ContactReveal() {
   const startWith = (t: Tier) => {
     setForm((f) => ({ ...f, budget: t.budget }));
     setOpenTier(null);
-    setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
+    setTimeout(() => { if (formRef.current) lenisScrollTo(formRef.current); }, 120);
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -113,7 +114,6 @@ export default function ContactReveal() {
         background: "var(--bg-warm-2)",
         borderTopLeftRadius: "clamp(1.75rem, 4.5vw, 3.5rem)",
         borderTopRightRadius: "clamp(1.75rem, 4.5vw, 3.5rem)",
-        boxShadow: "0 -26px 60px -34px rgba(0,0,0,0.22)",
         padding: "clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem)",
       }}
     >
@@ -137,8 +137,8 @@ export default function ContactReveal() {
                 textAlign: "left", outline: t.featured ? "2px solid var(--ink)" : "none", outlineOffset: "-2px",
                 transition: "transform 0.45s ease, box-shadow 0.45s ease",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-8px)"; e.currentTarget.style.boxShadow = "0 36px 70px -34px rgba(0,0,0,0.45)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-8px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
             >
               {/* legibility scrim */}
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.42) 100%)" }} />
@@ -243,10 +243,11 @@ function TierModal({ tier, onClose, onStart }: { tier: Tier | null; onClose: () 
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    document.body.style.overflow = tier ? "hidden" : "";
+    if (tier) { lenisStop(); document.body.style.overflow = "hidden"; }
+    else { lenisStart(); document.body.style.overflow = ""; }
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
-    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
+    return () => { lenisStart(); document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
   }, [tier, onClose]);
 
   if (!mounted) return null;
