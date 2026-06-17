@@ -47,18 +47,18 @@ export default function ContactReveal() {
   return (
     <section
       id="contact"
-      className="grain-dark"
+      className="grain"
       style={{
         position: "relative", zIndex: 1, overflow: "hidden",
-        background: "var(--dark)",
+        background: "var(--tone-b)",
         borderTopLeftRadius: "clamp(1.75rem, 4.5vw, 3.5rem)",
         borderTopRightRadius: "clamp(1.75rem, 4.5vw, 3.5rem)",
         padding: "clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 4vw, 3rem) clamp(4rem, 8vw, 7rem)",
       }}
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-        <h2 className="display" style={{ textAlign: "center", fontSize: "clamp(2.2rem, 5vw, 4rem)", color: "var(--dark-text)", marginBottom: "clamp(2.5rem, 5vw, 4rem)" }}>
-          Let&rsquo;s build
+        <h2 className="display" style={{ textAlign: "center", fontSize: "clamp(2.2rem, 5vw, 4rem)", color: "var(--ink)", marginBottom: "clamp(2.5rem, 5vw, 4rem)" }}>
+          Work with us
         </h2>
 
         {/* Large gradient tier cards */}
@@ -69,10 +69,10 @@ export default function ContactReveal() {
               onClick={() => setOpenTier(i)}
               style={{
                 position: "relative", overflow: "hidden", border: "none", padding: 0, cursor: "pointer",
-                borderRadius: 22, minHeight: "clamp(420px, 56vh, 600px)",
+                borderRadius: 22, minHeight: "clamp(480px, 66vh, 720px)",
                 background: t.gradient,
                 display: "flex", flexDirection: "column", justifyContent: "flex-end",
-                textAlign: "left", outline: t.featured ? "1px solid rgba(245,240,232,0.5)" : "none", outlineOffset: "-1px",
+                textAlign: "left", outline: t.featured ? "1px solid var(--ink)" : "none", outlineOffset: "-1px",
                 transition: "transform 0.45s ease",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-8px)"; }}
@@ -81,7 +81,7 @@ export default function ContactReveal() {
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.42) 100%)" }} />
               <span style={{ position: "absolute", top: "1.5rem", left: "1.5rem", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.82)" }}>{t.price}</span>
               <div style={{ position: "relative", zIndex: 1, padding: "clamp(1.5rem, 3vw, 2.25rem)" }}>
-                <h3 className="display" style={{ fontSize: "clamp(1.9rem, 3.2vw, 2.8rem)", color: "#fff", letterSpacing: "-0.02em", marginBottom: "1.25rem" }}>{t.name}</h3>
+                <h3 className="display" style={{ fontSize: "clamp(2.1rem, 3.6vw, 3.1rem)", color: "#fff", letterSpacing: "-0.02em", marginBottom: "1.25rem" }}>{t.name}</h3>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.3rem", borderRadius: 100, border: "1px solid rgba(255,255,255,0.6)", color: "#fff", fontSize: "0.9rem", fontWeight: 500 }}>
                   View details <span aria-hidden>↗</span>
                 </span>
@@ -95,9 +95,9 @@ export default function ContactReveal() {
           <button
             onClick={() => openForm("")}
             className="link-line"
-            style={{ background: "none", border: "none", cursor: "pointer", padding: "0.4rem 0", fontSize: "0.95rem", color: "var(--dark-muted)", letterSpacing: "0.01em" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--dark-text)")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--dark-muted)")}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: "0.4rem 0", fontSize: "0.95rem", color: "var(--gray)", letterSpacing: "0.01em" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--gray)")}
           >
             Or send a request →
           </button>

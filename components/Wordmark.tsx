@@ -13,21 +13,32 @@ const letterV = {
   visible: { y: 0, transition: { duration: 1.0, ease } },
 };
 
-// Staggered mask-reveal of FZY plus a slow light sheen. `light` renders it white
-// (for use over the dark video hero); otherwise near-black on the white hero.
-export default function Wordmark({ className, light = false }: { className?: string; light?: boolean }) {
+// Staggered mask-reveal of FZY. `outline` renders elegant stroked letters (used
+// over the video hero); otherwise a filled wordmark with a slow sheen.
+export default function Wordmark({ className, light = false, outline = false }: { className?: string; light?: boolean; outline?: boolean }) {
   const reduce = useReducedMotion();
   const letters = ["F", "Z", "Y"];
 
   const base = light ? "#ffffff" : "#0a0a0a";
   const sheen = light ? "#bdbdbd" : "#6a6a6a";
 
-  const type: React.CSSProperties = {
+  const sizing: React.CSSProperties = {
     display: "inline-block",
     fontWeight: 600,
     letterSpacing: "-0.05em",
     lineHeight: 0.8,
-    fontSize: "clamp(5rem, 17vw, 15rem)",
+    fontSize: "clamp(5rem, 16vw, 14rem)",
+  };
+
+  const outlineType: React.CSSProperties = {
+    ...sizing,
+    color: "transparent",
+    WebkitTextFillColor: "transparent",
+    WebkitTextStroke: `2px ${light ? "rgba(255,255,255,0.9)" : "rgba(10,10,10,0.85)"}`,
+  };
+
+  const fillType: React.CSSProperties = {
+    ...sizing,
     backgroundImage: `linear-gradient(105deg, ${base} 0%, ${base} 40%, ${sheen} 50%, ${base} 60%, ${base} 100%)`,
     backgroundSize: "230% 100%",
     WebkitBackgroundClip: "text",
@@ -37,10 +48,13 @@ export default function Wordmark({ className, light = false }: { className?: str
     animation: "fzy-sheen 7s ease-in-out infinite",
   };
 
+  const type = outline ? outlineType : fillType;
+
   if (reduce) {
+    const staticStyle = outline ? outlineType : { ...sizing, color: base, WebkitTextFillColor: base };
     return (
       <div className={className} style={{ display: "flex", justifyContent: "center" }}>
-        <span style={{ ...type, animation: "none", backgroundImage: "none", color: base, WebkitTextFillColor: base }}>FZY</span>
+        <span style={staticStyle}>FZY</span>
       </div>
     );
   }

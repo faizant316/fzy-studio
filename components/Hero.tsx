@@ -35,7 +35,7 @@ function Headline({ light }: { light: boolean }) {
           className="pill-solid"
           style={light ? { background: "#fff", color: "#0a0a0a", borderColor: "#fff" } : undefined}
         >
-          Let&rsquo;s build
+          Start a project
           <span style={{ fontSize: "0.85rem" }}>↗</span>
         </button>
         <OutlinePill light={light} onClick={() => lenisScrollTo("#work")}>View our work</OutlinePill>
@@ -91,7 +91,7 @@ export default function Hero() {
             <Headline light />
           </div>
           <div className="hero-right" style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 }}>
-            <Wordmark light />
+            <Wordmark light outline />
           </div>
         </div>
         <HeroStyles />

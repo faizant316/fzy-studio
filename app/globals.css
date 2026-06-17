@@ -13,12 +13,9 @@
   --gray-light: #9a958d;  /* tertiary / labels */
   --line: #e6e2da;        /* subtle warm divider */
   --line-strong: #d7d2c8;
-  /* dark sections (Start a Project, footer) */
-  --dark: #15110d;
-  --dark-soft: #1d1813;
-  --dark-text: #f5f0e8;
-  --dark-muted: #9a938a;
-  --dark-line: rgba(245, 240, 232, 0.12);
+  /* two-tone cool-gray section scheme (lighter + darker of one hue) */
+  --tone-a: #ebecee;      /* lighter */
+  --tone-b: #d4d7dc;      /* darker */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

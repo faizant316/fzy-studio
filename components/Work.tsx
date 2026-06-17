@@ -59,7 +59,7 @@ export default function Work() {
       id="work"
       className="grain"
       style={{
-        background: "var(--bg-warm)",
+        background: "var(--tone-a)",
         padding: "clamp(5rem, 11vw, 9rem) clamp(1.25rem, 4vw, 3rem)",
       }}
     >

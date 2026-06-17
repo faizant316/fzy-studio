@@ -12,13 +12,11 @@ const links = [
 ];
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
   // White text while sitting over the dark video hero; dark once scrolled past it.
   const [overHero, setOverHero] = useState(Boolean(HERO_VIDEO));
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 40);
       if (HERO_VIDEO) setOverHero(window.scrollY < window.innerHeight * 0.82);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -45,8 +43,6 @@ export default function Nav() {
         justifyContent: "space-between",
         padding: "1rem clamp(1.1rem, 2.4vw, 1.75rem)",
         background: "transparent",
-        backdropFilter: scrolled ? "blur(8px)" : "none",
-        transition: "backdrop-filter 0.4s ease",
       }}
     >
       <button
