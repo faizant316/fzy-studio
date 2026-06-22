@@ -3,24 +3,40 @@
 @tailwind utilities;
 
 :root {
-  /* Minimal Swiss: white + warm off-white + near-black (Neuralink-inspired) */
-  --bg: #ffffff;
-  --bg-warm: #f3f0ea;     /* alternating warm off-white section */
-  --bg-warm-2: #ebe7df;   /* slightly deeper warm */
-  --ink: #0a0a0a;
-  --ink-soft: #2a2a2a;
-  --gray: #6b6b6b;        /* secondary text */
-  --gray-light: #9a958d;  /* tertiary / labels */
-  --line: #e6e2da;        /* subtle warm divider */
-  --line-strong: #d7d2c8;
-  /* two-tone cool-gray section scheme (lighter + darker of one hue) */
-  --tone-a: #ebecee;      /* lighter */
-  --tone-b: #d4d7dc;      /* darker */
+  /* ── Neutral near-black editorial palette ──────────────────────────────────
+     True charcoal-black base (no color cast), off-white ink, hairline borders.
+     Accents are a refined blue (primary) and a warm coral/red (secondary), used
+     sparingly. Variable names are kept stable so inline styles adapt. */
+  --bg: #0a0a0b;          /* deepest base */
+  --bg-warm: #0f0f11;     /* alternating section, barely lifted */
+  --bg-warm-2: #141417;   /* deeper panel */
+  --ink: #f4f4f2;         /* near-white primary text */
+  --ink-soft: #c7c7c5;    /* softened body text */
+  --gray: #8d8d8c;        /* secondary text */
+  --gray-light: #6a6a6a;  /* tertiary / labels */
+  --line: rgba(255,255,255,0.10);       /* subtle divider */
+  --line-strong: rgba(255,255,255,0.18);/* stronger divider / outline */
+
+  /* surfaces for cards + raised elements */
+  --surface: #151517;
+  --surface-2: #1c1c20;
+
+  /* section tones (subtle alternation, not a hard flip) */
+  --tone-a: #0e0e10;      /* lifted section (Work) */
+  --tone-b: #0c0c0d;      /* deep section (Contact / Footer) */
+
+  /* accents — refined blue (primary) + warm coral/red (secondary) */
+  --accent: #7aa2e3;
+  --accent-deep: #5d84c6;
+  --accent-soft: rgba(122,162,227,0.14);
+  --accent-red: #e0786c;
+  --accent-red-deep: #c85f53;
+  --accent-red-soft: rgba(224,120,108,0.14);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; background: var(--bg); }
 
 /* ── Lenis smooth scroll ── */
 html.lenis, html.lenis body { height: auto; }
@@ -36,9 +52,10 @@ body {
   background: var(--bg);
   color: var(--ink);
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
-::selection { background: var(--ink); color: #fff; }
+::selection { background: var(--accent); color: #0a0a0b; }
 
 /* ── Type helpers ── */
 .font-display { font-family: var(--font-inter), system-ui, sans-serif; }
@@ -63,32 +80,20 @@ body {
 /* ── Hairline ── */
 .hairline { height: 1px; background: var(--line); width: 100%; }
 
-/* ── Paper grain for warm/tan sections ── */
-.grain { position: relative; }
-.grain > * { position: relative; z-index: 1; }
-.grain::before {
+/* ── Premium brushed texture — fine diagonal "guilloché" hairlines + a soft top
+   sheen, à la a metal Amex card. Subtle and clean (no TV-static noise). ── */
+.grain, .grain-dark { position: relative; }
+.grain > *, .grain-dark > * { position: relative; z-index: 1; }
+.grain::before, .grain-dark::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.18;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
-}
-
-/* Grain for dark sections (light speckle) */
-.grain-dark { position: relative; }
-.grain-dark > * { position: relative; z-index: 1; }
-.grain-dark::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.06;
-  mix-blend-mode: screen;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.014) 0px, rgba(255,255,255,0.014) 1px, transparent 1px, transparent 7px),
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.008) 0px, rgba(255,255,255,0.008) 1px, transparent 1px, transparent 7px),
+    radial-gradient(150% 90% at 50% -15%, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0) 55%);
 }
 
 /* ── Clean link underline (grows on hover) ── */
@@ -105,12 +110,12 @@ body {
 }
 .link-line:hover::after { transform: scaleX(1); transform-origin: left; }
 
-/* ── Outline pill button (Neuralink style) ── */
+/* ── Outline pill button ── */
 .pill {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--line-strong);
   border-radius: 100px;
   padding: 0.7rem 1.5rem;
   font-size: 0.92rem;
@@ -118,10 +123,11 @@ body {
   color: var(--ink);
   background: transparent;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
-.pill:hover { background: var(--ink); color: #fff; }
+.pill:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
+/* ── Solid pill — light "cream" CTA that pops on the dark theme ── */
 .pill-solid {
   display: inline-flex;
   align-items: center;
@@ -131,12 +137,12 @@ body {
   padding: 0.95rem 1.9rem;
   font-size: 0.98rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--bg);
   background: var(--ink);
   cursor: pointer;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.pill-solid:hover { opacity: 0.85; transform: translateY(-1px); }
+.pill-solid:hover { opacity: 0.88; transform: translateY(-1px); }
 
 /* ── No scrollbar ── */
 .no-scrollbar::-webkit-scrollbar { display: none; }

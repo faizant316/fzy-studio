@@ -8,10 +8,7 @@ export default function Footer() {
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <div style={{ height: 1, background: "var(--line-strong)", marginBottom: "2.5rem" }} />
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "2rem", alignItems: "flex-start" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
-            <svg width="26" height="14" viewBox="0 0 26 14" fill="none" aria-hidden>
-              <path d="M1 7 H6 L9 1 L13 13 L17 7 H25" stroke="var(--ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <span style={{ fontWeight: 600, letterSpacing: "0.22em", color: "var(--ink)" }}>FZY</span>
           </div>
 
@@ -22,7 +19,7 @@ export default function Footer() {
               { label: "Start a Project", href: "#contact" },
             ]} />
             <FooterCol title="Elsewhere" links={[
-              { label: "hello@fzystudio.dev", href: "mailto:hello@fzystudio.dev" },
+              { label: "hello@fzydev.com", href: "mailto:hello@fzydev.com" },
               { label: "Founder's portfolio ↗", href: PORTFOLIO_URL, external: true },
             ]} />
           </div>

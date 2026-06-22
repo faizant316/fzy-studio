@@ -23,10 +23,10 @@ export default function Statement() {
         </motion.h2>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem", maxWidth: "42ch" }}>
-          <motion.p {...fade(0.1)} style={{ fontSize: "clamp(1.05rem, 1.5vw, 1.25rem)", lineHeight: 1.6, color: "var(--ink-soft)" }}>
+          <motion.p {...fade(0.1)} style={{ fontSize: "clamp(1.05rem, 1.5vw, 1.25rem)", lineHeight: 1.65, color: "var(--ink-soft)" }}>
             FZY is a web development studio. We design and engineer custom platforms end to end.
           </motion.p>
-          <motion.p {...fade(0.18)} style={{ fontSize: "clamp(1.05rem, 1.5vw, 1.25rem)", lineHeight: 1.6, color: "var(--gray)" }}>
+          <motion.p {...fade(0.18)} style={{ fontSize: "clamp(1.05rem, 1.5vw, 1.25rem)", lineHeight: 1.65, color: "var(--gray)" }}>
             One considered product that replaces the spreadsheets and DMs a business outgrows, and runs without you.
           </motion.p>
         </div>

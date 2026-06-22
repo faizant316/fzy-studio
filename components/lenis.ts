@@ -26,3 +26,15 @@ export function lenisStop() {
 export function lenisStart() {
   instance?.start();
 }
+
+// Snap Lenis (and native scroll) to an exact position with no animation. Used
+// when closing an overlay so the page returns to where it was instead of
+// gliding from the top back down to the section.
+export function lenisResync(y: number) {
+  if (instance) {
+    instance.resize();
+    instance.scrollTo(y, { immediate: true, force: true });
+  } else if (typeof window !== "undefined") {
+    window.scrollTo(0, y);
+  }
+}

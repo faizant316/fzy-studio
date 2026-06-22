@@ -8,7 +8,7 @@ const FROM = "FZY Studio <hello@fzydev.com>";
 
 export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const { name, email, projectType, budget, description } = await req.json();
+  const { name, email, company, projectType, budget, timeline, description } = await req.json();
 
   if (!name || !email || !projectType) {
     return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
@@ -28,8 +28,10 @@ export async function POST(req: NextRequest) {
           <table style="width: 100%; border-collapse: collapse;">
             <tr><td style="color: #8a8580; padding: 0.4rem 0; width: 130px;">Name</td><td style="color: #f5f0eb;">${name}</td></tr>
             <tr><td style="color: #8a8580; padding: 0.4rem 0;">Email</td><td style="color: #f5f0eb;">${email}</td></tr>
+            ${company ? `<tr><td style="color: #8a8580; padding: 0.4rem 0;">Business</td><td style="color: #f5f0eb;">${company}</td></tr>` : ""}
             <tr><td style="color: #8a8580; padding: 0.4rem 0;">Project type</td><td style="color: #f5f0eb;">${projectType}</td></tr>
             <tr><td style="color: #8a8580; padding: 0.4rem 0;">Budget</td><td style="color: #f5f0eb;">${budget || "Not specified"}</td></tr>
+            <tr><td style="color: #8a8580; padding: 0.4rem 0;">Timeline</td><td style="color: #f5f0eb;">${timeline || "Not specified"}</td></tr>
           </table>
           ${description ? `<p style="color: #8a8580; margin: 1.5rem 0 0.25rem;">Details</p><p style="color: #f5f0eb; margin: 0; line-height: 1.6;">${description}</p>` : ""}
           <p style="color: #444; font-size: 0.75rem; margin: 2rem 0 0;">Sent via fzydev.com</p>

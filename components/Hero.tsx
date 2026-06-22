@@ -79,11 +79,12 @@ export default function Hero() {
   // ── Video mode (Neuralink-style full-bleed background) ──
   if (HERO_VIDEO) {
     return (
-      <section id="hero" style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0a", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)" }}>
+      <section id="hero" style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0b", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 5vw, 3rem) clamp(2.5rem, 6vh, 3.5rem)" }}>
         <video autoPlay muted loop playsInline poster={HERO_POSTER || undefined} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}>
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
-        <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(10,10,10,0.42) 0%, rgba(10,10,10,0.12) 20%, rgba(10,10,10,0.12) 48%, rgba(10,10,10,0.72) 100%)" }} />
+        {/* Vertical wash — fades the video into the dark page color at the bottom. */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(10,10,11,0.42) 0%, rgba(10,10,11,0.10) 20%, rgba(10,10,11,0.12) 46%, rgba(10,10,11,0.78) 86%, rgba(10,10,11,0.98) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(105deg, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0) 55%)" }} />
 
         <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", minWidth: 0 }}>

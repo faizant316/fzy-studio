@@ -9,12 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg:        "#ffffff",
-        "bg-warm": "#f3f0ea",
-        ink:       "#0a0a0a",
-        "ink-soft": "#2a2a2a",
-        gray:      "#6b6b6b",
-        line:      "#e6e2da",
+        bg:        "#0a0a0b",
+        "bg-warm": "#0f0f11",
+        ink:       "#f4f4f2",
+        "ink-soft": "#c7c7c5",
+        gray:      "#8d8d8c",
+        line:      "rgba(255,255,255,0.10)",
+        accent:    "#7aa2e3",
+        "accent-red": "#e0786c",
       },
       fontFamily: {
         sans:    ["var(--font-inter)", "system-ui", "sans-serif"],
