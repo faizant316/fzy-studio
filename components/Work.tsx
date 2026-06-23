@@ -97,7 +97,7 @@ export default function Work() {
         <div style={{ maxWidth: 1480, margin: "0 auto", position: "relative" }}>
           {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "0px 0px -60px 0px" }}
             transition={{ duration: 0.8, ease }}
@@ -135,7 +135,7 @@ export default function Work() {
 
           {/* More coming soon */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "0px 0px -40px 0px" }}
             transition={{ duration: 0.8, ease }}
@@ -196,7 +196,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
     <div ref={ref} className="work-feature" style={{ position: "relative" }}>
       {/* Left, index, services, CTAs, subtle quote */}
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "0px 0px -80px 0px" }}
         transition={{ duration: 0.8, ease }}
@@ -234,7 +234,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
 
       {/* Right, big clickable preview */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
+        initial={false}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, margin: "0px 0px -60px 0px" }}
         transition={{ duration: 0.9, ease }}
