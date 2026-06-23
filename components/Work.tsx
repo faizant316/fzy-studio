@@ -38,7 +38,7 @@ type Project = {
   detail?: CaseStudy;
 };
 
-// One flagship for now — the array is the seam: add objects here and the
+// One flagship for now, the array is the seam: add objects here and the
 // showcase grows into the same treatment, no layout rework.
 const projects: Project[] = [
   {
@@ -52,7 +52,7 @@ const projects: Project[] = [
       projectType: ["Booking platform", "Website", "Automation"],
       tech: ["Next.js", "Supabase", "Stripe", "Automated email"],
       description:
-        "FZY designed and engineered Makeup by Roko end to end — a full bridal booking platform that replaced a tangle of Instagram DMs, screenshots, and a paper calendar with one system: clients request a date and send a Zelle deposit, and Roko confirms the exact time from a single dashboard.",
+        "FZY designed and engineered Makeup by Roko end to end, a full bridal booking platform that replaced a tangle of Instagram DMs, screenshots, and a paper calendar with one system: clients request a date and send a Zelle deposit, and Roko confirms the exact time from a single dashboard.",
       sections: [
         {
           title: "The problem",
@@ -62,16 +62,16 @@ const projects: Project[] = [
         {
           title: "Booking & scheduling",
           body: "A mobile-first request flow with a live availability calendar. Clients choose their preferred date and submit; Roko reviews and locks in the exact time, so the schedule is never double-booked.",
-          bullets: ["Live calendar with real-time availability", "Service and add-on selection", "Roko confirms the time — no client self-scheduling"],
+          bullets: ["Live calendar with real-time availability", "Service and add-on selection", "Roko confirms the time, no client self-scheduling"],
         },
         {
           title: "Deposits & payments",
-          body: "Deposits are sent by Zelle to lock the date, with a one-tap screenshot upload for proof. Roko verifies and the date is secured — no more chasing payments in the DMs.",
+          body: "Deposits are sent by Zelle to lock the date, with a one-tap screenshot upload for proof. Roko verifies and the date is secured, no more chasing payments in the DMs.",
           bullets: ["Zelle deposit locks the date", "One-tap screenshot upload + auto reminder if unpaid", "Remaining balance in cash on the day"],
         },
         {
           title: "Automation & confirmations",
-          body: "Booking-request, deposit-reminder, and confirmation emails all send themselves — branded and automatic. Roko just approves from one dashboard.",
+          body: "Booking-request, deposit-reminder, and confirmation emails all send themselves, branded and automatic. Roko just approves from one dashboard.",
           bullets: ["Auto request-received email", "Auto Zelle deposit reminder", "Branded confirmation once Roko locks the time"],
         },
       ],
@@ -84,7 +84,7 @@ export default function Work() {
 
   return (
     <section id="work" style={{ background: BLACK }}>
-      {/* black → blue (ombre glitch) */}
+      {/* black to blue (ombre glitch) */}
       <GlitchBand top={BLACK} bottom={BLUE} seedBase={1} />
 
       <div
@@ -151,16 +151,16 @@ export default function Work() {
           >
             <span className="work-soon-dot" aria-hidden />
             <span className="eyebrow" style={{ color: "var(--gray)" }}>
-              More platforms in the studio — shipping soon
+              More platforms in the studio, shipping soon
             </span>
           </motion.div>
 
-          {/* Eye + laser overlay — sits high, tracks the cursor across the section */}
+          {/* Eye + laser overlay, sits high, tracks the cursor across the section */}
           <EyeLaser />
         </div>
       </div>
 
-      {/* blue → black (ombre glitch) */}
+      {/* blue to black (ombre glitch) */}
       <GlitchBand top={BLUE} bottom={BLACK} seedBase={2} />
 
       <style dangerouslySetInnerHTML={{ __html: `
@@ -176,7 +176,7 @@ export default function Work() {
           100% { box-shadow: 0 0 0 0 rgba(122,162,227,0); }
         }
         @media (prefers-reduced-motion: reduce) { .work-soon-dot { animation: none; } }
-        /* The laser needs a real cursor — hide it on touch / small screens. */
+        /* The laser needs a real cursor, hide it on touch / small screens. */
         @media (hover: none), (max-width: 760px) { .work-laser { display: none !important; } }
       ` }} />
     </section>
@@ -194,7 +194,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
 
   return (
     <div ref={ref} className="work-feature" style={{ position: "relative" }}>
-      {/* Left — index, services, CTAs, subtle quote */}
+      {/* Left, index, services, CTAs, subtle quote */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -203,7 +203,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
         className="work-feature__info"
       >
         <span className="eyebrow" style={{ color: "var(--gray)" }}>
-          {String(index + 1).padStart(2, "0")} — {p.category}
+          {String(index + 1).padStart(2, "0")} · {p.category}
         </span>
 
         <ul style={{ listStyle: "none", margin: "clamp(1.5rem, 3vw, 2.25rem) 0 0", padding: 0, display: "grid", gap: "0.5rem" }}>
@@ -232,7 +232,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
         </p>
       </motion.div>
 
-      {/* Right — big clickable preview */}
+      {/* Right, big clickable preview */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -244,7 +244,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
           href={p.url}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`${p.client} — open live site`}
+          aria-label={`${p.client}, open live site`}
           style={reduce ? { display: "block", height: "100%" } : { display: "block", height: "100%", y: yMedia }}
         >
           {p.image ? (
@@ -287,7 +287,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
   );
 }
 
-/* ── Full case study — portals to <body> (above the nav), slides up, and scrolls
+/* Full case study, portals to <body> (above the nav), slides up, and scrolls
    with its own Lenis instance. Joonas-Sandell layout: meta on the left, big
    description + tags on the right, then alternating screenshot/text sections. ── */
 function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: () => void }) {
@@ -385,7 +385,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             }}
           >
             <div>
-              {/* Top bar — keeps the real site header, with a clean close */}
+              {/* Top bar, keeps the real site header, with a clean close */}
               <div
                 style={{
                   position: "sticky",
@@ -402,7 +402,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
                   backdropFilter: "blur(12px)",
                 }}
               >
-                {/* Breadcrumb — file-explorer style: where you are in the site */}
+                {/* Breadcrumb, file-explorer style: where you are in the site */}
                 <nav aria-label="Breadcrumb" style={{ display: "flex", alignItems: "center", gap: "0.55rem", minWidth: 0, overflow: "hidden" }}>
                   <button
                     type="button"
@@ -458,7 +458,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
                   <span style={{ fontSize: "0.85rem" }}>↗</span>
                 </a>
 
-                {/* A peek into the real product — Makeup by Roko's own brand world */}
+                {/* A peek into the real product, Makeup by Roko's own brand world */}
                 <div style={{ marginTop: "clamp(2.5rem, 5vw, 4rem)" }}>
                   <RokoPreview />
                 </div>
@@ -483,7 +483,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
                       {d.description}
                     </p>
                     <p style={{ marginTop: "clamp(1.4rem, 2.5vw, 2rem)", fontSize: "1.08rem", lineHeight: 1.6, color: "var(--gray)", maxWidth: "46ch" }}>
-                      &ldquo;{p.quote}&rdquo; — {p.client}
+                      &ldquo;{p.quote}&rdquo;, {p.client}
                     </p>
                     <div style={{ marginTop: "clamp(1.75rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
                       {d.sections.map((s, i) => (
@@ -495,7 +495,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
                   </div>
                 </div>
 
-                {/* Sections — alternating screenshot / text */}
+                {/* Sections, alternating screenshot / text */}
                 <div style={{ marginTop: "clamp(4.5rem, 9vw, 8rem)", display: "grid", gap: "clamp(5rem, 10vw, 9rem)" }}>
                   {d.sections.map((s, i) => (
                     <motion.div
@@ -592,7 +592,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
               .cs-sec--bottom { align-items: flex-end; }
             }
 
-            /* ── Makeup by Roko brand skin — dusty rose + plum + black on white ── */
+            /* Makeup by Roko brand skin, dusty rose + plum + black on white */
             .rk {
               --rk-surface: #FBF5F7; --rk-surface-2: #F8F4F6;
               --rk-rose: #D4A0B0; --rk-rose-deep: #C4849A; --rk-plum: #B8A0D4; --rk-plum-text: #6B4055;
@@ -704,7 +704,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             .rk-btn-rose { margin-top: 0.85rem; width: 100%; padding: 0.72rem 1rem; border: none; border-radius: 100px; background: var(--rk-rose-deep); color: #fff; font-size: 0.82rem; font-weight: 500; cursor: default; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
             .rk-paid { display: flex; align-items: center; gap: 0.7rem; background: #fff; border: 1px solid var(--rk-border); border-radius: 14px; padding: 0.85rem 1rem; }
             .rk-paid-val { font-family: var(--font-cormorant), serif; font-size: 1.2rem; color: var(--rk-rose-deep); }
-            /* email — real confirmation design */
+            /* email, real confirmation design */
             .rk-email { text-align: center; }
             .rk-email-wm { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rk-rose-deep); }
             .rk-email-circle { width: 48px; height: 48px; border-radius: 50%; margin: 0.9rem auto 0; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--rk-rose-deep); background: linear-gradient(135deg, #FDF0F5, #F7D8E5); }
@@ -722,14 +722,23 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             .rk-email-foot { margin-top: 1.2rem; }
             .rk-email-foot-love { font-family: var(--font-cormorant), serif; font-style: italic; color: var(--rk-rose-deep); font-size: 1.1rem; }
             .rk-email-foot-ig { font-size: 0.74rem; color: #999; margin-top: 0.2rem; }
-            /* phone mock — full iPhone, side by side with the booking calendar */
+            /* phone mock, full iPhone, side by side with the booking calendar */
             .rk-bookrow { display: block; }
-            @media (min-width: 1025px) { .rk-bookrow { display: flex; align-items: center; gap: clamp(1rem, 2vw, 2.25rem); } .rk-bookrow > .rk-tile { flex: 1; min-width: 0; } }
-            .rk-phone { flex-shrink: 0; width: clamp(166px, 17vw, 214px); transform: rotate(-6deg); border-radius: 44px; background: #111; padding: 8px; box-shadow: 0 30px 64px rgba(0,0,0,0.55); }
-            .rk-phone-screen { position: relative; aspect-ratio: 390 / 844; background: var(--rk-surface); border-radius: 38px; overflow: hidden; display: flex; flex-direction: column; }
-            .rk-phone-status { display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 1rem 0.3rem; font-size: 0.5rem; color: var(--rk-ink); }
-            .rk-phone-wm-top { letter-spacing: 0.16em; color: var(--rk-rose-deep); }
-            .rk-phone-body { flex: 1; padding: 0.5rem 0.9rem 0.9rem; display: flex; flex-direction: column; }
+            @media (min-width: 1025px) { .rk-bookrow { display: flex; align-items: center; gap: clamp(1.4rem, 2.4vw, 2.75rem); overflow: visible; } .rk-bookrow > .rk-tile { flex: 1; min-width: 0; } }
+            .rk-phone-float { flex-shrink: 0; width: clamp(190px, 19vw, 248px); margin: 0.6rem 0.4rem 0.6rem 0; }
+            .rk-phone {
+              position: relative; width: 100%; transform: rotate(-6deg); border-radius: 18% / 8.4%;
+              background: linear-gradient(145deg, #28282c 0%, #0d0d10 44%, #050506 100%);
+              padding: 7px; box-shadow: 0 42px 86px -28px rgba(0,0,0,0.78), 0 18px 38px -24px rgba(196,132,154,0.7), inset 0 0 0 1px rgba(255,255,255,0.1);
+            }
+            .rk-phone::before { content: ""; position: absolute; left: -3px; top: 22%; width: 3px; height: 15%; border-radius: 3px 0 0 3px; background: linear-gradient(#303036, #0b0b0d); box-shadow: 0 42px 0 #111116; }
+            .rk-phone::after { content: ""; position: absolute; right: -3px; top: 30%; width: 3px; height: 19%; border-radius: 0 3px 3px 0; background: linear-gradient(#303036, #0b0b0d); }
+            .rk-phone-screen { position: relative; aspect-ratio: 390 / 844; background: var(--rk-surface); border-radius: 16.5% / 7.4%; overflow: hidden; display: flex; flex-direction: column; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22); }
+            .rk-phone-screen::before { content: ""; position: absolute; z-index: 4; top: 10px; left: 50%; width: 31%; height: 21px; transform: translateX(-50%); border-radius: 999px; background: #09090a; box-shadow: inset 0 -1px 1px rgba(255,255,255,0.09), 0 1px 1px rgba(255,255,255,0.12); }
+            .rk-phone-screen::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(116deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 18%, rgba(255,255,255,0) 39%); mix-blend-mode: screen; }
+            .rk-phone-status { display: flex; align-items: center; justify-content: space-between; padding: 0.74rem 1.1rem 0.34rem; font-size: 0.5rem; color: var(--rk-ink); }
+            .rk-phone-wm-top { letter-spacing: 0.16em; color: var(--rk-rose-deep); max-width: 44%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+            .rk-phone-body { flex: 1; padding: 0.6rem 1rem 1rem; display: flex; flex-direction: column; }
             .rk-phone-list { margin-top: 0.7rem; display: grid; gap: 0.1rem; }
             .rk-phone-tier { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; padding: 0.55rem 0; border-bottom: 1px solid var(--rk-border-2); }
             .rk-phone-tier:last-child { border-bottom: none; }
@@ -737,7 +746,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             .rk-phone-tier span { font-family: var(--font-cormorant), serif; font-size: 0.9rem; color: var(--rk-ink); }
             .rk-phone-tier em { display: block; font-style: normal; font-size: 0.52rem; color: var(--rk-rose-deep); text-align: right; }
             .rk-phone-cta { margin-top: auto; text-align: center; font-size: 0.6rem; color: #fff; background: var(--rk-ink); border-radius: 100px; padding: 0.6rem; }
-            @media (max-width: 1024px) { .rk-phone { display: none; } }
+            @media (max-width: 1024px) { .rk-phone-float { display: none; } }
           ` }} />
         </motion.div>
       )}
@@ -765,7 +774,7 @@ const ROKO_TIERS = [
   { name: "Full Day Service", price: "$1,700", dep: "$850 deposit" },
 ];
 
-/* The "preview pane" — a framed mini-window in Makeup by Roko's OWN brand world
+/* The "preview pane", a framed mini-window in Makeup by Roko's OWN brand world
    (dusty rose + plum + black on white) so the case study reads like the product. */
 function RokoPreview() {
   return (
@@ -781,7 +790,7 @@ function RokoPreview() {
           <br />
           <em>Elevated.</em>
         </h3>
-        <p className="rk-lead">Bridal &amp; editorial makeup — pick your date, choose your service, reserve with a deposit.</p>
+        <p className="rk-lead">Bridal &amp; editorial makeup, pick your date, choose your service, reserve with a deposit.</p>
 
         <div className="rk-grid">
           <div className="rk-card">
@@ -815,7 +824,7 @@ function RokoPreview() {
             </div>
             <div className="rk-review">
               <div className="rk-stars" aria-hidden>★★★★★</div>
-              <p className="rk-serif rk-quote">&ldquo;Flawless — and it booked itself.&rdquo;</p>
+              <p className="rk-serif rk-quote">&ldquo;Flawless, and it booked itself.&rdquo;</p>
             </div>
           </div>
         </div>
@@ -860,7 +869,7 @@ const DM_ROWS = [
 
 function rokoFragment(index: number) {
   switch (index) {
-    case 0: // The problem — scattered, "alive" DMs
+    case 0: // The problem, scattered, "alive" DMs
       return (
         <div>
           {DM_ROWS.map((r) => (
@@ -891,73 +900,19 @@ function rokoFragment(index: number) {
           </div>
         </div>
       );
-    case 1: // Booking & scheduling — live availability calendar
+    case 1: // Booking & scheduling, live availability calendar
       return <RokoCalendar />;
-    case 2: // Deposits & payments — the real Zelle flow
-      return (
-        <div style={{ display: "grid", gap: "0.9rem" }}>
-          <div className="rk-card">
-            <div className="rk-row">
-              <span className="rk-eyebrow">Deposit</span>
-              <span className="rk-mini">Action required</span>
-            </div>
-            <h4 className="rk-serif" style={{ fontSize: "1.65rem", color: "var(--rk-rose-deep)", margin: "0.6rem 0 0.6rem" }}>Deposit to Book</h4>
-            <div className="rk-receipt-row"><span>Bridal Trial</span><b>$500.00</b></div>
-            <div className="rk-receipt-row"><span>Deposit (held)</span><b>$250.00</b></div>
-            <div className="rk-receipt-total"><span>Due now · Zelle</span><b>$250.00</b></div>
-            <div className="rk-zelle">
-              <div className="rk-zelle-row">
-                <div>
-                  <div className="rk-zelle-to">Zelle to</div>
-                  <div className="rk-zelle-name">Ruqia M.</div>
-                </div>
-                <div className="rk-zelle-num">(•••) •••-••97</div>
-              </div>
-              <button type="button" className="rk-btn-rose" tabIndex={-1}><span aria-hidden>⤒</span> Upload Zelle screenshot</button>
-            </div>
-            <p style={{ marginTop: "0.7rem", fontSize: "0.72rem", color: "var(--rk-muted)" }}>Remaining balance due in cash on the day.</p>
-          </div>
-          <div className="rk-paid">
-            <span className="rk-check" style={{ width: 22, height: 22, fontSize: "0.72rem" }} aria-hidden>✓</span>
-            <div>
-              <div style={{ fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--rk-muted)" }}>Deposit paid</div>
-              <div className="rk-paid-val">$250.00</div>
-            </div>
-          </div>
-        </div>
-      );
-    default: // Automation — the real confirmation email
-      return (
-        <div className="rk-card rk-email">
-          <div className="rk-email-wm">Makeup by Roko</div>
-          <div className="rk-email-circle" aria-hidden>✓</div>
-          <h4 className="rk-email-h">
-            You&rsquo;re <em>Confirmed!</em>
-          </h4>
-          <div className="rk-email-sub">Can&rsquo;t wait to see you ✦</div>
-          <p className="rk-email-body">Hey Priya! Your Bridal Trial appointment on Saturday, June 14 at 10:30 AM is officially confirmed.</p>
-          <div className="rk-email-card">
-            <span className="rk-email-label">Appointment details</span>
-            <div style={{ marginTop: "0.6rem" }}>
-              <div className="rk-detail-row"><span>Service</span><b>Bridal Trial</b></div>
-              <div className="rk-detail-row"><span>Date</span><b>Saturday, June 14</b></div>
-              <div className="rk-detail-row"><span>Time</span><b>10:30 AM</b></div>
-              <div className="rk-detail-row"><span>Status</span><b style={{ color: "var(--rk-rose-deep)" }}>✓ Confirmed</b></div>
-            </div>
-          </div>
-          <div className="rk-note">💵 Remaining balance is due in cash on the day of your appointment.</div>
-          <div className="rk-email-foot">
-            <div className="rk-email-foot-love">With love, Roko</div>
-            <div className="rk-email-foot-ig">@makeupbyroko_</div>
-          </div>
-        </div>
-      );
+    case 2: // Deposits & payments, the real Zelle flow
+      return <RokoDepositFlow />;
+    default: // Automation, the real confirmation email
+      return <RokoConfirmationEmail />;
   }
 }
 
-/* Live availability calendar — the real request flow: the client picks a DATE
+/* Live availability calendar, the real request flow: the client picks a DATE
    only; Roko confirms the time. Emerald = open, amber = filling, red = booked. */
 function RokoCalendar() {
+  const reduce = useReducedMotion();
   const blanks = 1; // June 1 sits on Monday
   const days = Array.from({ length: 30 }, (_, i) => i + 1);
   const klass = (d: number) => {
@@ -968,7 +923,13 @@ function RokoCalendar() {
     return "rk-day rk-day--open";
   };
   return (
-    <div className="rk-card">
+    <motion.div
+      className="rk-card"
+      initial={reduce ? false : { opacity: 0, y: 16 }}
+      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.5 }}
+      transition={{ duration: 0.45, ease }}
+    >
       <div className="rk-cal-head">
         <span className="rk-cal-nav" aria-hidden>‹</span>
         <span className="rk-serif rk-cal-title">June 2026</span>
@@ -987,10 +948,17 @@ function RokoCalendar() {
           const c = klass(d);
           const dot = c.includes("--open") || c.includes("--fill");
           return (
-            <span key={d} className={c}>
+            <motion.span
+              key={d}
+              className={c}
+              initial={reduce || d !== 14 ? false : { backgroundColor: "#ffffff", color: "#8a8a8a", scale: 0.94 }}
+              whileInView={reduce || d !== 14 ? undefined : { backgroundColor: "#111111", color: "#ffffff", scale: [0.94, 1.08, 1] }}
+              viewport={{ once: false, amount: 0.5 }}
+              transition={{ duration: 0.38, delay: 0.42, ease }}
+            >
               {d}
               {dot && <i aria-hidden />}
-            </span>
+            </motion.span>
           );
         })}
       </div>
@@ -1000,45 +968,206 @@ function RokoCalendar() {
         <span><i style={{ background: "#FCA5A5" }} aria-hidden />Booked</span>
         <span><i className="sq" aria-hidden />Selected</span>
       </div>
-      <div className="rk-req">
+      <motion.div
+        className="rk-req"
+        initial={reduce ? false : { opacity: 0, y: 12 }}
+        whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.5 }}
+        transition={{ duration: 0.38, delay: 0.78, ease }}
+      >
         <span>Requested date</span>
         <b>Saturday, June 14</b>
-      </div>
+      </motion.div>
       <div className="rk-confirmrow">
         <span className="rk-confirmchip"><span className="rk-check" style={{ width: 15, height: 15, fontSize: "0.55rem" }} aria-hidden>✓</span> Time confirmed by Roko</span>
-        <span className="rk-confirmcap">You request the date — Roko confirms your exact time within 24–48 hrs.</span>
+        <span className="rk-confirmcap">You request the date, Roko confirms your exact time within 24–48 hrs.</span>
       </div>
-      <button type="button" className="rk-btn" tabIndex={-1}>Request this date</button>
+      <motion.button
+        type="button"
+        className="rk-btn"
+        tabIndex={-1}
+        initial={false}
+        whileInView={reduce ? undefined : { scale: [1, 0.97, 1] }}
+        viewport={{ once: false, amount: 0.5 }}
+        transition={{ duration: 0.28, delay: 1.15, ease }}
+      >
+        Request this date
+      </motion.button>
+    </motion.div>
+  );
+}
+
+function RokoDepositFlow() {
+  const reduce = useReducedMotion();
+  const [paid, setPaid] = useState(Boolean(reduce));
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const replay = () => {
+    if (timer.current) clearTimeout(timer.current);
+    if (reduce) {
+      setPaid(true);
+      return;
+    }
+    setPaid(false);
+    timer.current = setTimeout(() => setPaid(true), 900);
+  };
+
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
+
+  return (
+    <motion.div
+      style={{ display: "grid", gap: "0.9rem" }}
+      viewport={{ once: false, amount: 0.5 }}
+      onViewportEnter={replay}
+    >
+      <div className="rk-card">
+        <div className="rk-row">
+          <span className="rk-eyebrow">Deposit</span>
+          <span className="rk-mini">{paid ? "Verified" : "Action required"}</span>
+        </div>
+        <h4 className="rk-serif" style={{ fontSize: "1.65rem", color: "var(--rk-rose-deep)", margin: "0.6rem 0 0.6rem" }}>Deposit to Book</h4>
+        <div className="rk-receipt-row"><span>Bridal Trial</span><b>$500.00</b></div>
+        <div className="rk-receipt-row"><span>Deposit (held)</span><b>$250.00</b></div>
+        <div className="rk-receipt-total"><span>{paid ? "Paid · Zelle" : "Due now · Zelle"}</span><b>$250.00</b></div>
+        <AnimatePresence mode="wait">
+          {!paid ? (
+            <motion.div
+              key="zelle-due"
+              className="rk-zelle"
+              initial={reduce ? false : { opacity: 1 }}
+              exit={reduce ? undefined : { opacity: 0, y: -6 }}
+              transition={{ duration: 0.22, ease }}
+            >
+              <div className="rk-zelle-row">
+                <div>
+                  <div className="rk-zelle-to">Zelle to</div>
+                  <div className="rk-zelle-name">Ruqia M.</div>
+                </div>
+                <div className="rk-zelle-num">(•••) •••-••97</div>
+              </div>
+              <motion.button
+                type="button"
+                className="rk-btn-rose"
+                tabIndex={-1}
+                animate={reduce ? undefined : { scale: [1, 0.97, 1] }}
+                transition={{ duration: 0.28, delay: 0.48, ease }}
+              >
+                <span aria-hidden>⤒</span> Upload Zelle screenshot
+              </motion.button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="zelle-paid"
+              className="rk-paid"
+              initial={reduce ? false : { opacity: 0, y: 8 }}
+              animate={reduce ? undefined : { opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0 }}
+              transition={{ duration: 0.32, ease }}
+            >
+              <motion.span
+                className="rk-check"
+                style={{ width: 22, height: 22, fontSize: "0.72rem" }}
+                aria-hidden
+                initial={reduce ? false : { opacity: 0, scale: 0.65 }}
+                animate={reduce ? undefined : { opacity: 1, scale: 1 }}
+                transition={{ duration: 0.28, delay: 0.08, ease }}
+              >
+                ✓
+              </motion.span>
+              <div>
+                <div style={{ fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--rk-muted)" }}>Deposit paid · $250.00 · Zelle</div>
+                <div className="rk-paid-val">Date secured</div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <p style={{ marginTop: "0.7rem", fontSize: "0.72rem", color: "var(--rk-muted)" }}>Remaining balance due in cash on the day.</p>
+      </div>
+    </motion.div>
+  );
+}
+
+function RokoConfirmationEmail() {
+  const reduce = useReducedMotion();
+  const rowMotion = (delay: number) => ({
+    initial: reduce ? false : { opacity: 0, y: 8 },
+    whileInView: reduce ? undefined : { opacity: 1, y: 0 },
+    viewport: { once: false, amount: 0.5 },
+    transition: { duration: 0.32, delay, ease },
+  });
+
+  return (
+    <div className="rk-card rk-email">
+      <div className="rk-email-wm">Makeup by Roko</div>
+      <motion.div
+        className="rk-email-circle"
+        aria-hidden
+        initial={reduce ? false : { opacity: 0, scale: 0.72 }}
+        whileInView={reduce ? undefined : { opacity: 1, scale: [0.72, 1.08, 1] }}
+        viewport={{ once: false, amount: 0.5 }}
+        transition={{ duration: 0.42, ease }}
+      >
+        ✓
+      </motion.div>
+      <h4 className="rk-email-h">
+        You&rsquo;re <em>Confirmed!</em>
+      </h4>
+      <div className="rk-email-sub">Can&rsquo;t wait to see you ✦</div>
+      <p className="rk-email-body">Hey Priya! Your Bridal Trial appointment on Saturday, June 14 at 10:30 AM is officially confirmed.</p>
+      <div className="rk-email-card">
+        <span className="rk-email-label">Appointment details</span>
+        <div style={{ marginTop: "0.6rem" }}>
+          <motion.div className="rk-detail-row" {...rowMotion(0.12)}><span>Service</span><b>Bridal Trial</b></motion.div>
+          <motion.div className="rk-detail-row" {...rowMotion(0.2)}><span>Date</span><b>Saturday, June 14</b></motion.div>
+          <motion.div className="rk-detail-row" {...rowMotion(0.28)}><span>Time</span><b>10:30 AM</b></motion.div>
+          <motion.div className="rk-detail-row" {...rowMotion(0.36)}><span>Status</span><b style={{ color: "var(--rk-rose-deep)" }}>✓ Confirmed</b></motion.div>
+        </div>
+      </div>
+      <div className="rk-note">Remaining balance is due in cash on the day of your appointment.</div>
+      <div className="rk-email-foot">
+        <div className="rk-email-foot-love">With love, Roko</div>
+        <div className="rk-email-foot-ig">@makeupbyroko_</div>
+      </div>
     </div>
   );
 }
 
-/* Mobile mockup — full iPhone, the real mobile-first service menu. */
+/* Mobile mockup, full iPhone, the real mobile-first service menu. */
 function PhoneMock() {
+  const reduce = useReducedMotion();
   return (
-    <div className="rk-phone" aria-hidden>
-      <div className="rk-phone-screen">
-        <div className="rk-phone-status">
-          <span>9:41</span>
-          <span className="rk-phone-wm-top">MAKEUP BY ROKO</span>
-        </div>
-        <div className="rk-phone-body">
-          <span className="rk-eyebrow" style={{ fontSize: "0.52rem" }}>Choose your service</span>
-          <div className="rk-phone-list">
-            {ROKO_TIERS.map((t) => (
-              <div className="rk-phone-tier" key={t.name}>
-                <b>{t.name}</b>
-                <span>
-                  {t.price}
-                  <em>{t.dep}</em>
-                </span>
-              </div>
-            ))}
+    <motion.div
+      className="rk-phone-float"
+      aria-hidden
+      animate={reduce ? undefined : { y: [0, -6, 0] }}
+      transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <div className="rk-phone">
+        <div className="rk-phone-screen">
+          <div className="rk-phone-status">
+            <span>9:41</span>
+            <span className="rk-phone-wm-top">MAKEUP BY ROKO</span>
           </div>
-          <div className="rk-phone-cta">Request your date</div>
+          <div className="rk-phone-body">
+            <span className="rk-eyebrow" style={{ fontSize: "0.52rem" }}>Choose your service</span>
+            <div className="rk-phone-list">
+              {ROKO_TIERS.map((t) => (
+                <div className="rk-phone-tier" key={t.name}>
+                  <b>{t.name}</b>
+                  <span>
+                    {t.price}
+                    <em>{t.dep}</em>
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="rk-phone-cta">Request your date</div>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -1264,7 +1393,7 @@ function EyeLaser() {
             <line x1={40.5} y1={11} x2={44.5} y2={7.5} />
           </g>
 
-          {/* open eyeball — vertical aperture follows `lid` */}
+          {/* open eyeball, vertical aperture follows `lid` */}
           <g style={{ transform: `scaleY(${lid})`, transformBox: "fill-box", transformOrigin: "center", transition: "transform 0.13s ease" }}>
             <g clipPath="url(#eyeClip)">
               <path d="M3,16 Q24,3 45,16 Q24,29 3,16 Z" fill="#f4f4f2" opacity={0.94} />
@@ -1289,7 +1418,7 @@ function EyeLaser() {
   );
 }
 
-/* ── Glitch dissolve — an OMBRE gradient (old color carried into the new) with
+/* Glitch dissolve, an OMBRE gradient (old color carried into the new) with
    scattered `top`-colored pixels raining over it, thinning out as it descends so
    the glitch bleeds into the next section. Deterministic seeds keep it SSR-stable. ── */
 function mulberry32(seed: number) {
@@ -1324,7 +1453,7 @@ function GlitchBand({ top, bottom, seedBase }: { top: string; bottom: string; se
   const strips = Array.from({ length: N }, (_, i) => {
     const t = i / (N - 1);
     // Eased ramp (exp < 1) keeps `top`-pixels dense longer, so they bleed far
-    // down before dissolving — combined with the ombre this reads as carry-over.
+    // down before dissolving. Combined with the ombre this reads as carry-over.
     let cov = Math.pow(1 - t, 0.8);
     cov += (rand() - 0.5) * 0.16;
     cov = Math.max(0, Math.min(1, cov));
