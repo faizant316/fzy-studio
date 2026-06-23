@@ -47,7 +47,7 @@ const projects: Project[] = [
     year: "2025",
     quote: "It took my whole business out of my DMs and built something that runs itself.",
     services: ["UI/UX design", "Booking & automation", "Full-stack development"],
-    url: "https://makeupbyroko.vercel.app",
+    url: "https://makeupby-roko.vercel.app",
     detail: {
       projectType: ["Booking platform", "Website", "Automation"],
       tech: ["Next.js", "Supabase", "Stripe", "Automated email"],
@@ -614,6 +614,30 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
               position: relative; overflow: hidden; padding: clamp(1.75rem, 4vw, 3.5rem);
               background: radial-gradient(85% 60% at 90% 0%, rgba(212,160,176,0.16) 0%, rgba(212,160,176,0) 60%), var(--rk-surface);
             }
+            .rk-preview { background: #080607; }
+            .rk-preview .rk-bar { background: #0f0d0d; border-bottom-color: rgba(255,255,255,0.08); }
+            .rk-preview .rk-url { background: rgba(255,255,255,0.04); border-color: rgba(212,160,176,0.25); color: rgba(255,255,255,0.66); }
+            .rk-site-shot { position: relative; min-height: clamp(430px, 58vw, 720px); overflow: hidden; background: #080607; color: #F5F0EB; }
+            .rk-site-nav {
+              height: 50px; display: grid; grid-template-columns: 1fr repeat(4, auto) 1fr; align-items: center; gap: clamp(0.85rem, 2vw, 1.75rem);
+              padding: 0 clamp(1rem, 2.5vw, 2rem); border-bottom: 1px solid rgba(255,255,255,0.07);
+              background: rgba(10,8,8,0.76); font-size: 0.72rem; color: rgba(255,255,255,0.52);
+            }
+            .rk-site-logo { justify-self: start; font-family: var(--font-cormorant), serif; font-weight: 600; letter-spacing: 0.16em; color: #fff; font-size: 1.05rem; }
+            .rk-site-nav b { justify-self: end; border: 1px solid rgba(255,255,255,0.14); padding: 0.5rem 0.9rem; font-size: 0.64rem; color: rgba(255,255,255,0.68); font-weight: 600; }
+            .rk-site-hero { position: absolute; inset: 50px 0 0; display: grid; grid-template-columns: 0.95fr 1.05fr; min-height: 0; }
+            .rk-site-copy { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding: clamp(1.5rem, 5vw, 4.75rem); max-width: 620px; }
+            .rk-site-name { display: block; font-family: var(--font-cormorant), serif; font-size: clamp(3rem, 7.4vw, 6rem); font-weight: 500; line-height: 0.92; letter-spacing: -0.02em; color: #F5F0EB; }
+            .rk-site-name--pink { color: var(--rk-rose); font-style: italic; }
+            .rk-site-meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; margin-top: 1.2rem; color: rgba(255,255,255,0.75); font-size: 0.78rem; letter-spacing: 0.06em; }
+            .rk-site-copy p { max-width: 34ch; margin-top: 1.3rem; padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.55); line-height: 1.7; font-size: 0.9rem; }
+            .rk-site-stats { display: flex; gap: 1.6rem; margin-top: 1.4rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.58rem; }
+            .rk-site-stats b { display: block; color: #fff; font-family: var(--font-cormorant), serif; font-size: 1.55rem; font-weight: 500; letter-spacing: 0; line-height: 1; text-transform: none; }
+            .rk-site-media { position: relative; min-width: 0; overflow: hidden; }
+            .rk-site-media img { width: 100%; height: 100%; object-fit: cover; object-position: center; filter: saturate(0) brightness(0.68) contrast(1.12); transform: scale(1.03); }
+            .rk-site-media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, #080607 0%, rgba(8,6,7,0.72) 24%, rgba(8,6,7,0.14) 58%, rgba(8,6,7,0) 100%); }
+            .rk-site-media::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(8,6,7,0.62), rgba(8,6,7,0) 36%); }
+            .rk-site-glow { position: absolute; right: 12%; top: 18%; width: 42%; height: 44%; border-radius: 50%; background: rgba(212,160,176,0.16); filter: blur(46px); z-index: 2; mix-blend-mode: screen; }
             .rk-eyebrow { font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rk-rose-deep); font-weight: 500; }
             .rk-headline { font-size: clamp(2.6rem, 6vw, 5rem); line-height: 0.96; color: var(--rk-ink); margin: 0.8rem 0 0; letter-spacing: -0.01em; }
             .rk-headline em { font-style: italic; color: var(--rk-plum-text); }
@@ -774,62 +798,127 @@ const ROKO_TIERS = [
   { name: "Full Day Service", price: "$1,700", dep: "$850 deposit" },
 ];
 
+const ROKO_ASSETS = {
+  heroPoster: "https://makeupby-roko.vercel.app/hero-poster.jpg",
+  roko: "https://makeupby-roko.vercel.app/roko_pic.png",
+  bridal: "https://makeupby-roko.vercel.app/bridal_trial.png",
+};
+
+const rkViewport = { once: false, amount: 0.45 };
+
+function useReplaySequence(length: number, interval = 850) {
+  const reduce = useReducedMotion();
+  const [step, setStep] = useState(reduce ? length - 1 : 0);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clear = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  };
+
+  const replay = () => {
+    clear();
+    if (reduce) {
+      setStep(length - 1);
+      return;
+    }
+    setStep(0);
+    for (let i = 1; i < length; i++) {
+      timers.current.push(setTimeout(() => setStep(i), i * interval));
+    }
+  };
+
+  useEffect(() => () => clear(), []);
+
+  return { step, reduce, replay };
+}
+
 /* The "preview pane", a framed mini-window in Makeup by Roko's OWN brand world
    (dusty rose + plum + black on white) so the case study reads like the product. */
 function RokoPreview() {
+  const reduce = useReducedMotion();
+  const heroLines = ["Roqia", "Moshref"];
+
   return (
-    <div className="rk rk-frame">
+    <motion.div
+      className="rk rk-frame rk-preview"
+      initial={reduce ? false : { opacity: 0, y: 20 }}
+      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.35 }}
+      transition={{ duration: 0.7, ease }}
+    >
       <div className="rk-bar">
         <span className="rk-dots" aria-hidden><i /><i /><i /></span>
-        <span className="rk-url">makeupbyroko.vercel.app</span>
+        <span className="rk-url">makeupby-roko.vercel.app</span>
       </div>
-      <div className="rk-canvas">
-        <span className="rk-eyebrow">Luxury makeup artistry</span>
-        <h3 className="rk-serif rk-headline">
-          Beauty,
-          <br />
-          <em>Elevated.</em>
-        </h3>
-        <p className="rk-lead">Bridal &amp; editorial makeup, pick your date, choose your service, reserve with a deposit.</p>
-
-        <div className="rk-grid">
-          <div className="rk-card">
-            <span className="rk-aura" aria-hidden />
-            <div className="rk-row">
-              <span className="rk-eyebrow">Choose your service</span>
-              <span className="rk-mini">Roqia Moshref</span>
-            </div>
-            <div style={{ marginTop: "0.6rem" }}>
-              {ROKO_TIERS.map((t) => (
-                <div className="rk-tier" key={t.name}>
-                  <span className="rk-serif rk-tier-name">{t.name}</span>
-                  <span style={{ textAlign: "right" }}>
-                    <span className="rk-serif rk-tier-price">{t.price}</span>
-                    <span className="rk-tier-dep" style={{ display: "block" }}>{t.dep}</span>
-                  </span>
-                </div>
+      <div className="rk-site-shot">
+        <div className="rk-site-nav">
+          <span className="rk-site-logo">MAKEUP BY ROKO</span>
+          <span>Home</span>
+          <span>About</span>
+          <span>Services</span>
+          <span>Reviews</span>
+          <b>@MAKEUPBYROKO_</b>
+        </div>
+        <div className="rk-site-hero">
+          <div className="rk-site-copy">
+            <div>
+              {heroLines.map((line, i) => (
+                <motion.span
+                  key={line}
+                  className={`rk-site-name ${i === 1 ? "rk-site-name--pink" : ""}`}
+                  initial={reduce ? false : { opacity: 0, y: 22 }}
+                  whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.62, delay: 0.12 + i * 0.12, ease }}
+                >
+                  {line}
+                </motion.span>
               ))}
             </div>
-            <button type="button" className="rk-btn" tabIndex={-1}>Reserve &amp; pay deposit</button>
+            <motion.div
+              className="rk-site-meta"
+              initial={reduce ? false : { opacity: 0, y: 10 }}
+              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.5, delay: 0.42, ease }}
+            >
+              <span>@MAKEUPBYROKO_</span>
+              <span>Bay Area, California</span>
+              <span>Traveling Artist</span>
+            </motion.div>
+            <motion.p
+              initial={reduce ? false : { opacity: 0, y: 10 }}
+              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.5, delay: 0.55, ease }}
+            >
+              Every service is crafted for each client, from everyday glow to wedding day.
+            </motion.p>
+            <motion.div
+              className="rk-site-stats"
+              initial={reduce ? false : { opacity: 0, y: 10 }}
+              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.5, delay: 0.68, ease }}
+            >
+              <span><b>17+</b> years</span>
+              <span><b>1000+</b> clients</span>
+            </motion.div>
           </div>
-
-          <div className="rk-col">
-            <span className="rk-chip"><span className="rk-check" aria-hidden>✓</span> Booking confirmed</span>
-            <div className="rk-badge">
-              <span className="rk-badge-icon" aria-hidden>✦</span>
-              <div>
-                <b>$250.00</b>
-                <span>Zelle · deposit paid</span>
-              </div>
-            </div>
-            <div className="rk-review">
-              <div className="rk-stars" aria-hidden>★★★★★</div>
-              <p className="rk-serif rk-quote">&ldquo;Flawless, and it booked itself.&rdquo;</p>
-            </div>
-          </div>
+          <motion.div
+            className="rk-site-media"
+            initial={reduce ? false : { opacity: 0, scale: 1.04 }}
+            whileInView={reduce ? undefined : { opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.85, delay: 0.18, ease }}
+          >
+            <img src={ROKO_ASSETS.heroPoster} alt="" />
+            <span className="rk-site-glow" aria-hidden />
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -870,36 +959,7 @@ const DM_ROWS = [
 function rokoFragment(index: number) {
   switch (index) {
     case 0: // The problem, scattered, "alive" DMs
-      return (
-        <div>
-          {DM_ROWS.map((r) => (
-            <div className="rk-msg" key={r.name}>
-              <span className="rk-msg-av" aria-hidden />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-                  <b>{r.name}</b>
-                  {r.collision && <span className="rk-collide">double-booked?</span>}
-                </div>
-                <p>{r.msg}</p>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.4rem" }}>
-                <span className="rk-msg-time">{r.time}</span>
-                {r.unread && <span className="rk-msg-dot" aria-hidden />}
-              </div>
-            </div>
-          ))}
-          <div className="rk-msg">
-            <span className="rk-msg-av" aria-hidden />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <b>Aaliyah</b>
-              <p style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
-                typing
-                <span className="rk-typing" aria-hidden><i /><i /><i /></span>
-              </p>
-            </div>
-          </div>
-        </div>
-      );
+      return <RokoProblemFlow />;
     case 1: // Booking & scheduling, live availability calendar
       return <RokoCalendar />;
     case 2: // Deposits & payments, the real Zelle flow
@@ -907,6 +967,62 @@ function rokoFragment(index: number) {
     default: // Automation, the real confirmation email
       return <RokoConfirmationEmail />;
   }
+}
+
+function RokoProblemFlow() {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      initial={reduce ? false : "hidden"}
+      whileInView={reduce ? undefined : "show"}
+      viewport={rkViewport}
+      variants={{
+        hidden: {},
+        show: { transition: { staggerChildren: 0.1 } },
+      }}
+    >
+      {DM_ROWS.map((r, i) => (
+        <motion.div
+          className="rk-msg"
+          key={r.name}
+          variants={{
+            hidden: { opacity: 0, x: i % 2 ? 14 : -14 },
+            show: { opacity: 1, x: 0 },
+          }}
+          transition={{ duration: 0.38, ease }}
+        >
+          <span className="rk-msg-av" aria-hidden />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+              <b>{r.name}</b>
+              {r.collision && <span className="rk-collide">double-booked?</span>}
+            </div>
+            <p>{r.msg}</p>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.4rem" }}>
+            <span className="rk-msg-time">{r.time}</span>
+            {r.unread && <span className="rk-msg-dot" aria-hidden />}
+          </div>
+        </motion.div>
+      ))}
+      <motion.div
+        className="rk-msg"
+        initial={reduce ? false : { opacity: 0, y: 10 }}
+        whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+        viewport={rkViewport}
+        transition={{ duration: 0.36, delay: 0.5, ease }}
+      >
+        <span className="rk-msg-av" aria-hidden />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <b>Aaliyah</b>
+          <p style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+            typing
+            <span className="rk-typing" aria-hidden><i /><i /><i /></span>
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
 }
 
 /* Live availability calendar, the real request flow: the client picks a DATE
