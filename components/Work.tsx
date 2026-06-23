@@ -617,27 +617,9 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             .rk-preview { background: #080607; }
             .rk-preview .rk-bar { background: #0f0d0d; border-bottom-color: rgba(255,255,255,0.08); }
             .rk-preview .rk-url { background: rgba(255,255,255,0.04); border-color: rgba(212,160,176,0.25); color: rgba(255,255,255,0.66); }
-            .rk-site-shot { position: relative; min-height: clamp(430px, 58vw, 720px); overflow: hidden; background: #080607; color: #F5F0EB; }
-            .rk-site-nav {
-              height: 50px; display: grid; grid-template-columns: 1fr repeat(4, auto) 1fr; align-items: center; gap: clamp(0.85rem, 2vw, 1.75rem);
-              padding: 0 clamp(1rem, 2.5vw, 2rem); border-bottom: 1px solid rgba(255,255,255,0.07);
-              background: rgba(10,8,8,0.76); font-size: 0.72rem; color: rgba(255,255,255,0.52);
-            }
-            .rk-site-logo { justify-self: start; font-family: var(--font-cormorant), serif; font-weight: 600; letter-spacing: 0.16em; color: #fff; font-size: 1.05rem; }
-            .rk-site-nav b { justify-self: end; border: 1px solid rgba(255,255,255,0.14); padding: 0.5rem 0.9rem; font-size: 0.64rem; color: rgba(255,255,255,0.68); font-weight: 600; }
-            .rk-site-hero { position: absolute; inset: 50px 0 0; display: grid; grid-template-columns: 0.95fr 1.05fr; min-height: 0; }
-            .rk-site-copy { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding: clamp(1.5rem, 5vw, 4.75rem); max-width: 620px; }
-            .rk-site-name { display: block; font-family: var(--font-cormorant), serif; font-size: clamp(3rem, 7.4vw, 6rem); font-weight: 500; line-height: 0.92; letter-spacing: -0.02em; color: #F5F0EB; }
-            .rk-site-name--pink { color: var(--rk-rose); font-style: italic; }
-            .rk-site-meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; margin-top: 1.2rem; color: rgba(255,255,255,0.75); font-size: 0.78rem; letter-spacing: 0.06em; }
-            .rk-site-copy p { max-width: 34ch; margin-top: 1.3rem; padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.55); line-height: 1.7; font-size: 0.9rem; }
-            .rk-site-stats { display: flex; gap: 1.6rem; margin-top: 1.4rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.58rem; }
-            .rk-site-stats b { display: block; color: #fff; font-family: var(--font-cormorant), serif; font-size: 1.55rem; font-weight: 500; letter-spacing: 0; line-height: 1; text-transform: none; }
-            .rk-site-media { position: relative; min-width: 0; overflow: hidden; }
-            .rk-site-media img { width: 100%; height: 100%; object-fit: cover; object-position: center; filter: saturate(0) brightness(0.68) contrast(1.12); transform: scale(1.03); }
-            .rk-site-media::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, #080607 0%, rgba(8,6,7,0.72) 24%, rgba(8,6,7,0.14) 58%, rgba(8,6,7,0) 100%); }
-            .rk-site-media::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(8,6,7,0.62), rgba(8,6,7,0) 36%); }
-            .rk-site-glow { position: absolute; right: 12%; top: 18%; width: 42%; height: 44%; border-radius: 50%; background: rgba(212,160,176,0.16); filter: blur(46px); z-index: 2; mix-blend-mode: screen; }
+            .rk-hero-shot { position: relative; min-height: clamp(360px, 50vw, 720px); overflow: hidden; background: #080607; }
+            .rk-hero-shot-img { display: block; width: 100%; height: 100%; min-height: clamp(360px, 50vw, 720px); object-fit: cover; object-position: center top; }
+            .rk-hero-shot::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), inset 0 -80px 100px rgba(0,0,0,0.22); }
             .rk-eyebrow { font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rk-rose-deep); font-weight: 500; }
             .rk-headline { font-size: clamp(2.6rem, 6vw, 5rem); line-height: 0.96; color: var(--rk-ink); margin: 0.8rem 0 0; letter-spacing: -0.01em; }
             .rk-headline em { font-style: italic; color: var(--rk-plum-text); }
@@ -715,10 +697,22 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             @keyframes rk-type { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-2px); } }
             @media (prefers-reduced-motion: reduce) { .rk-typing i { animation: none; } }
             .rk-collide { font-size: 0.6rem; color: #D98A8A; border: 1px solid #F2D4D4; background: #FDF4F4; border-radius: 100px; padding: 0.1rem 0.5rem; white-space: nowrap; }
+            .rk-chaos-stack { margin-top: 0.7rem; overflow: hidden; border: 1px solid var(--rk-border); border-radius: 14px; background: rgba(255,255,255,0.72); box-shadow: 0 10px 34px rgba(17,17,17,0.06); }
+            .rk-live-label { display: block; padding: 0.58rem 0.82rem; border-bottom: 1px solid var(--rk-border-2); color: var(--rk-rose-deep); font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; }
+            .rk-chaos-msg { display: grid; grid-template-columns: 34px 1fr; gap: 0.72rem; align-items: start; padding: 0.72rem 0.82rem; border-bottom: 1px solid var(--rk-border-2); }
+            .rk-chaos-msg:last-child { border-bottom: none; }
+            .rk-chaos-msg b { display: block; font-size: 0.82rem; color: var(--rk-ink); }
+            .rk-chaos-msg p { min-height: 1.1rem; margin: 0.12rem 0 0; color: var(--rk-muted); font-size: 0.76rem; line-height: 1.45; }
+            .rk-chaos-caret { display: inline-block; width: 1px; height: 0.85em; margin-left: 2px; background: var(--rk-rose-deep); transform: translateY(1px); }
+            .rk-chaos-msg .rk-typing { margin-left: 0.34rem; }
             /* booking confirm-by-Roko row */
             .rk-confirmrow { display: flex; align-items: center; gap: 0.7rem; margin-top: 1.1rem; }
             .rk-confirmchip { display: inline-flex; align-items: center; gap: 0.45rem; background: #FDF8FA; border: 1px solid var(--rk-border); border-radius: 100px; padding: 0.45rem 0.85rem; font-size: 0.76rem; color: var(--rk-plum-text); white-space: nowrap; flex-shrink: 0; }
             .rk-confirmcap { font-size: 0.72rem; line-height: 1.4; color: var(--rk-muted); }
+            .rk-request-sent { display: grid; grid-template-columns: auto 1fr; gap: 0.72rem; align-items: center; margin-top: 0.82rem; padding: 0.72rem 0.85rem; border: 1px solid #E8C4D0; border-radius: 13px; background: #FDF8FA; }
+            .rk-request-check { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; color: #fff; background: var(--rk-rose-deep); font-size: 0.75rem; }
+            .rk-request-sent b { display: block; color: var(--rk-ink); font-size: 0.8rem; }
+            .rk-request-sent p { margin: 0.1rem 0 0; color: var(--rk-muted); font-size: 0.7rem; line-height: 1.42; }
             /* Zelle deposit */
             .rk-zelle { background: #FDF8FA; border: 1px solid #F0E0E9; border-radius: 12px; padding: 0.85rem 1rem; margin-top: 0.9rem; }
             .rk-zelle-row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
@@ -749,7 +743,7 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             /* phone mock, full iPhone, side by side with the booking calendar */
             .rk-bookrow { display: block; }
             @media (min-width: 1025px) { .rk-bookrow { display: flex; align-items: center; gap: clamp(1.4rem, 2.4vw, 2.75rem); overflow: visible; } .rk-bookrow > .rk-tile { flex: 1; min-width: 0; } }
-            .rk-phone-float { flex-shrink: 0; width: clamp(190px, 19vw, 248px); margin: 0.6rem 0.4rem 0.6rem 0; }
+            .rk-phone-float { flex-shrink: 0; width: clamp(210px, 15vw, 270px); margin: 0.6rem clamp(0.9rem, 1.6vw, 1.5rem) 0.6rem 0; }
             .rk-phone {
               position: relative; width: 100%; transform: rotate(-6deg); border-radius: 18% / 8.4%;
               background: linear-gradient(145deg, #28282c 0%, #0d0d10 44%, #050506 100%);
@@ -757,20 +751,59 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             }
             .rk-phone::before { content: ""; position: absolute; left: -3px; top: 22%; width: 3px; height: 15%; border-radius: 3px 0 0 3px; background: linear-gradient(#303036, #0b0b0d); box-shadow: 0 42px 0 #111116; }
             .rk-phone::after { content: ""; position: absolute; right: -3px; top: 30%; width: 3px; height: 19%; border-radius: 0 3px 3px 0; background: linear-gradient(#303036, #0b0b0d); }
-            .rk-phone-screen { position: relative; aspect-ratio: 390 / 844; background: var(--rk-surface); border-radius: 16.5% / 7.4%; overflow: hidden; display: flex; flex-direction: column; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22); }
+            .rk-phone-screen { position: relative; aspect-ratio: 390 / 844; background: var(--rk-surface); border-radius: 16.5% / 7.4%; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22); }
             .rk-phone-screen::before { content: ""; position: absolute; z-index: 4; top: 10px; left: 50%; width: 31%; height: 21px; transform: translateX(-50%); border-radius: 999px; background: #09090a; box-shadow: inset 0 -1px 1px rgba(255,255,255,0.09), 0 1px 1px rgba(255,255,255,0.12); }
             .rk-phone-screen::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(116deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 18%, rgba(255,255,255,0) 39%); mix-blend-mode: screen; }
-            .rk-phone-status { display: flex; align-items: center; justify-content: space-between; padding: 0.74rem 1.1rem 0.34rem; font-size: 0.5rem; color: var(--rk-ink); }
-            .rk-phone-wm-top { letter-spacing: 0.16em; color: var(--rk-rose-deep); max-width: 44%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-            .rk-phone-body { flex: 1; padding: 0.6rem 1rem 1rem; display: flex; flex-direction: column; }
+            .rk-phone-screen-inner, .rk-phone-stage { position: absolute; inset: 0; }
+            .rk-phone-stage { display: flex; flex-direction: column; padding: 2.55rem 1rem 1rem; }
+            .rk-phone-home { color: #fff; background: radial-gradient(80% 52% at 28% 20%, rgba(212,160,176,0.4), transparent 64%), linear-gradient(158deg, #161116 0%, #251826 48%, #080607 100%); }
+            .rk-phone-home-time { font-family: var(--font-cormorant), serif; font-size: 1.8rem; line-height: 1; }
+            .rk-app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.72rem 0.58rem; margin-top: 1rem; }
+            .rk-app { position: relative; display: grid; justify-items: center; gap: 0.22rem; color: rgba(255,255,255,0.8); font-size: 0.45rem; }
+            .rk-app i { width: 32px; height: 32px; border-radius: 9px; display: block; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28); }
+            .rk-phone-dock { position: relative; display: flex; justify-content: center; gap: 0.65rem; margin-top: auto; padding: 0.55rem; border-radius: 18px; background: rgba(255,255,255,0.13); backdrop-filter: blur(8px); }
+            .rk-app--safari i { border-radius: 50%; background: radial-gradient(circle at 50% 50%, #fff 0 18%, #D4A0B0 19% 34%, #111 35% 38%, #FDF8FA 39% 100%); }
+            .rk-phone-tap { position: absolute; left: 50%; bottom: 1.16rem; width: 38px; height: 38px; margin-left: -19px; border: 1px solid rgba(255,255,255,0.8); border-radius: 50%; pointer-events: none; }
+            .rk-phone-safari { background: #F8F4F6; color: var(--rk-ink); }
+            .rk-safari-top { height: 2rem; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #fff; border: 1px solid var(--rk-border-2); font-size: 0.54rem; color: var(--rk-muted); }
+            .rk-phone-load { width: 100%; height: 2px; margin-top: 0.65rem; transform-origin: left; background: var(--rk-rose-deep); border-radius: 999px; }
+            .rk-safari-card { margin-top: 1rem; padding: 0.9rem; border-radius: 14px; background: #fff; border: 1px solid var(--rk-border); box-shadow: 0 12px 24px rgba(17,17,17,0.05); }
+            .rk-safari-mark { display: block; color: var(--rk-rose-deep); font-size: 0.48rem; letter-spacing: 0.16em; }
+            .rk-safari-card b { display: block; margin-top: 0.45rem; font-family: var(--font-cormorant), serif; font-weight: 400; font-size: 1.05rem; line-height: 1.05; }
+            .rk-mini-hero { padding: 0; justify-content: flex-end; overflow: hidden; color: #fff; background: #080607; }
+            .rk-mini-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% top; filter: saturate(0) brightness(0.72); }
+            .rk-mini-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,6,7,0.88) 0%, rgba(8,6,7,0.12) 72%); }
+            .rk-mini-hero-copy { position: relative; z-index: 1; padding: 0 1rem 1.05rem; }
+            .rk-mini-hero-copy span { display: block; font-size: 0.48rem; letter-spacing: 0.16em; color: rgba(255,255,255,0.72); }
+            .rk-mini-hero-copy b { display: block; margin-top: 0.4rem; font-family: var(--font-cormorant), serif; font-weight: 500; font-size: 2rem; line-height: 0.92; }
+            .rk-mini-hero-copy em { color: var(--rk-rose); font-style: italic; }
+            .rk-mini-hero-copy p { margin: 0.55rem 0 0; font-size: 0.58rem; color: rgba(255,255,255,0.66); }
+            .rk-phone-body { background: var(--rk-surface); }
             .rk-phone-list { margin-top: 0.7rem; display: grid; gap: 0.1rem; }
             .rk-phone-tier { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; padding: 0.55rem 0; border-bottom: 1px solid var(--rk-border-2); }
             .rk-phone-tier:last-child { border-bottom: none; }
+            .rk-phone-tier--active { margin: 0 -0.45rem; padding-inline: 0.45rem; border-radius: 10px; background: #fff; box-shadow: 0 8px 18px rgba(17,17,17,0.06); }
             .rk-phone-tier b { font-family: var(--font-cormorant), serif; font-weight: 400; font-size: 0.9rem; color: var(--rk-ink); }
             .rk-phone-tier span { font-family: var(--font-cormorant), serif; font-size: 0.9rem; color: var(--rk-ink); }
             .rk-phone-tier em { display: block; font-style: normal; font-size: 0.52rem; color: var(--rk-rose-deep); text-align: right; }
             .rk-phone-cta { margin-top: auto; text-align: center; font-size: 0.6rem; color: #fff; background: var(--rk-ink); border-radius: 100px; padding: 0.6rem; }
+            .rk-mini-booking { background: #fff; color: var(--rk-ink); }
+            .rk-mini-booking > b { margin-top: 0.28rem; font-family: var(--font-cormorant), serif; font-weight: 400; font-size: 1.45rem; line-height: 1; }
+            .rk-mini-date-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 1.05rem; }
+            .rk-mini-date-grid span { aspect-ratio: 1; display: grid; place-items: center; color: var(--rk-muted); font-size: 0.64rem; border-radius: 5px; background: #FDF8FA; }
+            .rk-mini-date-grid .is-selected { color: #fff; background: var(--rk-ink); }
+            .rk-mini-sent { display: flex; align-items: flex-start; gap: 0.55rem; margin-top: auto; border: 1px solid var(--rk-border); border-radius: 14px; padding: 0.7rem; background: #FDF8FA; }
+            .rk-mini-sent p { margin: 0; color: var(--rk-muted); font-size: 0.58rem; line-height: 1.45; }
+            .rk-mini-sent p b { display: block; color: var(--rk-ink); font-size: 0.66rem; margin-bottom: 0.08rem; }
             @media (max-width: 1024px) { .rk-phone-float { display: none; } }
+            @media (max-width: 760px) {
+              .rk-hero-shot { min-height: clamp(420px, 118vw, 620px); }
+              .rk-hero-shot-img { min-height: clamp(420px, 118vw, 620px); object-position: 45% top; }
+              .rk-confirmrow { align-items: flex-start; flex-direction: column; }
+              .rk-confirmchip { white-space: normal; }
+              .rk-request-sent { grid-template-columns: auto 1fr; }
+              .rk-chaos-msg { grid-template-columns: 30px 1fr; gap: 0.62rem; padding-inline: 0.72rem; }
+            }
           ` }} />
         </motion.div>
       )}
@@ -799,6 +832,7 @@ const ROKO_TIERS = [
 ];
 
 const ROKO_ASSETS = {
+  heroShot: "/roko-hero-screenshot.png",
   heroPoster: "https://makeupby-roko.vercel.app/hero-poster.jpg",
   roko: "https://makeupby-roko.vercel.app/roko_pic.png",
   bridal: "https://makeupby-roko.vercel.app/bridal_trial.png",
@@ -833,11 +867,10 @@ function useReplaySequence(length: number, interval = 850) {
   return { step, reduce, replay };
 }
 
-/* The "preview pane", a framed mini-window in Makeup by Roko's OWN brand world
-   (dusty rose + plum + black on white) so the case study reads like the product. */
+/* The preview pane uses a real current hero capture so the case study leads with
+   the live product instead of a recreated approximation. */
 function RokoPreview() {
   const reduce = useReducedMotion();
-  const heroLines = ["Roqia", "Moshref"];
 
   return (
     <motion.div
@@ -851,72 +884,16 @@ function RokoPreview() {
         <span className="rk-dots" aria-hidden><i /><i /><i /></span>
         <span className="rk-url">makeupby-roko.vercel.app</span>
       </div>
-      <div className="rk-site-shot">
-        <div className="rk-site-nav">
-          <span className="rk-site-logo">MAKEUP BY ROKO</span>
-          <span>Home</span>
-          <span>About</span>
-          <span>Services</span>
-          <span>Reviews</span>
-          <b>@MAKEUPBYROKO_</b>
-        </div>
-        <div className="rk-site-hero">
-          <div className="rk-site-copy">
-            <div>
-              {heroLines.map((line, i) => (
-                <motion.span
-                  key={line}
-                  className={`rk-site-name ${i === 1 ? "rk-site-name--pink" : ""}`}
-                  initial={reduce ? false : { opacity: 0, y: 22 }}
-                  whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{ duration: 0.62, delay: 0.12 + i * 0.12, ease }}
-                >
-                  {line}
-                </motion.span>
-              ))}
-            </div>
-            <motion.div
-              className="rk-site-meta"
-              initial={reduce ? false : { opacity: 0, y: 10 }}
-              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.5, delay: 0.42, ease }}
-            >
-              <span>@MAKEUPBYROKO_</span>
-              <span>Bay Area, California</span>
-              <span>Traveling Artist</span>
-            </motion.div>
-            <motion.p
-              initial={reduce ? false : { opacity: 0, y: 10 }}
-              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.5, delay: 0.55, ease }}
-            >
-              Every service is crafted for each client, from everyday glow to wedding day.
-            </motion.p>
-            <motion.div
-              className="rk-site-stats"
-              initial={reduce ? false : { opacity: 0, y: 10 }}
-              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.5, delay: 0.68, ease }}
-            >
-              <span><b>17+</b> years</span>
-              <span><b>1000+</b> clients</span>
-            </motion.div>
-          </div>
-          <motion.div
-            className="rk-site-media"
-            initial={reduce ? false : { opacity: 0, scale: 1.04 }}
-            whileInView={reduce ? undefined : { opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.85, delay: 0.18, ease }}
-          >
-            <img src={ROKO_ASSETS.heroPoster} alt="" />
-            <span className="rk-site-glow" aria-hidden />
-          </motion.div>
-        </div>
+      <div className="rk-hero-shot">
+        <motion.img
+          src={ROKO_ASSETS.heroShot}
+          alt="Makeup by Roko homepage hero"
+          className="rk-hero-shot-img"
+          initial={reduce ? false : { opacity: 0, scale: 1.015 }}
+          whileInView={reduce ? undefined : { opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.72, ease }}
+        />
       </div>
     </motion.div>
   );
@@ -950,10 +927,16 @@ function RokoTile({ section, index }: { section: { title: string; image?: string
 }
 
 const DM_ROWS = [
-  { name: "Bride · Priya", msg: "hey!! is June 14 still open?? 🤍", time: "2h", unread: true },
-  { name: "Maria K.", msg: "wait what's the deposit again, can I just venmo you?", time: "5h", unread: true },
-  { name: "Unknown", msg: "GIRL your work is unreal 😭 are you free that weekend?", time: "Yesterday", unread: true },
-  { name: "Bride · Sam", msg: "did we say 9 or 10am?? 🥹", time: "Yesterday", collision: true },
+  { name: "Bride · Priya", msg: "hey!! is June 14 still open??", time: "2h", unread: true },
+  { name: "Maria K.", msg: "wait where do I send the Zelle deposit again?", time: "5h", unread: true },
+  { name: "Unknown", msg: "your work is unreal, are you free that weekend?", time: "Yesterday", unread: true },
+  { name: "Bride · Sam", msg: "did we say 9 or 10am??", time: "Yesterday", collision: true },
+];
+
+const CHAOS_TYPERS = [
+  { name: "Aaliyah", msg: "Can you hold June 14 for me? My venue just changed the ready-by plan." },
+  { name: "Leena", msg: "I sent my deposit screenshot, did it come through on your end?" },
+  { name: "Noura", msg: "My sister wants the same weekend too. Is there any opening left?" },
 ];
 
 function rokoFragment(index: number) {
@@ -971,11 +954,51 @@ function rokoFragment(index: number) {
 
 function RokoProblemFlow() {
   const reduce = useReducedMotion();
+  const [typedMessages, setTypedMessages] = useState(() => (
+    reduce ? CHAOS_TYPERS.map((t) => t.msg) : CHAOS_TYPERS.map(() => "")
+  ));
+  const [activeTyper, setActiveTyper] = useState(reduce ? CHAOS_TYPERS.length : 0);
+  const typingTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearTyping = () => {
+    typingTimers.current.forEach(clearTimeout);
+    typingTimers.current = [];
+  };
+
+  const replayTyping = () => {
+    clearTyping();
+    if (reduce) {
+      setTypedMessages(CHAOS_TYPERS.map((t) => t.msg));
+      setActiveTyper(CHAOS_TYPERS.length);
+      return;
+    }
+
+    setTypedMessages(CHAOS_TYPERS.map(() => ""));
+    setActiveTyper(0);
+    CHAOS_TYPERS.forEach((item, index) => {
+      const start = 620 + index * 1180;
+      typingTimers.current.push(setTimeout(() => setActiveTyper(index), start));
+      Array.from(item.msg).forEach((_, charIndex) => {
+        typingTimers.current.push(setTimeout(() => {
+          setTypedMessages((current) => {
+            const next = [...current];
+            next[index] = item.msg.slice(0, charIndex + 1);
+            return next;
+          });
+        }, start + charIndex * 18));
+      });
+    });
+    typingTimers.current.push(setTimeout(() => setActiveTyper(CHAOS_TYPERS.length), 4300));
+  };
+
+  useEffect(() => () => clearTyping(), []);
+
   return (
     <motion.div
       initial={reduce ? false : "hidden"}
       whileInView={reduce ? undefined : "show"}
       viewport={rkViewport}
+      onViewportEnter={replayTyping}
       variants={{
         hidden: {},
         show: { transition: { staggerChildren: 0.1 } },
@@ -1006,20 +1029,41 @@ function RokoProblemFlow() {
         </motion.div>
       ))}
       <motion.div
-        className="rk-msg"
+        className="rk-chaos-stack"
         initial={reduce ? false : { opacity: 0, y: 10 }}
         whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
         viewport={rkViewport}
-        transition={{ duration: 0.36, delay: 0.5, ease }}
+        transition={{ duration: 0.36, delay: 0.44, ease }}
       >
-        <span className="rk-msg-av" aria-hidden />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <b>Aaliyah</b>
-          <p style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
-            typing
-            <span className="rk-typing" aria-hidden><i /><i /><i /></span>
-          </p>
-        </div>
+        <span className="rk-live-label">Still coming in</span>
+        <AnimatePresence>
+          {CHAOS_TYPERS.map((item, index) => {
+            const typed = typedMessages[index];
+            const visible = reduce || typed || activeTyper >= index;
+            const typing = activeTyper === index && typed.length < item.msg.length;
+            if (!visible) return null;
+            return (
+              <motion.div
+                className="rk-chaos-msg"
+                key={item.name}
+                initial={reduce ? false : { opacity: 0, x: -10 }}
+                animate={reduce ? undefined : { opacity: 1, x: 0 }}
+                exit={reduce ? undefined : { opacity: 0 }}
+                transition={{ duration: 0.3, ease }}
+              >
+                <span className="rk-msg-av" aria-hidden />
+                <div>
+                  <b>{item.name}</b>
+                  <p>
+                    {typed}
+                    {typing && <span className="rk-chaos-caret" aria-hidden />}
+                    {typing && <span className="rk-typing" aria-hidden><i /><i /><i /></span>}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   );
@@ -1109,6 +1153,28 @@ function RokoCalendar() {
       >
         Request this date
       </motion.button>
+      <motion.div
+        className="rk-request-sent"
+        initial={reduce ? false : { opacity: 0, y: 12, scale: 0.98 }}
+        whileInView={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: false, amount: 0.5 }}
+        transition={{ duration: 0.38, delay: 1.38, ease }}
+      >
+        <motion.span
+          className="rk-request-check"
+          aria-hidden
+          initial={reduce ? false : { scale: 0.72, opacity: 0 }}
+          whileInView={reduce ? undefined : { scale: [0.72, 1.12, 1], opacity: 1 }}
+          viewport={{ once: false, amount: 0.5 }}
+          transition={{ duration: 0.36, delay: 1.5, ease }}
+        >
+          ✓
+        </motion.span>
+        <div>
+          <b>Request sent to Roko</b>
+          <p>She reviews the preferred date, then confirms the exact time within 24–48 hrs.</p>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -1250,37 +1316,148 @@ function RokoConfirmationEmail() {
   );
 }
 
-/* Mobile mockup, full iPhone, the real mobile-first service menu. */
+function PhoneHomeScreen() {
+  const apps = ["Photos", "Mail", "Calendar", "Camera", "Notes", "Maps"];
+  return (
+    <div className="rk-phone-stage rk-phone-home">
+      <div className="rk-phone-home-time">9:41</div>
+      <div className="rk-app-grid">
+        {apps.map((app, i) => (
+          <span className="rk-app" key={app}>
+            <i style={{ background: i % 2 ? "#F7D8E5" : "#FDF8FA" }} />
+            <b>{app}</b>
+          </span>
+        ))}
+      </div>
+      <div className="rk-phone-dock">
+        <span className="rk-app rk-app--safari">
+          <i />
+          <b>Safari</b>
+        </span>
+        <motion.span
+          className="rk-phone-tap"
+          aria-hidden
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: [0, 1, 0], scale: [0.5, 1, 1.45] }}
+          transition={{ duration: 0.7, delay: 0.2, ease }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function PhoneSafariScreen() {
+  return (
+    <div className="rk-phone-stage rk-phone-safari">
+      <div className="rk-safari-top">
+        <span>makeupby-roko.vercel.app</span>
+      </div>
+      <motion.div
+        className="rk-phone-load"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.62, ease }}
+      />
+      <div className="rk-safari-card">
+        <span className="rk-safari-mark">MAKEUP BY ROKO</span>
+        <b>Loading bridal booking platform</b>
+      </div>
+    </div>
+  );
+}
+
+function PhoneHeroScreen() {
+  return (
+    <div className="rk-phone-stage rk-mini-hero">
+      <img src={ROKO_ASSETS.heroPoster} alt="" />
+      <div className="rk-mini-hero-copy">
+        <span>MAKEUP BY ROKO</span>
+        <b>Roqia <em>Moshref</em></b>
+        <p>Bay Area, California</p>
+      </div>
+    </div>
+  );
+}
+
+function PhoneServicesScreen() {
+  return (
+    <div className="rk-phone-stage rk-phone-body">
+      <span className="rk-eyebrow" style={{ fontSize: "0.52rem" }}>Choose your service</span>
+      <div className="rk-phone-list">
+        {ROKO_TIERS.map((t, index) => (
+          <motion.div
+            className={`rk-phone-tier ${index === 1 ? "rk-phone-tier--active" : ""}`}
+            key={t.name}
+            initial={false}
+            animate={index === 1 ? { scale: [1, 0.985, 1] } : undefined}
+            transition={{ duration: 0.32, delay: 0.28, ease }}
+          >
+            <b>{t.name}</b>
+            <span>
+              {t.price}
+              <em>{t.dep}</em>
+            </span>
+          </motion.div>
+        ))}
+      </div>
+      <div className="rk-phone-cta">Request your date</div>
+    </div>
+  );
+}
+
+function PhoneRequestScreen() {
+  return (
+    <div className="rk-phone-stage rk-mini-booking">
+      <span className="rk-eyebrow">Preferred date</span>
+      <b>Saturday, June 14</b>
+      <div className="rk-mini-date-grid">
+        {[9, 10, 13, 14, 15, 16, 17].map((day) => (
+          <span className={day === 14 ? "is-selected" : ""} key={day}>{day}</span>
+        ))}
+      </div>
+      <div className="rk-mini-sent">
+        <span className="rk-check" aria-hidden>✓</span>
+        <p><b>Request sent</b>Roko confirms your exact time within 24–48 hrs.</p>
+      </div>
+    </div>
+  );
+}
+
+/* Mobile mockup, full iPhone, showing the real mobile-first request flow. */
 function PhoneMock() {
-  const reduce = useReducedMotion();
+  const { step, reduce, replay } = useReplaySequence(5, 760);
+  const activeStep = reduce ? 4 : step;
+  const screens = [
+    <PhoneHomeScreen key="home" />,
+    <PhoneSafariScreen key="safari" />,
+    <PhoneHeroScreen key="hero" />,
+    <PhoneServicesScreen key="services" />,
+    <PhoneRequestScreen key="request" />,
+  ];
+
   return (
     <motion.div
       className="rk-phone-float"
       aria-hidden
       animate={reduce ? undefined : { y: [0, -6, 0] }}
       transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+      onViewportEnter={replay}
+      viewport={{ once: false, amount: 0.5 }}
     >
       <div className="rk-phone">
         <div className="rk-phone-screen">
-          <div className="rk-phone-status">
-            <span>9:41</span>
-            <span className="rk-phone-wm-top">MAKEUP BY ROKO</span>
-          </div>
-          <div className="rk-phone-body">
-            <span className="rk-eyebrow" style={{ fontSize: "0.52rem" }}>Choose your service</span>
-            <div className="rk-phone-list">
-              {ROKO_TIERS.map((t) => (
-                <div className="rk-phone-tier" key={t.name}>
-                  <b>{t.name}</b>
-                  <span>
-                    {t.price}
-                    <em>{t.dep}</em>
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="rk-phone-cta">Request your date</div>
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeStep}
+              className="rk-phone-screen-inner"
+              initial={reduce ? false : { opacity: 0, y: 10, scale: 0.985 }}
+              animate={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
+              exit={reduce ? undefined : { opacity: 0, y: -8, scale: 0.99 }}
+              transition={{ duration: 0.36, ease }}
+            >
+              {screens[activeStep]}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </motion.div>
