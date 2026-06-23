@@ -32,6 +32,16 @@
   --accent-red: #e0786c;
   --accent-red-deep: #c85f53;
   --accent-red-soft: rgba(224,120,108,0.14);
+
+  /* ── Warm "preview card" tokens — dark ink on the light project placeholder
+     that sits inside the dark navy Selected Work interlude. */
+  --cream-ink: #17140f;         /* warm near-black text on the light card */
+  --cream-ink-soft: #5a544b;    /* secondary text on the light card */
+  --cream-line: rgba(23,20,15,0.14);
+  --cream-line-strong: rgba(23,20,15,0.30);
+
+  /* ── Selected Work interlude background — deep navy (not black) ── */
+  --navy: #0a1330;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -94,6 +104,22 @@ body {
     repeating-linear-gradient(135deg, rgba(255,255,255,0.014) 0px, rgba(255,255,255,0.014) 1px, transparent 1px, transparent 7px),
     repeating-linear-gradient(45deg, rgba(255,255,255,0.008) 0px, rgba(255,255,255,0.008) 1px, transparent 1px, transparent 7px),
     radial-gradient(150% 90% at 50% -15%, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0) 55%);
+}
+
+/* ── Cream-panel brushed texture — same fine guilloché hairlines as .grain, but
+   in dark ink so it reads on the light interlude. Plus a soft top sheen. ── */
+.grain-cream { position: relative; }
+.grain-cream > * { position: relative; z-index: 1; }
+.grain-cream::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(135deg, rgba(23,20,15,0.020) 0px, rgba(23,20,15,0.020) 1px, transparent 1px, transparent 7px),
+    repeating-linear-gradient(45deg, rgba(23,20,15,0.012) 0px, rgba(23,20,15,0.012) 1px, transparent 1px, transparent 7px),
+    radial-gradient(150% 90% at 50% -15%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 50%);
 }
 
 /* ── Clean link underline (grows on hover) ── */
