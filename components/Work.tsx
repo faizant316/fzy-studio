@@ -1670,7 +1670,7 @@ function BeatDeposit() {
         </div>
       </motion.div>
       <motion.div className="rk-chip" variants={rise}>
-        <motion.span className="rk-check rk-m-check" aria-hidden initial={{ scale: 0.6 }} animate={{ scale: [0.6, 1.18, 1] }} transition={{ type: "spring", stiffness: 150, damping: 12, delay: 0.95 }}>
+        <motion.span className="rk-check rk-m-check" aria-hidden initial={{ scale: 0.6 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 320, damping: 11, delay: 0.95 }}>
           <svg viewBox="0 0 24 24" width="11" height="11" fill="none">
             <motion.path d="M5 12.5 L10 17.5 L19 6.5" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5, delay: 0.5, ease }} />
           </svg>
