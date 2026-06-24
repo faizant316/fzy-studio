@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
 import Lenis from "lenis";
 import { lenisScrollTo, lenisStart, lenisStop } from "./lenis";
 
@@ -702,7 +702,8 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             .rk-chaos-msg { display: grid; grid-template-columns: 34px 1fr; gap: 0.72rem; align-items: start; padding: 0.72rem 0.82rem; border-bottom: 1px solid var(--rk-border-2); }
             .rk-chaos-msg:last-child { border-bottom: none; }
             .rk-chaos-msg b { display: block; font-size: 0.82rem; color: var(--rk-ink); }
-            .rk-chaos-msg p { min-height: 1.1rem; margin: 0.12rem 0 0; color: var(--rk-muted); font-size: 0.76rem; line-height: 1.45; }
+            /* Reserve two lines so the row never grows mid-type as the text wraps. */
+            .rk-chaos-msg p { min-height: 2.2rem; margin: 0.12rem 0 0; color: var(--rk-muted); font-size: 0.76rem; line-height: 1.45; }
             .rk-chaos-caret { display: inline-block; width: 1px; height: 0.85em; margin-left: 2px; background: var(--rk-rose-deep); transform: translateY(1px); }
             .rk-chaos-msg .rk-typing { margin-left: 0.34rem; }
             /* booking confirm-by-Roko row */
@@ -722,6 +723,10 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             .rk-btn-rose { margin-top: 0.85rem; width: 100%; padding: 0.72rem 1rem; border: none; border-radius: 100px; background: var(--rk-rose-deep); color: #fff; font-size: 0.82rem; font-weight: 500; cursor: default; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
             .rk-paid { display: flex; align-items: center; gap: 0.7rem; background: #fff; border: 1px solid var(--rk-border); border-radius: 14px; padding: 0.85rem 1rem; }
             .rk-paid-val { font-family: var(--font-cormorant), serif; font-size: 1.2rem; color: var(--rk-rose-deep); }
+            /* Stack both states in one cell so the card always holds the taller
+               "due" height, paid + unpaid never shift it. */
+            .rk-deposit-swap { display: grid; margin-top: 0.9rem; }
+            .rk-deposit-swap > * { grid-area: 1 / 1; margin-top: 0; align-self: start; }
             /* email, real confirmation design */
             .rk-email { text-align: center; }
             .rk-email-wm { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rk-rose-deep); }
@@ -756,45 +761,30 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
             .rk-phone-screen::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(116deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 18%, rgba(255,255,255,0) 39%); mix-blend-mode: screen; }
             .rk-phone-screen-inner, .rk-phone-stage { position: absolute; inset: 0; }
             .rk-phone-stage { display: flex; flex-direction: column; padding: 2.55rem 1rem 1rem; }
-            .rk-phone-home { color: #fff; background: radial-gradient(80% 52% at 28% 20%, rgba(212,160,176,0.4), transparent 64%), linear-gradient(158deg, #161116 0%, #251826 48%, #080607 100%); }
-            .rk-phone-home-time { font-family: var(--font-cormorant), serif; font-size: 1.8rem; line-height: 1; }
-            .rk-app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.72rem 0.58rem; margin-top: 1rem; }
-            .rk-app { position: relative; display: grid; justify-items: center; gap: 0.22rem; color: rgba(255,255,255,0.8); font-size: 0.45rem; }
-            .rk-app i { width: 32px; height: 32px; border-radius: 9px; display: block; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28); }
-            .rk-phone-dock { position: relative; display: flex; justify-content: center; gap: 0.65rem; margin-top: auto; padding: 0.55rem; border-radius: 18px; background: rgba(255,255,255,0.13); backdrop-filter: blur(8px); }
-            .rk-app--safari i { border-radius: 50%; background: radial-gradient(circle at 50% 50%, #fff 0 18%, #D4A0B0 19% 34%, #111 35% 38%, #FDF8FA 39% 100%); }
-            .rk-phone-tap { position: absolute; left: 50%; bottom: 1.16rem; width: 38px; height: 38px; margin-left: -19px; border: 1px solid rgba(255,255,255,0.8); border-radius: 50%; pointer-events: none; }
-            .rk-phone-safari { background: #F8F4F6; color: var(--rk-ink); }
-            .rk-safari-top { height: 2rem; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #fff; border: 1px solid var(--rk-border-2); font-size: 0.54rem; color: var(--rk-muted); }
-            .rk-phone-load { width: 100%; height: 2px; margin-top: 0.65rem; transform-origin: left; background: var(--rk-rose-deep); border-radius: 999px; }
-            .rk-safari-card { margin-top: 1rem; padding: 0.9rem; border-radius: 14px; background: #fff; border: 1px solid var(--rk-border); box-shadow: 0 12px 24px rgba(17,17,17,0.05); }
-            .rk-safari-mark { display: block; color: var(--rk-rose-deep); font-size: 0.48rem; letter-spacing: 0.16em; }
-            .rk-safari-card b { display: block; margin-top: 0.45rem; font-family: var(--font-cormorant), serif; font-weight: 400; font-size: 1.05rem; line-height: 1.05; }
-            .rk-mini-hero { padding: 0; justify-content: flex-end; overflow: hidden; color: #fff; background: #080607; }
-            .rk-mini-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% top; filter: saturate(0) brightness(0.72); }
-            .rk-mini-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,6,7,0.88) 0%, rgba(8,6,7,0.12) 72%); }
-            .rk-mini-hero-copy { position: relative; z-index: 1; padding: 0 1rem 1.05rem; }
-            .rk-mini-hero-copy span { display: block; font-size: 0.48rem; letter-spacing: 0.16em; color: rgba(255,255,255,0.72); }
-            .rk-mini-hero-copy b { display: block; margin-top: 0.4rem; font-family: var(--font-cormorant), serif; font-weight: 500; font-size: 2rem; line-height: 0.92; }
-            .rk-mini-hero-copy em { color: var(--rk-rose); font-style: italic; }
-            .rk-mini-hero-copy p { margin: 0.55rem 0 0; font-size: 0.58rem; color: rgba(255,255,255,0.66); }
-            .rk-phone-body { background: var(--rk-surface); }
-            .rk-phone-list { margin-top: 0.7rem; display: grid; gap: 0.1rem; }
-            .rk-phone-tier { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; padding: 0.55rem 0; border-bottom: 1px solid var(--rk-border-2); }
-            .rk-phone-tier:last-child { border-bottom: none; }
-            .rk-phone-tier--active { margin: 0 -0.45rem; padding-inline: 0.45rem; border-radius: 10px; background: #fff; box-shadow: 0 8px 18px rgba(17,17,17,0.06); }
-            .rk-phone-tier b { font-family: var(--font-cormorant), serif; font-weight: 400; font-size: 0.9rem; color: var(--rk-ink); }
-            .rk-phone-tier span { font-family: var(--font-cormorant), serif; font-size: 0.9rem; color: var(--rk-ink); }
-            .rk-phone-tier em { display: block; font-style: normal; font-size: 0.52rem; color: var(--rk-rose-deep); text-align: right; }
-            .rk-phone-cta { margin-top: auto; text-align: center; font-size: 0.6rem; color: #fff; background: var(--rk-ink); border-radius: 100px; padding: 0.6rem; }
-            .rk-mini-booking { background: #fff; color: var(--rk-ink); }
-            .rk-mini-booking > b { margin-top: 0.28rem; font-family: var(--font-cormorant), serif; font-weight: 400; font-size: 1.45rem; line-height: 1; }
-            .rk-mini-date-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 1.05rem; }
-            .rk-mini-date-grid span { aspect-ratio: 1; display: grid; place-items: center; color: var(--rk-muted); font-size: 0.64rem; border-radius: 5px; background: #FDF8FA; }
-            .rk-mini-date-grid .is-selected { color: #fff; background: var(--rk-ink); }
-            .rk-mini-sent { display: flex; align-items: flex-start; gap: 0.55rem; margin-top: auto; border: 1px solid var(--rk-border); border-radius: 14px; padding: 0.7rem; background: #FDF8FA; }
-            .rk-mini-sent p { margin: 0; color: var(--rk-muted); font-size: 0.58rem; line-height: 1.45; }
-            .rk-mini-sent p b { display: block; color: var(--rk-ink); font-size: 0.66rem; margin-bottom: 0.08rem; }
+            /* Mobile booking screen, a calm mirror of the calendar beside it. */
+            .rk-phone-booking { background: #fff; color: var(--rk-ink); }
+            .rk-pb-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+            .rk-pb-head b { font-size: 0.92rem; color: var(--rk-ink); }
+            .rk-pb-week { display: grid; grid-template-columns: repeat(7, 1fr); margin-top: 0.75rem; }
+            .rk-pb-week span { text-align: center; font-size: 0.4rem; letter-spacing: 0.06em; color: var(--rk-faint); text-transform: uppercase; }
+            .rk-pb-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; margin-top: 0.35rem; }
+            .rk-pb-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 0.52rem; border-radius: 4px; color: #9a9a9a; }
+            .rk-pb-day i { width: 3px; height: 3px; border-radius: 50%; display: block; }
+            .rk-pb-day--open i { background: #34D399; }
+            .rk-pb-day--fill { color: #555; } .rk-pb-day--fill i { background: #F0C27A; }
+            .rk-pb-day--booked { color: #FCA5A5; text-decoration: line-through; }
+            .rk-pb-day--sel { background: var(--rk-ink); color: #fff; }
+            .rk-pb-day--today { color: var(--rk-rose-deep); font-weight: 700; }
+            .rk-pb-req { margin-top: 0.75rem; border: 1px solid rgba(212,160,176,0.4); border-radius: 9px; padding: 0.5rem 0.62rem; background: linear-gradient(100deg, rgba(212,160,176,0.1), rgba(184,160,212,0.1)); }
+            .rk-pb-req span { font-size: 0.42rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rk-rose-deep); }
+            .rk-pb-req b { display: block; font-size: 0.8rem; color: var(--rk-ink); margin-top: 0.12rem; }
+            /* Fixed-height action so request ⇄ sent never resizes the screen. */
+            .rk-pb-action { position: relative; margin-top: auto; min-height: 2.7rem; display: flex; align-items: stretch; }
+            .rk-pb-action > * { width: 100%; }
+            .rk-pb-btn { display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.56rem; color: #fff; background: var(--rk-ink); border-radius: 100px; padding: 0.6rem; }
+            .rk-pb-sent { display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--rk-border); border-radius: 12px; padding: 0.55rem 0.62rem; background: #FDF8FA; }
+            .rk-pb-sent p { margin: 0; color: var(--rk-muted); font-size: 0.48rem; line-height: 1.4; }
+            .rk-pb-sent p b { display: block; color: var(--rk-ink); font-size: 0.56rem; margin-bottom: 0.05rem; }
             @media (max-width: 1024px) { .rk-phone-float { display: none; } }
             @media (max-width: 760px) {
               .rk-hero-shot { min-height: clamp(420px, 118vw, 620px); }
@@ -825,47 +815,13 @@ function MetaBlock({ label, values }: { label: string; values: string[] }) {
   );
 }
 
-const ROKO_TIERS = [
-  { name: "Bridal Trial", price: "$500", dep: "$250 deposit" },
-  { name: "Luxury Bridal Look", price: "$750", dep: "$375 deposit" },
-  { name: "Full Day Service", price: "$1,700", dep: "$850 deposit" },
-];
-
 const ROKO_ASSETS = {
   heroShot: "/roko-hero-screenshot.png",
-  heroPoster: "https://makeupby-roko.vercel.app/hero-poster.jpg",
   roko: "https://makeupby-roko.vercel.app/roko_pic.png",
   bridal: "https://makeupby-roko.vercel.app/bridal_trial.png",
 };
 
 const rkViewport = { once: false, amount: 0.45 };
-
-function useReplaySequence(length: number, interval = 850) {
-  const reduce = useReducedMotion();
-  const [step, setStep] = useState(reduce ? length - 1 : 0);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-
-  const clear = () => {
-    timers.current.forEach(clearTimeout);
-    timers.current = [];
-  };
-
-  const replay = () => {
-    clear();
-    if (reduce) {
-      setStep(length - 1);
-      return;
-    }
-    setStep(0);
-    for (let i = 1; i < length; i++) {
-      timers.current.push(setTimeout(() => setStep(i), i * interval));
-    }
-  };
-
-  useEffect(() => () => clear(), []);
-
-  return { step, reduce, replay };
-}
 
 /* The preview pane uses a real current hero capture so the case study leads with
    the live product instead of a recreated approximation. */
@@ -975,6 +931,7 @@ function RokoProblemFlow() {
 
     setTypedMessages(CHAOS_TYPERS.map(() => ""));
     setActiveTyper(0);
+    let cycleEnd = 0;
     CHAOS_TYPERS.forEach((item, index) => {
       const start = 620 + index * 1180;
       typingTimers.current.push(setTimeout(() => setActiveTyper(index), start));
@@ -987,8 +944,12 @@ function RokoProblemFlow() {
           });
         }, start + charIndex * 18));
       });
+      cycleEnd = Math.max(cycleEnd, start + item.msg.length * 18);
     });
-    typingTimers.current.push(setTimeout(() => setActiveTyper(CHAOS_TYPERS.length), 4300));
+    typingTimers.current.push(setTimeout(() => setActiveTyper(CHAOS_TYPERS.length), cycleEnd + 120));
+    // Keep it alive: hold the full thread for a beat, then replay the whole
+    // sequence so it loops smoothly even while it stays on screen.
+    typingTimers.current.push(setTimeout(replayTyping, cycleEnd + 2600));
   };
 
   useEffect(() => () => clearTyping(), []);
@@ -1036,34 +997,32 @@ function RokoProblemFlow() {
         transition={{ duration: 0.36, delay: 0.44, ease }}
       >
         <span className="rk-live-label">Still coming in</span>
-        <AnimatePresence>
-          {CHAOS_TYPERS.map((item, index) => {
-            const typed = typedMessages[index];
-            const visible = reduce || typed || activeTyper >= index;
-            const typing = activeTyper === index && typed.length < item.msg.length;
-            if (!visible) return null;
-            return (
-              <motion.div
-                className="rk-chaos-msg"
-                key={item.name}
-                initial={reduce ? false : { opacity: 0, x: -10 }}
-                animate={reduce ? undefined : { opacity: 1, x: 0 }}
-                exit={reduce ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.3, ease }}
-              >
-                <span className="rk-msg-av" aria-hidden />
-                <div>
-                  <b>{item.name}</b>
-                  <p>
-                    {typed}
-                    {typing && <span className="rk-chaos-caret" aria-hidden />}
-                    {typing && <span className="rk-typing" aria-hidden><i /><i /><i /></span>}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+        {/* Every row stays mounted so the card holds its full height from the
+            start, the thread fades each person in instead of growing the box. */}
+        {CHAOS_TYPERS.map((item, index) => {
+          const typed = typedMessages[index];
+          const revealed = reduce || activeTyper >= index;
+          const typing = activeTyper === index && typed.length < item.msg.length;
+          return (
+            <motion.div
+              className="rk-chaos-msg"
+              key={item.name}
+              initial={false}
+              animate={reduce ? undefined : { opacity: revealed ? 1 : 0 }}
+              transition={{ duration: 0.32, ease }}
+            >
+              <span className="rk-msg-av" aria-hidden />
+              <div>
+                <b>{item.name}</b>
+                <p>
+                  {typed}
+                  {typing && <span className="rk-chaos-caret" aria-hidden />}
+                  {typing && <span className="rk-typing" aria-hidden><i /><i /><i /></span>}
+                </p>
+              </div>
+            </motion.div>
+          );
+        })}
       </motion.div>
     </motion.div>
   );
@@ -1213,58 +1172,58 @@ function RokoDepositFlow() {
         <div className="rk-receipt-row"><span>Bridal Trial</span><b>$500.00</b></div>
         <div className="rk-receipt-row"><span>Deposit (held)</span><b>$250.00</b></div>
         <div className="rk-receipt-total"><span>{paid ? "Paid · Zelle" : "Due now · Zelle"}</span><b>$250.00</b></div>
-        <AnimatePresence mode="wait">
-          {!paid ? (
-            <motion.div
-              key="zelle-due"
-              className="rk-zelle"
-              initial={reduce ? false : { opacity: 1 }}
-              exit={reduce ? undefined : { opacity: 0, y: -6 }}
-              transition={{ duration: 0.22, ease }}
-            >
-              <div className="rk-zelle-row">
-                <div>
-                  <div className="rk-zelle-to">Zelle to</div>
-                  <div className="rk-zelle-name">Ruqia M.</div>
-                </div>
-                <div className="rk-zelle-num">(•••) •••-••97</div>
-              </div>
-              <motion.button
-                type="button"
-                className="rk-btn-rose"
-                tabIndex={-1}
-                animate={reduce ? undefined : { scale: [1, 0.97, 1] }}
-                transition={{ duration: 0.28, delay: 0.48, ease }}
-              >
-                <span aria-hidden>⤒</span> Upload Zelle screenshot
-              </motion.button>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="zelle-paid"
-              className="rk-paid"
-              initial={reduce ? false : { opacity: 0, y: 8 }}
-              animate={reduce ? undefined : { opacity: 1, y: 0 }}
-              exit={reduce ? undefined : { opacity: 0 }}
-              transition={{ duration: 0.32, ease }}
-            >
-              <motion.span
-                className="rk-check"
-                style={{ width: 22, height: 22, fontSize: "0.72rem" }}
-                aria-hidden
-                initial={reduce ? false : { opacity: 0, scale: 0.65 }}
-                animate={reduce ? undefined : { opacity: 1, scale: 1 }}
-                transition={{ duration: 0.28, delay: 0.08, ease }}
-              >
-                ✓
-              </motion.span>
+        {/* Both states are stacked in one cell, so the card always holds the
+            taller "due" height, paid + unpaid cross-fade without any jump. */}
+        <div className="rk-deposit-swap">
+          <motion.div
+            className="rk-zelle"
+            aria-hidden={paid}
+            initial={false}
+            animate={reduce ? undefined : { opacity: paid ? 0 : 1 }}
+            transition={{ duration: 0.28, ease }}
+            style={{ pointerEvents: paid ? "none" : "auto" }}
+          >
+            <div className="rk-zelle-row">
               <div>
-                <div style={{ fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--rk-muted)" }}>Deposit paid · $250.00 · Zelle</div>
-                <div className="rk-paid-val">Date secured</div>
+                <div className="rk-zelle-to">Zelle to</div>
+                <div className="rk-zelle-name">Ruqia M.</div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <div className="rk-zelle-num">(•••) •••-••97</div>
+            </div>
+            <motion.button
+              type="button"
+              className="rk-btn-rose"
+              tabIndex={-1}
+              animate={reduce || paid ? undefined : { scale: [1, 0.97, 1] }}
+              transition={{ duration: 0.28, delay: 0.48, ease }}
+            >
+              <span aria-hidden>⤒</span> Upload Zelle screenshot
+            </motion.button>
+          </motion.div>
+          <motion.div
+            className="rk-paid"
+            aria-hidden={!paid}
+            initial={false}
+            animate={reduce ? undefined : { opacity: paid ? 1 : 0 }}
+            transition={{ duration: 0.32, ease }}
+            style={{ pointerEvents: paid ? "auto" : "none" }}
+          >
+            <motion.span
+              className="rk-check"
+              style={{ width: 22, height: 22, fontSize: "0.72rem" }}
+              aria-hidden
+              initial={false}
+              animate={reduce ? undefined : { scale: paid ? 1 : 0.65 }}
+              transition={{ duration: 0.28, delay: paid ? 0.08 : 0, ease }}
+            >
+              ✓
+            </motion.span>
+            <div>
+              <div style={{ fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--rk-muted)" }}>Deposit paid · $250.00 · Zelle</div>
+              <div className="rk-paid-val">Date secured</div>
+            </div>
+          </motion.div>
+        </div>
         <p style={{ marginTop: "0.7rem", fontSize: "0.72rem", color: "var(--rk-muted)" }}>Remaining balance due in cash on the day.</p>
       </div>
     </motion.div>
@@ -1316,124 +1275,105 @@ function RokoConfirmationEmail() {
   );
 }
 
-function PhoneHomeScreen() {
-  const apps = ["Photos", "Mail", "Calendar", "Camera", "Notes", "Maps"];
+/* The phone simply mirrors the booking calendar beside it, the same mobile
+   request flow, no home screen / Safari / hero detour. It just gently confirms. */
+function PhoneBookingScreen({ sent, reduce }: { sent: boolean; reduce: boolean | null }) {
+  const blanks = 1; // June 1 sits on Monday
+  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+  const klass = (d: number) => {
+    if ([1, 2, 3, 4, 5, 6, 7, 8, 11, 20].includes(d)) return "rk-pb-day rk-pb-day--booked";
+    if (d === 12) return "rk-pb-day rk-pb-day--today";
+    if (d === 14) return "rk-pb-day rk-pb-day--sel";
+    if ([10, 17, 24, 28].includes(d)) return "rk-pb-day rk-pb-day--fill";
+    return "rk-pb-day rk-pb-day--open";
+  };
+
   return (
-    <div className="rk-phone-stage rk-phone-home">
-      <div className="rk-phone-home-time">9:41</div>
-      <div className="rk-app-grid">
-        {apps.map((app, i) => (
-          <span className="rk-app" key={app}>
-            <i style={{ background: i % 2 ? "#F7D8E5" : "#FDF8FA" }} />
-            <b>{app}</b>
-          </span>
+    <div className="rk-phone-stage rk-phone-booking">
+      <div className="rk-pb-head">
+        <span className="rk-eyebrow" style={{ fontSize: "0.46rem" }}>Makeup by Roko</span>
+        <b className="rk-serif">June 2026</b>
+      </div>
+      <div className="rk-pb-week">
+        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((w) => (
+          <span key={w}>{w}</span>
         ))}
       </div>
-      <div className="rk-phone-dock">
-        <span className="rk-app rk-app--safari">
-          <i />
-          <b>Safari</b>
-        </span>
-        <motion.span
-          className="rk-phone-tap"
-          aria-hidden
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: [0, 1, 0], scale: [0.5, 1, 1.45] }}
-          transition={{ duration: 0.7, delay: 0.2, ease }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function PhoneSafariScreen() {
-  return (
-    <div className="rk-phone-stage rk-phone-safari">
-      <div className="rk-safari-top">
-        <span>makeupby-roko.vercel.app</span>
-      </div>
-      <motion.div
-        className="rk-phone-load"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 0.62, ease }}
-      />
-      <div className="rk-safari-card">
-        <span className="rk-safari-mark">MAKEUP BY ROKO</span>
-        <b>Loading bridal booking platform</b>
-      </div>
-    </div>
-  );
-}
-
-function PhoneHeroScreen() {
-  return (
-    <div className="rk-phone-stage rk-mini-hero">
-      <img src={ROKO_ASSETS.heroPoster} alt="" />
-      <div className="rk-mini-hero-copy">
-        <span>MAKEUP BY ROKO</span>
-        <b>Roqia <em>Moshref</em></b>
-        <p>Bay Area, California</p>
-      </div>
-    </div>
-  );
-}
-
-function PhoneServicesScreen() {
-  return (
-    <div className="rk-phone-stage rk-phone-body">
-      <span className="rk-eyebrow" style={{ fontSize: "0.52rem" }}>Choose your service</span>
-      <div className="rk-phone-list">
-        {ROKO_TIERS.map((t, index) => (
-          <motion.div
-            className={`rk-phone-tier ${index === 1 ? "rk-phone-tier--active" : ""}`}
-            key={t.name}
-            initial={false}
-            animate={index === 1 ? { scale: [1, 0.985, 1] } : undefined}
-            transition={{ duration: 0.32, delay: 0.28, ease }}
-          >
-            <b>{t.name}</b>
-            <span>
-              {t.price}
-              <em>{t.dep}</em>
+      <div className="rk-pb-days">
+        {Array.from({ length: blanks }).map((_, i) => (
+          <span key={`b${i}`} />
+        ))}
+        {days.map((d) => {
+          const c = klass(d);
+          const dot = c.includes("--open") || c.includes("--fill");
+          return (
+            <span key={d} className={c}>
+              {d}
+              {dot && <i aria-hidden />}
             </span>
-          </motion.div>
-        ))}
+          );
+        })}
       </div>
-      <div className="rk-phone-cta">Request your date</div>
+      <div className="rk-pb-req">
+        <span>Requested date</span>
+        <b className="rk-serif">Saturday, June 14</b>
+      </div>
+      <div className="rk-pb-action">
+        <AnimatePresence mode="wait" initial={false}>
+          {!sent ? (
+            <motion.div
+              key="btn"
+              className="rk-pb-btn"
+              initial={reduce ? false : { opacity: 0 }}
+              animate={reduce ? undefined : { opacity: 1 }}
+              exit={reduce ? undefined : { opacity: 0 }}
+              transition={{ duration: 0.28, ease }}
+            >
+              Request this date
+            </motion.div>
+          ) : (
+            <motion.div
+              key="sent"
+              className="rk-pb-sent"
+              initial={reduce ? false : { opacity: 0, y: 6 }}
+              animate={reduce ? undefined : { opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0 }}
+              transition={{ duration: 0.32, ease }}
+            >
+              <span className="rk-check" aria-hidden>✓</span>
+              <p><b>Request sent</b>Roko confirms your exact time within 24–48 hrs.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
 
-function PhoneRequestScreen() {
-  return (
-    <div className="rk-phone-stage rk-mini-booking">
-      <span className="rk-eyebrow">Preferred date</span>
-      <b>Saturday, June 14</b>
-      <div className="rk-mini-date-grid">
-        {[9, 10, 13, 14, 15, 16, 17].map((day) => (
-          <span className={day === 14 ? "is-selected" : ""} key={day}>{day}</span>
-        ))}
-      </div>
-      <div className="rk-mini-sent">
-        <span className="rk-check" aria-hidden>✓</span>
-        <p><b>Request sent</b>Roko confirms your exact time within 24–48 hrs.</p>
-      </div>
-    </div>
-  );
-}
-
-/* Mobile mockup, full iPhone, showing the real mobile-first request flow. */
+/* Mobile mockup, full iPhone, showing the real mobile-first request flow.
+   It loops quietly between "request" and "sent" without ever resizing. */
 function PhoneMock() {
-  const { step, reduce, replay } = useReplaySequence(5, 760);
-  const activeStep = reduce ? 4 : step;
-  const screens = [
-    <PhoneHomeScreen key="home" />,
-    <PhoneSafariScreen key="safari" />,
-    <PhoneHeroScreen key="hero" />,
-    <PhoneServicesScreen key="services" />,
-    <PhoneRequestScreen key="request" />,
-  ];
+  const reduce = useReducedMotion();
+  const [sent, setSent] = useState(Boolean(reduce));
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clear = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  };
+
+  const loop = () => {
+    clear();
+    if (reduce) {
+      setSent(true);
+      return;
+    }
+    setSent(false);
+    timers.current.push(setTimeout(() => setSent(true), 1600));
+    timers.current.push(setTimeout(loop, 4400)); // hold the confirmation, then replay
+  };
+
+  useEffect(() => () => clear(), []);
 
   return (
     <motion.div
@@ -1441,82 +1381,490 @@ function PhoneMock() {
       aria-hidden
       animate={reduce ? undefined : { y: [0, -6, 0] }}
       transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-      onViewportEnter={replay}
+      onViewportEnter={loop}
       viewport={{ once: false, amount: 0.5 }}
     >
       <div className="rk-phone">
         <div className="rk-phone-screen">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeStep}
-              className="rk-phone-screen-inner"
-              initial={reduce ? false : { opacity: 0, y: 10, scale: 0.985 }}
-              animate={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
-              exit={reduce ? undefined : { opacity: 0, y: -8, scale: 0.99 }}
-              transition={{ duration: 0.36, ease }}
-            >
-              {screens[activeStep]}
-            </motion.div>
-          </AnimatePresence>
+          <div className="rk-phone-screen-inner">
+            <PhoneBookingScreen sent={sent} reduce={reduce} />
+          </div>
         </div>
       </div>
     </motion.div>
   );
 }
 
-/* Refined light "preview card" placeholder so the feature reads as intentional
-   until a real screenshot lands. Sharp corners, warm wash that nods to the brand. */
+/* The preview card is a premium "live preview" product film: a 3D browser window
+   holding the real Makeup by Roko booking UI, floating over a swirling aura with
+   parallax, springs, and a seamless ~8s loop (pick a date, request, deposit,
+   confirmed, signature) that resolves into the wordmark and dissolves back.
+   Reduced motion renders one clean static product card, no motion. */
 function Placeholder({ p }: { p: Project }) {
+  return <RokoMontage p={p} />;
+}
+
+// One unhurried film: four product beats (~1.5s) then the signature hold (~2s).
+const BEAT_MS = [1500, 1500, 1500, 1500, 2000];
+
+// Slow, weighty spring used everywhere so nothing snaps; it breathes.
+const spring = { type: "spring", stiffness: 120, damping: 18 } as const;
+
+// Staggered child reveal: blur(8px) -> 0, y:24 -> 0, scale:0.96 -> 1, on a spring.
+const stagger: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
+};
+const rise: Variants = {
+  hidden: { opacity: 0, y: 24, scale: 0.96, filter: "blur(8px)" },
+  show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", transition: spring },
+};
+const wordRise: Variants = {
+  hidden: { opacity: 0, y: "0.85em", filter: "blur(8px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: spring },
+};
+const ruleRise: Variants = {
+  hidden: { scaleX: 0 },
+  show: { scaleX: 1, transition: { duration: 0.7, ease, delay: 0.15 } },
+};
+// Outgoing beat: scales in slightly, blurs, fades, as the next rises over it.
+const beatExit = { opacity: 0, scale: 0.96, filter: "blur(8px)", transition: { duration: 0.35, ease } };
+
+function RokoMontage({ p }: { p: Project }) {
+  const reduce = useReducedMotion();
   const host = p.url.replace(/^https?:\/\//, "");
-  return (
-    <div
-      className="grain-cream"
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        overflow: "hidden",
-        background:
-          "radial-gradient(90% 80% at 80% 12%, rgba(216,98,79,0.30) 0%, rgba(216,98,79,0) 60%), linear-gradient(155deg, #f2ece5 0%, #e8dad3 52%, #e0c8c0 100%)",
-      }}
-    >
-      <span className="eyebrow" style={{ position: "absolute", top: "1.6rem", left: "1.6rem", color: "var(--cream-ink-soft)" }}>
-        {p.category}
-      </span>
-      <span style={{ position: "absolute", top: "1.6rem", right: "1.6rem", fontSize: "0.76rem", letterSpacing: "0.04em", color: "var(--cream-ink-soft)" }}>
-        {host} ↗
-      </span>
+  const ref = useRef<HTMLDivElement>(null);
+  const [beat, setBeat] = useState(0);
+  const [inView, setInView] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [hover, setHover] = useState(false);
 
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "1rem",
-          padding: "1.5rem",
-          textAlign: "center",
-        }}
-      >
-        <span className="display" style={{ fontSize: "clamp(1.9rem, 4.4vw, 3.4rem)", color: "var(--cream-ink)", letterSpacing: "-0.035em" }}>
-          {p.client}
-        </span>
-        <span style={{ width: 44, height: 1, background: "var(--cream-line-strong)" }} />
-        <span className="eyebrow" style={{ color: "var(--cream-ink-soft)" }}>Live preview</span>
+  // Scroll-linked parallax: aura drifts most, the window less, the cue least.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const auraY = useTransform(scrollYProgress, [0, 1], [70, -70]);
+  const windowY = useTransform(scrollYProgress, [0, 1], [28, -28]);
+  const cueY = useTransform(scrollYProgress, [0, 1], [-16, 16]);
+
+  // Advance the loop only while visible, so it truly pauses offscreen.
+  useEffect(() => {
+    if (reduce || !started || !inView) return;
+    const id = setTimeout(() => setBeat((b) => (b + 1) % BEAT_MS.length), BEAT_MS[beat]);
+    return () => clearTimeout(id);
+  }, [beat, inView, started, reduce]);
+
+  // Reduced motion: one clean, static product card. No springs, no loop.
+  if (reduce) {
+    return (
+      <div ref={ref} className="rk rk-canvas rk-montage rk-montage--static">
+        <div className="rk-m-aura-par"><div className="rk-m-aura" /></div>
+        <div className="rk-m-parallax"><div className="rk-m-stage"><div className="rk-m-float">
+          <div className="rk-m-ghost rk-m-ghost--1" aria-hidden />
+          <div className="rk-m-ghost rk-m-ghost--2" aria-hidden />
+          <div className="rk-m-window">
+            <BrowserBar host={host} />
+            <div className="rk-m-body"><StaticCard /></div>
+          </div>
+        </div></div></div>
+        <style dangerouslySetInnerHTML={{ __html: MONTAGE_CSS }} />
       </div>
+    );
+  }
 
-      <span
-        className="display"
-        aria-hidden
-        style={{ position: "absolute", right: "1.4rem", bottom: "-1.8rem", fontSize: "clamp(5rem, 14vw, 11rem)", color: "rgba(23,20,15,0.06)", letterSpacing: "-0.04em" }}
-      >
-        {p.year}
-      </span>
+  const isSig = beat === 4;
+
+  return (
+    <motion.div
+      ref={ref}
+      className="rk rk-canvas rk-montage"
+      onViewportEnter={() => { setInView(true); setStarted(true); }}
+      onViewportLeave={() => setInView(false)}
+      viewport={{ amount: 0.3 }}
+      onHoverStart={() => setHover(true)}
+      onHoverEnd={() => setHover(false)}
+    >
+      {/* Ambient aura: scroll parallax on the wrapper, slow swirl on the glow. */}
+      <motion.div className="rk-m-aura-par" aria-hidden style={{ y: auraY }}>
+        <motion.div
+          className="rk-m-aura"
+          animate={inView ? { rotate: [0, 10, -6, 8, 0], scale: [1, 1.12, 1.05, 1.1, 1], x: ["0%", "6%", "-4%", "5%", "0%"], y: ["0%", "-5%", "4%", "-3%", "0%"] } : { rotate: 0, scale: 1, x: "0%", y: "0%" }}
+          transition={{ repeat: Infinity, duration: 16, ease: "easeInOut" }}
+        />
+      </motion.div>
+
+      {/* Window parallax -> stage entrance + hover -> continuous float. */}
+      <motion.div className="rk-m-parallax" style={{ y: windowY }}>
+        <motion.div
+          className="rk-m-stage"
+          animate={started
+            ? { opacity: 1, y: 0, scale: hover ? 1.02 : 1 }
+            : { opacity: 0, y: 42, scale: 0.94 }}
+          transition={spring}
+        >
+          <motion.div
+            className="rk-m-float"
+            animate={inView ? { y: [0, -9, 0], rotateZ: [-1, 1, -1] } : { y: 0, rotateZ: 0 }}
+            transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut" }}
+          >
+            <div className="rk-m-ghost rk-m-ghost--1" aria-hidden />
+            <div className="rk-m-ghost rk-m-ghost--2" aria-hidden />
+            <div className="rk-m-window">
+              <BrowserBar host={host} />
+              <div className="rk-m-body">
+                {started ? (
+                  <AnimatePresence mode="wait" initial={false}>
+                    {isSig
+                      ? <Signature key="sig" p={p} />
+                      : <BookingCard key="card" beat={beat} />}
+                  </AnimatePresence>
+                ) : (
+                  <StaticCard />
+                )}
+                {/* Diagonal glass sheen passing across the window. */}
+                <motion.div
+                  className="rk-m-sweep"
+                  aria-hidden
+                  animate={inView ? { x: ["-140%", "140%"] } : { x: "-140%" }}
+                  transition={{ repeat: Infinity, duration: 6.5, ease: "easeInOut", repeatDelay: 1.6 }}
+                />
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {/* Hover cue: the whole card is already the link, this just signposts it. */}
+      <AnimatePresence>
+        {hover && (
+          <motion.div className="rk-m-visit-wrap" style={{ y: cueY }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.span
+              className="rk-chip rk-m-visit"
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.96 }}
+              transition={spring}
+            >
+              Visit live site <span aria-hidden>↗</span>
+            </motion.span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style dangerouslySetInnerHTML={{ __html: MONTAGE_CSS }} />
+    </motion.div>
+  );
+}
+
+function BrowserBar({ host }: { host: string }) {
+  return (
+    <div className="rk-bar">
+      <span className="rk-dots" aria-hidden><i /><i /><i /></span>
+      <span className="rk-url">{host}</span>
     </div>
   );
 }
+
+/* The booking card, persistent across beats 0 to 3, its inner UI morphing card
+   to card. It recedes (scale down + blur) when the signature takes over. */
+function BookingCard({ beat }: { beat: number }) {
+  return (
+    <motion.div
+      className="rk-m-cardwrap"
+      initial={{ opacity: 0, y: 30, scale: 0.94, filter: "blur(8px)" }}
+      animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+      exit={{ opacity: 0, scale: 0.86, filter: "blur(10px)", transition: { duration: 0.5, ease } }}
+      transition={spring}
+    >
+      <motion.div
+        className="rk-aura rk-m-cardaura"
+        aria-hidden
+        animate={{ opacity: beat === 3 ? 0.95 : 0.45, scale: beat === 3 ? 1.12 : 1 }}
+        transition={spring}
+      />
+      <div className="rk-card">
+        <AnimatePresence mode="wait" initial={false}>
+          {beat === 0 && <BeatCalendar key="b0" />}
+          {beat === 1 && <BeatRequest key="b1" />}
+          {beat === 2 && <BeatDeposit key="b2" />}
+          {beat === 3 && <BeatConfirmed key="b3" />}
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  );
+}
+
+const CAL_OPEN = [13, 16, 17, 21, 23, 27, 30];
+const CAL_FILL = [9, 18, 24];
+const CAL_DAYS = Array.from({ length: 30 }, (_, i) => i + 1);
+const WEEK = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+/* Beat 1: live-availability calendar. June 14 springs to selected, the black
+   fill expanding from center with a soft ripple ring. */
+function BeatCalendar() {
+  return (
+    <motion.div className="rk-m-beat" variants={stagger} initial="hidden" animate="show" exit={beatExit}>
+      <motion.div className="rk-cal-head" variants={rise}>
+        <span className="rk-cal-nav" aria-hidden>‹</span>
+        <span className="rk-serif rk-cal-title">June 2026</span>
+        <span className="rk-cal-nav" aria-hidden>›</span>
+      </motion.div>
+      <motion.div className="rk-week" variants={rise}>
+        {WEEK.map((w) => <span key={w}>{w}</span>)}
+      </motion.div>
+      <motion.div className="rk-days" variants={rise}>
+        <span aria-hidden />{/* June 1 falls on Monday */}
+        {CAL_DAYS.map((d) => {
+          if (d === 14) {
+            return (
+              <span key={d} className="rk-day rk-m-day14">
+                <motion.span className="rk-m-selfill" aria-hidden initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 160, damping: 15, delay: 0.35 }} />
+                <motion.span className="rk-m-ripple" aria-hidden initial={{ scale: 0.4, opacity: 0.5 }} animate={{ scale: 2.8, opacity: 0 }} transition={{ duration: 1, delay: 0.4, ease }} />
+                <motion.span className="rk-m-day-num" initial={{ color: "#8a8a8a" }} animate={{ color: "#ffffff" }} transition={{ delay: 0.5, duration: 0.3 }}>14</motion.span>
+              </span>
+            );
+          }
+          const isOpen = CAL_OPEN.includes(d);
+          const isFill = CAL_FILL.includes(d);
+          const cls = isOpen ? "rk-day rk-day--open" : isFill ? "rk-day rk-day--fill" : "rk-day";
+          return <span key={d} className={cls}>{d}{(isOpen || isFill) && <i aria-hidden />}</span>;
+        })}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* Beat 2: requested-date banner springs in, the request button presses with a
+   soft rose glow pulse. */
+function BeatRequest() {
+  return (
+    <motion.div className="rk-m-beat rk-m-stack" variants={stagger} initial="hidden" animate="show" exit={beatExit}>
+      <motion.span className="rk-eyebrow" variants={rise}>Preferred date</motion.span>
+      <motion.div className="rk-req" variants={rise}>
+        <span>Requested date</span>
+        <b>Saturday, June 14</b>
+      </motion.div>
+      <motion.div className="rk-m-btn-wrap" variants={rise}>
+        <motion.button
+          type="button"
+          className="rk-btn"
+          tabIndex={-1}
+          animate={{ scale: [1, 0.97, 1], boxShadow: ["0 0 0 0 rgba(196,132,154,0)", "0 0 0 10px rgba(196,132,154,0.16)", "0 0 0 0 rgba(196,132,154,0)"] }}
+          transition={{ duration: 0.9, delay: 0.7, ease }}
+        >
+          Request this date
+        </motion.button>
+      </motion.div>
+      <motion.p className="rk-m-cap" variants={rise}>Roko confirms your exact time within 24 to 48 hrs.</motion.p>
+    </motion.div>
+  );
+}
+
+/* Beat 3: the Zelle deposit rises in, the confirmed check draws via SVG then springs. */
+function BeatDeposit() {
+  return (
+    <motion.div className="rk-m-beat rk-m-stack" variants={stagger} initial="hidden" animate="show" exit={beatExit}>
+      <motion.div className="rk-badge" variants={rise}>
+        <span className="rk-badge-icon" aria-hidden>$</span>
+        <div>
+          <b>$250.00</b>
+          <span>Zelle · Deposit paid</span>
+        </div>
+      </motion.div>
+      <motion.div className="rk-chip" variants={rise}>
+        <motion.span className="rk-check rk-m-check" aria-hidden initial={{ scale: 0.6 }} animate={{ scale: [0.6, 1.18, 1] }} transition={{ type: "spring", stiffness: 150, damping: 12, delay: 0.95 }}>
+          <svg viewBox="0 0 24 24" width="11" height="11" fill="none">
+            <motion.path d="M5 12.5 L10 17.5 L19 6.5" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5, delay: 0.5, ease }} />
+          </svg>
+        </motion.span>
+        Booking confirmed
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* Beat 4: the motion calms, the serif confirmation glows up from the aura bloom. */
+function BeatConfirmed() {
+  return (
+    <motion.div className="rk-m-beat rk-m-confirm" variants={stagger} initial="hidden" animate="show" exit={beatExit}>
+      <motion.span className="rk-serif rk-m-confirm-h" variants={rise}>You&rsquo;re confirmed</motion.span>
+      <motion.span className="rk-serif rk-m-confirm-d" variants={rise}>Saturday, June 14</motion.span>
+    </motion.div>
+  );
+}
+
+/* The signature: the product card recedes, then the wordmark resolves in serif,
+   words rising in stagger, a hairline rule drawing beneath, LIVE PREVIEW pulsing. */
+function Signature({ p }: { p: Project }) {
+  const words = p.client.split(" ");
+  return (
+    <motion.div
+      className="rk-m-sig"
+      variants={stagger}
+      initial="hidden"
+      animate="show"
+      exit={{ opacity: 0, scale: 0.98, filter: "blur(8px)", transition: { duration: 0.4, ease } }}
+    >
+      <h3 className="rk-serif rk-m-sig-h">
+        {words.map((w, i) => (
+          <span className="rk-m-sig-word-mask" key={`${w}-${i}`}>
+            <motion.span className="rk-m-sig-word" variants={wordRise}>{w}</motion.span>
+            {i < words.length - 1 ? " " : ""}
+          </span>
+        ))}
+      </h3>
+      <motion.span className="rk-m-sig-rule" aria-hidden variants={ruleRise} />
+      <motion.div className="rk-m-sig-live" variants={rise}>
+        <span className="rk-m-sig-dot" aria-hidden /> Live preview
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* Static product card, shared by reduced motion and the pre-scroll idle state. */
+function StaticCard() {
+  return (
+    <div className="rk-m-cardwrap">
+      <div className="rk-aura rk-m-cardaura" aria-hidden />
+      <div className="rk-card">
+        <div className="rk-m-beat">
+          <div className="rk-cal-head">
+            <span className="rk-cal-nav" aria-hidden>‹</span>
+            <span className="rk-serif rk-cal-title">June 2026</span>
+            <span className="rk-cal-nav" aria-hidden>›</span>
+          </div>
+          <div className="rk-week">{WEEK.map((w) => <span key={w}>{w}</span>)}</div>
+          <div className="rk-days">
+            <span aria-hidden />
+            {CAL_DAYS.map((d) => {
+              if (d === 14) return <span key={d} className="rk-day rk-day--sel">14</span>;
+              const isOpen = CAL_OPEN.includes(d);
+              const isFill = CAL_FILL.includes(d);
+              const cls = isOpen ? "rk-day rk-day--open" : isFill ? "rk-day rk-day--fill" : "rk-day";
+              return <span key={d} className={cls}>{d}{(isOpen || isFill) && <i aria-hidden />}</span>;
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* The Makeup by Roko brand skin, scoped to the montage. These rules mirror the
+   case-study skin so the card renders correctly even while that modal is closed
+   (the case study only mounts its own copy when it is open). */
+const MONTAGE_CSS = `
+.rk-montage {
+  --rk-surface: #FBF5F7; --rk-surface-2: #F8F4F6;
+  --rk-rose: #D4A0B0; --rk-rose-deep: #C4849A; --rk-plum: #B8A0D4; --rk-plum-text: #6B4055;
+  --rk-ink: #111111; --rk-muted: #6E6058; --rk-faint: #B5A99A;
+  --rk-border: #E2C4D2; --rk-border-2: #EDE6DF;
+  color: var(--rk-ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  perspective: 1400px; perspective-origin: 52% 38%;
+  background: radial-gradient(90% 70% at 88% -8%, rgba(212,160,176,0.20) 0%, rgba(212,160,176,0) 58%),
+              radial-gradient(70% 60% at 4% 110%, rgba(184,160,212,0.16) 0%, rgba(184,160,212,0) 60%),
+              var(--rk-surface);
+}
+.rk-montage .rk-serif { font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif; font-weight: 300; }
+.rk-montage .rk-eyebrow { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rk-rose-deep); font-weight: 500; }
+
+/* Ambient aura */
+.rk-m-aura-par { position: absolute; inset: 0; z-index: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.rk-m-aura { width: 78%; height: 78%; border-radius: 50%; filter: blur(60px); opacity: 0.7; will-change: transform;
+  background: radial-gradient(38% 50% at 28% 36%, rgba(212,160,176,0.72), transparent 70%),
+              radial-gradient(40% 52% at 74% 30%, rgba(184,160,212,0.6), transparent 70%),
+              radial-gradient(46% 56% at 52% 82%, rgba(170,190,230,0.5), transparent 70%); }
+
+/* 3D stack */
+.rk-m-parallax { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; }
+.rk-m-stage { transform-style: preserve-3d; will-change: transform, opacity; }
+.rk-m-float { position: relative; width: min(360px, 86%); transform-style: preserve-3d; will-change: transform; }
+
+.rk-m-ghost { position: absolute; inset: 0; border-radius: 16px; border: 1px solid var(--rk-border-2);
+  background: linear-gradient(160deg, #ffffff 0%, var(--rk-surface) 100%); box-shadow: 0 30px 60px -42px rgba(17,17,17,0.5); }
+.rk-m-ghost--1 { transform: translate3d(-22px, 14px, -70px) rotate(-5deg); opacity: 0.55; }
+.rk-m-ghost--2 { transform: translate3d(20px, 24px, -130px) rotate(4.5deg); opacity: 0.32; }
+
+.rk-m-window { position: relative; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--rk-border);
+  box-shadow: 0 50px 90px -45px rgba(17,17,17,0.55), 0 0 0 1px rgba(226,196,210,0.35);
+  transform: rotateX(6deg) rotateY(-10deg); transform-style: preserve-3d; backface-visibility: hidden; }
+
+.rk-montage .rk-bar { display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.9rem; background: var(--rk-surface-2); border-bottom: 1px solid var(--rk-border-2); }
+.rk-montage .rk-dots { display: flex; gap: 6px; }
+.rk-montage .rk-dots i { width: 9px; height: 9px; border-radius: 50%; background: #E6D4DC; display: block; }
+.rk-montage .rk-url { font-size: 0.68rem; color: var(--rk-muted); background: #fff; border: 1px solid var(--rk-border-2); border-radius: 100px; padding: 0.18rem 0.8rem; margin-left: auto; }
+
+.rk-m-body { position: relative; height: clamp(250px, 33vh, 318px); padding: 10px; overflow: hidden;
+  background: radial-gradient(82% 60% at 85% 0%, rgba(212,160,176,0.12), transparent 60%), #fff; }
+
+.rk-m-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 55%; z-index: 4; pointer-events: none; will-change: transform;
+  background: linear-gradient(112deg, transparent 0%, rgba(255,255,255,0.55) 48%, transparent 100%); mix-blend-mode: screen; }
+
+/* Booking card */
+.rk-m-cardwrap { position: absolute; inset: 10px; display: flex; will-change: transform, opacity, filter; }
+.rk-montage .rk-card { position: relative; width: 100%; height: 100%; background: #fff; border: 1px solid var(--rk-border); border-radius: 13px; padding: clamp(0.9rem, 2vw, 1.25rem); box-shadow: 0 10px 34px rgba(17,17,17,0.06); display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.rk-montage .rk-card > * { position: relative; z-index: 1; }
+.rk-m-cardaura { position: absolute; inset: -40% -20% -20% -20%; z-index: 0; filter: blur(34px); pointer-events: none; will-change: transform, opacity;
+  background: radial-gradient(40% 55% at 24% 36%, rgba(212,160,176,0.7), transparent 70%),
+              radial-gradient(42% 55% at 76% 28%, rgba(184,160,212,0.6), transparent 70%),
+              radial-gradient(50% 60% at 50% 86%, rgba(170,190,230,0.5), transparent 70%); }
+
+.rk-m-beat { width: 100%; }
+.rk-m-stack { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; text-align: center; }
+.rk-m-btn-wrap { width: 100%; }
+.rk-m-cap { font-size: 0.62rem; line-height: 1.45; color: var(--rk-muted); max-width: 26ch; }
+
+.rk-montage .rk-btn { width: 100%; padding: 0.7rem 1rem; border: none; border-radius: 100px; background: var(--rk-ink); color: #fff; font-size: 0.82rem; font-weight: 500; cursor: default; }
+.rk-montage .rk-chip { display: inline-flex; align-items: center; gap: 0.45rem; background: #fff; border: 1px solid var(--rk-border); border-radius: 100px; padding: 0.45rem 0.85rem; font-size: 0.78rem; color: var(--rk-ink); width: max-content; }
+.rk-montage .rk-check { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--rk-rose); color: #fff; flex-shrink: 0; }
+.rk-m-check svg { display: block; }
+.rk-montage .rk-badge { display: flex; align-items: center; gap: 0.7rem; background: var(--rk-surface); border: 1px solid var(--rk-border); border-radius: 13px; padding: 0.7rem 0.9rem; }
+.rk-montage .rk-badge-icon { width: 30px; height: 30px; border-radius: 50%; background: #F7EEF2; display: flex; align-items: center; justify-content: center; color: var(--rk-rose-deep); font-size: 0.88rem; flex-shrink: 0; }
+.rk-montage .rk-badge b { display: block; font-size: 1.05rem; color: var(--rk-ink); font-family: var(--font-cormorant), serif; font-weight: 400; }
+.rk-montage .rk-badge span { font-size: 0.56rem; color: var(--rk-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.rk-montage .rk-cal-head { display: flex; align-items: center; justify-content: space-between; }
+.rk-montage .rk-cal-title { font-size: 1.22rem; color: var(--rk-ink); }
+.rk-montage .rk-cal-nav { color: var(--rk-faint); font-size: 1rem; padding: 0 0.35rem; }
+.rk-montage .rk-week { display: grid; grid-template-columns: repeat(7, 1fr); margin-top: 0.55rem; }
+.rk-montage .rk-week span { text-align: center; font-size: 0.5rem; letter-spacing: 0.06em; color: var(--rk-faint); text-transform: uppercase; padding-bottom: 0.4rem; }
+.rk-montage .rk-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.rk-montage .rk-day { position: relative; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 0.7rem; border-radius: 6px; color: #8a8a8a; }
+.rk-montage .rk-day i { width: 4px; height: 4px; border-radius: 50%; display: block; }
+.rk-montage .rk-day--open i { background: #34D399; }
+.rk-montage .rk-day--fill { color: #555; } .rk-montage .rk-day--fill i { background: #F0C27A; }
+.rk-montage .rk-day--sel { background: var(--rk-ink); color: #fff; border-radius: 5px; }
+.rk-m-day14 { color: #fff; }
+.rk-m-selfill { position: absolute; inset: 0; background: var(--rk-ink); border-radius: 5px; transform-origin: center; z-index: 0; will-change: transform; }
+.rk-m-ripple { position: absolute; inset: -1px; border-radius: 7px; box-shadow: 0 0 0 1.5px var(--rk-rose-deep); z-index: 2; pointer-events: none; will-change: transform, opacity; }
+.rk-m-day-num { position: relative; z-index: 1; }
+
+.rk-montage .rk-req { border: 1px solid rgba(212,160,176,0.4); border-radius: 12px; padding: 0.65rem 0.9rem; background: linear-gradient(100deg, rgba(212,160,176,0.12), rgba(184,160,212,0.12)); text-align: left; width: 100%; }
+.rk-montage .rk-req span { font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rk-rose-deep); }
+.rk-montage .rk-req b { display: block; font-family: var(--font-cormorant), serif; font-weight: 400; font-size: 1.25rem; color: var(--rk-ink); margin-top: 0.15rem; }
+
+.rk-m-confirm { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
+.rk-m-confirm-h { font-size: clamp(1.8rem, 4.6vw, 2.4rem); color: var(--rk-ink); line-height: 1.05; }
+.rk-m-confirm-d { font-size: 1.1rem; font-style: italic; color: var(--rk-rose-deep); }
+
+/* Signature */
+.rk-m-sig { position: absolute; inset: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.7rem; text-align: center; }
+.rk-m-sig-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0 0.28em; font-size: clamp(2rem, 5.5vw, 3rem); color: var(--rk-ink); line-height: 1.02; margin: 0; }
+.rk-m-sig-word-mask { display: inline-block; overflow: hidden; padding-bottom: 0.1em; }
+.rk-m-sig-word { display: inline-block; will-change: transform, opacity, filter; }
+.rk-m-sig-rule { width: clamp(48px, 22%, 90px); height: 1px; background: linear-gradient(90deg, transparent, var(--rk-rose-deep), transparent); will-change: transform; }
+.rk-m-sig-live { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rk-rose-deep); }
+.rk-m-sig-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rk-rose-deep); animation: rk-m-dot 2.4s ease-out infinite; }
+@keyframes rk-m-dot { 0% { box-shadow: 0 0 0 0 rgba(196,132,154,0.5); } 70% { box-shadow: 0 0 0 7px rgba(196,132,154,0); } 100% { box-shadow: 0 0 0 0 rgba(196,132,154,0); } }
+
+/* Hover cue */
+.rk-m-visit-wrap { position: absolute; left: 0; right: 0; bottom: clamp(0.9rem, 2.4vw, 1.5rem); display: flex; justify-content: center; z-index: 6; pointer-events: none; }
+.rk-m-visit { box-shadow: 0 14px 34px rgba(17,17,17,0.16); }
+
+@media (prefers-reduced-motion: reduce) { .rk-m-sig-dot { animation: none; } }
+`;
 
 /* ── The eye + red laser. The eye sleeps (closed) until the cursor stirs, then
    blinks open, tracks the cursor, and fires a detailed red beam at it. ── */
