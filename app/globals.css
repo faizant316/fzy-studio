@@ -170,6 +170,27 @@ body {
 }
 .pill-solid:hover { opacity: 0.88; transform: translateY(-1px); }
 
+/* ── Spec tag — refined square-ish meta label (replaces the rounded "bubble"
+   pills). Hairline border, no fill, quiet text. Used for process/capability
+   detail tags so the UI reads cleaner and more editorial. ── */
+.spec-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  padding: 0.42rem 0.72rem;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-soft);
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+@media (hover: hover) {
+  .spec-tag:hover { border-color: var(--line-strong); }
+}
+
 /* ── No scrollbar ── */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

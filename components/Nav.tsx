@@ -9,7 +9,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 const links = [
   { label: "Work", id: "work" },
-  { label: "Capabilities", id: "capabilities" },
+  { label: "Process", id: "process" },
   { label: "Studio", id: "studio" },
   { label: "Start a Project", id: "contact" },
 ];

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Lenis from "lenis";
 import { lenisScrollTo, lenisStart, lenisStop } from "./lenis";
 
@@ -15,7 +15,7 @@ const BLUE = "#0a1326";
 // Mirrors the site nav so the case study keeps the real header.
 const NAV_LINKS = [
   { label: "Work", id: "work" },
-  { label: "Capabilities", id: "capabilities" },
+  { label: "Process", id: "process" },
   { label: "Studio", id: "studio" },
   { label: "Start a Project", id: "contact" },
 ];
@@ -402,49 +402,35 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
                   backdropFilter: "blur(12px)",
                 }}
               >
-                {/* Breadcrumb, file-explorer style: where you are in the site */}
-                <nav aria-label="Breadcrumb" style={{ display: "flex", alignItems: "center", gap: "0.55rem", minWidth: 0, overflow: "hidden" }}>
+                {/* Left: back to site + brand (brand stays visible) */}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", minWidth: 0 }}>
+                  <button type="button" onClick={onClose} className="cs-back" aria-label="Back to site">
+                    <svg width="17" height="17" viewBox="0 0 16 16" fill="none"><path d="M10 3l-5 5 5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
                   <button
                     type="button"
                     onClick={() => { onClose(); setTimeout(() => lenisScrollTo(0), 80); }}
                     aria-label="FZY home"
-                    className="cs-crumb"
-                    style={{ color: "#fff", fontWeight: 600, letterSpacing: "0.24em" }}
+                    className="cs-brand"
+                    style={{ color: "#fff", fontWeight: 600, letterSpacing: "0.24em", fontSize: "0.95rem" }}
                   >
                     FZY
                   </button>
-                  <span className="cs-crumb-sep" aria-hidden>·</span>
-                  <button
-                    type="button"
-                    onClick={() => { onClose(); setTimeout(() => lenisScrollTo("#work"), 80); }}
-                    className="cs-crumb"
-                    style={{ color: "var(--ink-soft)" }}
-                  >
-                    Work
-                  </button>
-                  <span className="cs-crumb-sep" aria-hidden>·</span>
-                  <span className="cs-crumb cs-crumb--current" aria-current="page" style={{ color: "var(--accent)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {p.client}
-                  </span>
-                </nav>
-                <div style={{ display: "flex", alignItems: "center", gap: "clamp(1rem, 2.2vw, 2.25rem)" }}>
-                  <div className="cs-nav-links" style={{ alignItems: "center", gap: "clamp(1rem, 2.2vw, 2.25rem)" }}>
-                    {NAV_LINKS.map((l) => (
-                      <button
-                        key={l.id}
-                        type="button"
-                        onClick={() => { onClose(); setTimeout(() => lenisScrollTo("#" + l.id), 80); }}
-                        className="link-line"
-                        style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontSize: "0.82rem", color: "var(--ink-soft)", whiteSpace: "nowrap" }}
-                      >
-                        {l.label}
-                      </button>
-                    ))}
-                  </div>
-                  <button type="button" onClick={onClose} className="cs-close" aria-label="Close case study">
-                    Close
-                    <span aria-hidden style={{ fontSize: "1.05rem", lineHeight: 1 }}>✕</span>
-                  </button>
+                </div>
+
+                {/* Right: section nav (desktop only) */}
+                <div className="cs-nav-links" style={{ alignItems: "center", gap: "clamp(1rem, 2.2vw, 2.25rem)" }}>
+                  {NAV_LINKS.map((l) => (
+                    <button
+                      key={l.id}
+                      type="button"
+                      onClick={() => { onClose(); setTimeout(() => lenisScrollTo("#" + l.id), 80); }}
+                      className="link-line"
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontSize: "0.82rem", color: "var(--ink-soft)", whiteSpace: "nowrap" }}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -544,14 +530,18 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
           </div>
 
           <style dangerouslySetInnerHTML={{ __html: `
-            .cs-close {
-              display: inline-flex; align-items: center; gap: 0.5rem;
-              padding: 0.55rem 1.1rem; border-radius: 100px;
-              border: 1px solid var(--line-strong); background: transparent; color: var(--ink);
-              font-size: 0.85rem; cursor: pointer;
-              transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            .cs-back {
+              flex-shrink: 0;
+              width: 40px; height: 40px; border-radius: 50%;
+              display: inline-flex; align-items: center; justify-content: center;
+              border: 1px solid var(--line-strong); background: rgba(255,255,255,0.04); color: var(--ink);
+              cursor: pointer;
+              transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
             }
-            .cs-close:hover { background: var(--ink); color: #0a0a0a; border-color: var(--ink); }
+            .cs-back:hover { background: var(--ink); color: #0a0a0a; border-color: var(--ink); }
+            .cs-back:active { transform: scale(0.94); }
+            .cs-brand { background: none; border: none; padding: 0; cursor: pointer; transition: opacity 0.3s ease; }
+            .cs-brand:hover { opacity: 0.72; }
             .cs-tag {
               padding: 0.5rem 1.05rem; border-radius: 100px;
               border: 1px solid var(--line-strong); background: transparent; color: var(--ink-soft);
@@ -559,16 +549,6 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
               transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
             }
             .cs-tag:hover { background: var(--ink); color: #0a0a0a; border-color: var(--ink); }
-            .cs-crumb { background: none; border: none; padding: 0; cursor: pointer; font-size: 0.82rem; }
-            button.cs-crumb { position: relative; }
-            button.cs-crumb::after {
-              content: ""; position: absolute; left: 0; bottom: -3px; width: 100%; height: 1px;
-              background: currentColor; transform: scaleX(0); transform-origin: right;
-              transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
-            }
-            button.cs-crumb:hover::after { transform: scaleX(1); transform-origin: left; }
-            .cs-crumb--current { cursor: default; font-size: 0.82rem; max-width: 42vw; }
-            .cs-crumb-sep { color: var(--gray-light); font-size: 0.82rem; }
             .cs-nav-links { display: none; }
             @media (min-width: 860px) { .cs-nav-links { display: flex; } }
             .cs-hero {
@@ -816,17 +796,26 @@ function MetaBlock({ label, values }: { label: string; values: string[] }) {
 }
 
 const ROKO_ASSETS = {
-  heroShot: "/roko-hero-screenshot.png",
+  heroShot: "/roko-hero-screenshot.png", // poster: shown until the video loads / for reduced-motion
+  heroVideo: "/roko-hero.mp4",           // drop a screen recording here in /public to make the preview play
   roko: "https://makeupby-roko.vercel.app/roko_pic.png",
   bridal: "https://makeupby-roko.vercel.app/bridal_trial.png",
 };
 
 const rkViewport = { once: false, amount: 0.45 };
 
-/* The preview pane uses a real current hero capture so the case study leads with
-   the live product instead of a recreated approximation. */
+/* The preview pane plays a screen recording of the live Roko site (poster falls
+   back to the still hero capture until the video loads, or for reduced-motion). */
 function RokoPreview() {
   const reduce = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true; // ensure the muted property is set so browsers allow autoplay
+    if (!reduce) v.play().catch(() => {}); // ignore autoplay rejection — the poster stays up
+  }, [reduce]);
 
   return (
     <motion.div
@@ -841,10 +830,17 @@ function RokoPreview() {
         <span className="rk-url">makeupby-roko.vercel.app</span>
       </div>
       <div className="rk-hero-shot">
-        <motion.img
-          src={ROKO_ASSETS.heroShot}
-          alt="Makeup by Roko homepage hero"
+        <motion.video
+          ref={videoRef}
           className="rk-hero-shot-img"
+          src={ROKO_ASSETS.heroVideo}
+          poster={ROKO_ASSETS.heroShot}
+          aria-label="Makeup by Roko site walkthrough"
+          muted
+          loop
+          playsInline
+          autoPlay={!reduce}
+          preload="metadata"
           initial={reduce ? false : { opacity: 0, scale: 1.015 }}
           whileInView={reduce ? undefined : { opacity: 1, scale: 1 }}
           viewport={{ once: true, amount: 0.35 }}
@@ -1395,475 +1391,64 @@ function PhoneMock() {
   );
 }
 
-/* The preview card is a premium "live preview" product film: a 3D browser window
-   holding the real Makeup by Roko booking UI, floating over a swirling aura with
-   parallax, springs, and a seamless ~8s loop (pick a date, request, deposit,
-   confirmed, signature) that resolves into the wordmark and dissolves back.
-   Reduced motion renders one clean static product card, no motion. */
+/* The preview plays a screen recording of the live Makeup by Roko site, framed in
+   minimal browser chrome. It plays only while in view; reduced motion holds the
+   poster still. The whole media is already the live-site link (see Feature). */
 function Placeholder({ p }: { p: Project }) {
-  return <RokoMontage p={p} />;
-}
-
-// One unhurried film: four product beats (~1.5s) then the signature hold (~2s).
-const BEAT_MS = [1500, 1500, 1500, 1500, 2000];
-
-// Slow, weighty spring used everywhere so nothing snaps; it breathes.
-const spring = { type: "spring", stiffness: 120, damping: 18 } as const;
-
-// Staggered child reveal: blur(8px) -> 0, y:24 -> 0, scale:0.96 -> 1, on a spring.
-const stagger: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
-};
-const rise: Variants = {
-  hidden: { opacity: 0, y: 24, scale: 0.96, filter: "blur(8px)" },
-  show: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", transition: spring },
-};
-const wordRise: Variants = {
-  hidden: { opacity: 0, y: "0.85em", filter: "blur(8px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: spring },
-};
-const ruleRise: Variants = {
-  hidden: { scaleX: 0 },
-  show: { scaleX: 1, transition: { duration: 0.7, ease, delay: 0.15 } },
-};
-// Outgoing beat: scales in slightly, blurs, fades, as the next rises over it.
-const beatExit = { opacity: 0, scale: 0.96, filter: "blur(8px)", transition: { duration: 0.35, ease } };
-
-function RokoMontage({ p }: { p: Project }) {
   const reduce = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const host = p.url.replace(/^https?:\/\//, "");
-  const ref = useRef<HTMLDivElement>(null);
-  const [beat, setBeat] = useState(0);
-  const [inView, setInView] = useState(false);
-  const [started, setStarted] = useState(false);
-  const [hover, setHover] = useState(false);
 
-  // Scroll-linked parallax: aura drifts most, the window less, the cue least.
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const auraY = useTransform(scrollYProgress, [0, 1], [70, -70]);
-  const windowY = useTransform(scrollYProgress, [0, 1], [28, -28]);
-  const cueY = useTransform(scrollYProgress, [0, 1], [-16, 16]);
-
-  // Advance the loop only while visible, so it truly pauses offscreen.
   useEffect(() => {
-    if (reduce || !started || !inView) return;
-    const id = setTimeout(() => setBeat((b) => (b + 1) % BEAT_MS.length), BEAT_MS[beat]);
-    return () => clearTimeout(id);
-  }, [beat, inView, started, reduce]);
-
-  // Reduced motion: one clean, static product card. No springs, no loop.
-  if (reduce) {
-    return (
-      <div ref={ref} className="rk rk-canvas rk-montage rk-montage--static">
-        <div className="rk-m-aura-par"><div className="rk-m-aura" /></div>
-        <div className="rk-m-parallax"><div className="rk-m-stage"><div className="rk-m-float">
-          <div className="rk-m-ghost rk-m-ghost--1" aria-hidden />
-          <div className="rk-m-ghost rk-m-ghost--2" aria-hidden />
-          <div className="rk-m-window">
-            <BrowserBar host={host} />
-            <div className="rk-m-body"><StaticCard /></div>
-          </div>
-        </div></div></div>
-        <style dangerouslySetInnerHTML={{ __html: MONTAGE_CSS }} />
-      </div>
-    );
-  }
-
-  const isSig = beat === 4;
+    const v = videoRef.current;
+    if (v) v.muted = true; // set the property too, so browsers allow autoplay
+  }, []);
 
   return (
     <motion.div
-      ref={ref}
-      className="rk rk-canvas rk-montage"
-      onViewportEnter={() => { setInView(true); setStarted(true); }}
-      onViewportLeave={() => setInView(false)}
+      className="rk-vid"
+      onViewportEnter={() => { const v = videoRef.current; if (v && !reduce) v.play().catch(() => {}); }}
+      onViewportLeave={() => { const v = videoRef.current; if (v) v.pause(); }}
       viewport={{ amount: 0.3 }}
-      onHoverStart={() => setHover(true)}
-      onHoverEnd={() => setHover(false)}
     >
-      {/* Ambient aura: scroll parallax on the wrapper, slow swirl on the glow. */}
-      <motion.div className="rk-m-aura-par" aria-hidden style={{ y: auraY }}>
-        <motion.div
-          className="rk-m-aura"
-          animate={inView ? { rotate: [0, 10, -6, 8, 0], scale: [1, 1.12, 1.05, 1.1, 1], x: ["0%", "6%", "-4%", "5%", "0%"], y: ["0%", "-5%", "4%", "-3%", "0%"] } : { rotate: 0, scale: 1, x: "0%", y: "0%" }}
-          transition={{ repeat: Infinity, duration: 16, ease: "easeInOut" }}
+      <div className="rk-vid-bar" aria-hidden>
+        <span className="rk-vid-dots"><i /><i /><i /></span>
+        <span className="rk-vid-url">{host}</span>
+      </div>
+      <div className="rk-vid-screen">
+        <video
+          ref={videoRef}
+          className="rk-vid-media"
+          src="/0625.mp4"
+          poster="/roko-hero-screenshot.png"
+          aria-label={`${p.client} site walkthrough`}
+          muted
+          loop
+          playsInline
+          preload="metadata"
         />
-      </motion.div>
-
-      {/* Window parallax -> stage entrance + hover -> continuous float. */}
-      <motion.div className="rk-m-parallax" style={{ y: windowY }}>
-        <motion.div
-          className="rk-m-stage"
-          animate={started
-            ? { opacity: 1, y: 0, scale: hover ? 1.02 : 1 }
-            : { opacity: 0, y: 42, scale: 0.94 }}
-          transition={spring}
-        >
-          <motion.div
-            className="rk-m-float"
-            animate={inView ? { y: [0, -9, 0], rotateZ: [-1, 1, -1] } : { y: 0, rotateZ: 0 }}
-            transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut" }}
-          >
-            <div className="rk-m-ghost rk-m-ghost--1" aria-hidden />
-            <div className="rk-m-ghost rk-m-ghost--2" aria-hidden />
-            <div className="rk-m-window">
-              <BrowserBar host={host} />
-              <div className="rk-m-body">
-                {started ? (
-                  <AnimatePresence mode="wait" initial={false}>
-                    {isSig
-                      ? <Signature key="sig" p={p} />
-                      : <BookingCard key="card" beat={beat} />}
-                  </AnimatePresence>
-                ) : (
-                  <StaticCard />
-                )}
-                {/* Diagonal glass sheen passing across the window. */}
-                <motion.div
-                  className="rk-m-sweep"
-                  aria-hidden
-                  animate={inView ? { x: ["-140%", "140%"] } : { x: "-140%" }}
-                  transition={{ repeat: Infinity, duration: 6.5, ease: "easeInOut", repeatDelay: 1.6 }}
-                />
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-
-      {/* Hover cue: the whole card is already the link, this just signposts it. */}
-      <AnimatePresence>
-        {hover && (
-          <motion.div className="rk-m-visit-wrap" style={{ y: cueY }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <motion.span
-              className="rk-chip rk-m-visit"
-              initial={{ opacity: 0, y: 12, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.96 }}
-              transition={spring}
-            >
-              Visit live site <span aria-hidden>↗</span>
-            </motion.span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <style dangerouslySetInnerHTML={{ __html: MONTAGE_CSS }} />
-    </motion.div>
-  );
-}
-
-function BrowserBar({ host }: { host: string }) {
-  return (
-    <div className="rk-bar">
-      <span className="rk-dots" aria-hidden><i /><i /><i /></span>
-      <span className="rk-url">{host}</span>
-    </div>
-  );
-}
-
-/* The booking card, persistent across beats 0 to 3, its inner UI morphing card
-   to card. It recedes (scale down + blur) when the signature takes over. */
-function BookingCard({ beat }: { beat: number }) {
-  return (
-    <motion.div
-      className="rk-m-cardwrap"
-      initial={{ opacity: 0, y: 30, scale: 0.94, filter: "blur(8px)" }}
-      animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-      exit={{ opacity: 0, scale: 0.86, filter: "blur(10px)", transition: { duration: 0.5, ease } }}
-      transition={spring}
-    >
-      <motion.div
-        className="rk-aura rk-m-cardaura"
-        aria-hidden
-        animate={{ opacity: beat === 3 ? 0.95 : 0.45, scale: beat === 3 ? 1.12 : 1 }}
-        transition={spring}
-      />
-      <div className="rk-card">
-        <AnimatePresence mode="wait" initial={false}>
-          {beat === 0 && <BeatCalendar key="b0" />}
-          {beat === 1 && <BeatRequest key="b1" />}
-          {beat === 2 && <BeatDeposit key="b2" />}
-          {beat === 3 && <BeatConfirmed key="b3" />}
-        </AnimatePresence>
+        <span className="rk-vid-cta" aria-hidden>Visit live site <span>↗</span></span>
       </div>
+      <style dangerouslySetInnerHTML={{ __html: PREVIEW_CSS }} />
     </motion.div>
   );
 }
 
-const CAL_OPEN = [13, 16, 17, 21, 23, 27, 30];
-const CAL_FILL = [9, 18, 24];
-const CAL_DAYS = Array.from({ length: 30 }, (_, i) => i + 1);
-const WEEK = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-
-/* Beat 1: live-availability calendar. June 14 springs to selected, the black
-   fill expanding from center with a soft ripple ring. */
-function BeatCalendar() {
-  return (
-    <motion.div className="rk-m-beat" variants={stagger} initial="hidden" animate="show" exit={beatExit}>
-      <motion.div className="rk-cal-head" variants={rise}>
-        <span className="rk-cal-nav" aria-hidden>‹</span>
-        <span className="rk-serif rk-cal-title">June 2026</span>
-        <span className="rk-cal-nav" aria-hidden>›</span>
-      </motion.div>
-      <motion.div className="rk-week" variants={rise}>
-        {WEEK.map((w) => <span key={w}>{w}</span>)}
-      </motion.div>
-      <motion.div className="rk-days" variants={rise}>
-        <span aria-hidden />{/* June 1 falls on Monday */}
-        {CAL_DAYS.map((d) => {
-          if (d === 14) {
-            return (
-              <span key={d} className="rk-day rk-m-day14">
-                <motion.span className="rk-m-selfill" aria-hidden initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 160, damping: 15, delay: 0.35 }} />
-                <motion.span className="rk-m-ripple" aria-hidden initial={{ scale: 0.4, opacity: 0.5 }} animate={{ scale: 2.8, opacity: 0 }} transition={{ duration: 1, delay: 0.4, ease }} />
-                <motion.span className="rk-m-day-num" initial={{ color: "#8a8a8a" }} animate={{ color: "#ffffff" }} transition={{ delay: 0.5, duration: 0.3 }}>14</motion.span>
-              </span>
-            );
-          }
-          const isOpen = CAL_OPEN.includes(d);
-          const isFill = CAL_FILL.includes(d);
-          const cls = isOpen ? "rk-day rk-day--open" : isFill ? "rk-day rk-day--fill" : "rk-day";
-          return <span key={d} className={cls}>{d}{(isOpen || isFill) && <i aria-hidden />}</span>;
-        })}
-      </motion.div>
-    </motion.div>
-  );
+const PREVIEW_CSS = `
+.rk-vid { position: relative; width: 100%; height: 100%; min-height: inherit; display: flex; flex-direction: column; background: #0a0a0c; overflow: hidden; }
+.rk-vid-bar { display: flex; align-items: center; gap: 0.7rem; flex-shrink: 0; z-index: 2; padding: 0.62rem 0.95rem; background: linear-gradient(#161618, #0d0d0f); border-bottom: 1px solid rgba(255,255,255,0.07); }
+.rk-vid-dots { display: flex; gap: 6px; }
+.rk-vid-dots i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.16); display: block; }
+.rk-vid-url { margin-left: auto; font-size: 0.72rem; color: rgba(255,255,255,0.62); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 100px; padding: 0.2rem 0.95rem; }
+.rk-vid-screen { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.rk-vid-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transform: scale(1.001); transition: transform 1s cubic-bezier(0.22,1,0.36,1); }
+.rk-vid:hover .rk-vid-media { transform: scale(1.045); }
+.rk-vid-cta { position: absolute; left: 50%; bottom: clamp(1rem, 3vw, 1.7rem); transform: translate(-50%, 10px); display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.62rem 1.2rem; border-radius: 100px; background: rgba(255,255,255,0.94); color: #0a0a0a; font-size: 0.86rem; font-weight: 500; box-shadow: 0 16px 38px rgba(0,0,0,0.34); opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; pointer-events: none; z-index: 3; }
+.rk-vid:hover .rk-vid-cta { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) {
+  .rk-vid-media, .rk-vid-cta { transition: none; }
+  .rk-vid:hover .rk-vid-media { transform: none; }
 }
-
-/* Beat 2: requested-date banner springs in, the request button presses with a
-   soft rose glow pulse. */
-function BeatRequest() {
-  return (
-    <motion.div className="rk-m-beat rk-m-stack" variants={stagger} initial="hidden" animate="show" exit={beatExit}>
-      <motion.span className="rk-eyebrow" variants={rise}>Preferred date</motion.span>
-      <motion.div className="rk-req" variants={rise}>
-        <span>Requested date</span>
-        <b>Saturday, June 14</b>
-      </motion.div>
-      <motion.div className="rk-m-btn-wrap" variants={rise}>
-        <motion.button
-          type="button"
-          className="rk-btn"
-          tabIndex={-1}
-          animate={{ scale: [1, 0.97, 1], boxShadow: ["0 0 0 0 rgba(196,132,154,0)", "0 0 0 10px rgba(196,132,154,0.16)", "0 0 0 0 rgba(196,132,154,0)"] }}
-          transition={{ duration: 0.9, delay: 0.7, ease }}
-        >
-          Request this date
-        </motion.button>
-      </motion.div>
-      <motion.p className="rk-m-cap" variants={rise}>Roko confirms your exact time within 24 to 48 hrs.</motion.p>
-    </motion.div>
-  );
-}
-
-/* Beat 3: the Zelle deposit rises in, the confirmed check draws via SVG then springs. */
-function BeatDeposit() {
-  return (
-    <motion.div className="rk-m-beat rk-m-stack" variants={stagger} initial="hidden" animate="show" exit={beatExit}>
-      <motion.div className="rk-badge" variants={rise}>
-        <span className="rk-badge-icon" aria-hidden>$</span>
-        <div>
-          <b>$250.00</b>
-          <span>Zelle · Deposit paid</span>
-        </div>
-      </motion.div>
-      <motion.div className="rk-chip" variants={rise}>
-        <motion.span className="rk-check rk-m-check" aria-hidden initial={{ scale: 0.6 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 320, damping: 11, delay: 0.95 }}>
-          <svg viewBox="0 0 24 24" width="11" height="11" fill="none">
-            <motion.path d="M5 12.5 L10 17.5 L19 6.5" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5, delay: 0.5, ease }} />
-          </svg>
-        </motion.span>
-        Booking confirmed
-      </motion.div>
-    </motion.div>
-  );
-}
-
-/* Beat 4: the motion calms, the serif confirmation glows up from the aura bloom. */
-function BeatConfirmed() {
-  return (
-    <motion.div className="rk-m-beat rk-m-confirm" variants={stagger} initial="hidden" animate="show" exit={beatExit}>
-      <motion.span className="rk-serif rk-m-confirm-h" variants={rise}>You&rsquo;re confirmed</motion.span>
-      <motion.span className="rk-serif rk-m-confirm-d" variants={rise}>Saturday, June 14</motion.span>
-    </motion.div>
-  );
-}
-
-/* The signature: the product card recedes, then the wordmark resolves in serif,
-   words rising in stagger, a hairline rule drawing beneath, LIVE PREVIEW pulsing. */
-function Signature({ p }: { p: Project }) {
-  const words = p.client.split(" ");
-  return (
-    <motion.div
-      className="rk-m-sig"
-      variants={stagger}
-      initial="hidden"
-      animate="show"
-      exit={{ opacity: 0, scale: 0.98, filter: "blur(8px)", transition: { duration: 0.4, ease } }}
-    >
-      <h3 className="rk-serif rk-m-sig-h">
-        {words.map((w, i) => (
-          <span className="rk-m-sig-word-mask" key={`${w}-${i}`}>
-            <motion.span className="rk-m-sig-word" variants={wordRise}>{w}</motion.span>
-            {i < words.length - 1 ? " " : ""}
-          </span>
-        ))}
-      </h3>
-      <motion.span className="rk-m-sig-rule" aria-hidden variants={ruleRise} />
-      <motion.div className="rk-m-sig-live" variants={rise}>
-        <span className="rk-m-sig-dot" aria-hidden /> Live preview
-      </motion.div>
-    </motion.div>
-  );
-}
-
-/* Static product card, shared by reduced motion and the pre-scroll idle state. */
-function StaticCard() {
-  return (
-    <div className="rk-m-cardwrap">
-      <div className="rk-aura rk-m-cardaura" aria-hidden />
-      <div className="rk-card">
-        <div className="rk-m-beat">
-          <div className="rk-cal-head">
-            <span className="rk-cal-nav" aria-hidden>‹</span>
-            <span className="rk-serif rk-cal-title">June 2026</span>
-            <span className="rk-cal-nav" aria-hidden>›</span>
-          </div>
-          <div className="rk-week">{WEEK.map((w) => <span key={w}>{w}</span>)}</div>
-          <div className="rk-days">
-            <span aria-hidden />
-            {CAL_DAYS.map((d) => {
-              if (d === 14) return <span key={d} className="rk-day rk-day--sel">14</span>;
-              const isOpen = CAL_OPEN.includes(d);
-              const isFill = CAL_FILL.includes(d);
-              const cls = isOpen ? "rk-day rk-day--open" : isFill ? "rk-day rk-day--fill" : "rk-day";
-              return <span key={d} className={cls}>{d}{(isOpen || isFill) && <i aria-hidden />}</span>;
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* The Makeup by Roko brand skin, scoped to the montage. These rules mirror the
-   case-study skin so the card renders correctly even while that modal is closed
-   (the case study only mounts its own copy when it is open). */
-const MONTAGE_CSS = `
-.rk-montage {
-  --rk-surface: #FBF5F7; --rk-surface-2: #F8F4F6;
-  --rk-rose: #D4A0B0; --rk-rose-deep: #C4849A; --rk-plum: #B8A0D4; --rk-plum-text: #6B4055;
-  --rk-ink: #111111; --rk-muted: #6E6058; --rk-faint: #B5A99A;
-  --rk-border: #E2C4D2; --rk-border-2: #EDE6DF;
-  color: var(--rk-ink);
-  font-family: var(--font-inter), system-ui, sans-serif;
-  position: relative; width: 100%; height: 100%; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  padding: clamp(1.5rem, 4vw, 3rem);
-  perspective: 1400px; perspective-origin: 52% 38%;
-  background: radial-gradient(90% 70% at 88% -8%, rgba(212,160,176,0.20) 0%, rgba(212,160,176,0) 58%),
-              radial-gradient(70% 60% at 4% 110%, rgba(184,160,212,0.16) 0%, rgba(184,160,212,0) 60%),
-              var(--rk-surface);
-}
-.rk-montage .rk-serif { font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif; font-weight: 300; }
-.rk-montage .rk-eyebrow { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rk-rose-deep); font-weight: 500; }
-
-/* Ambient aura */
-.rk-m-aura-par { position: absolute; inset: 0; z-index: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
-.rk-m-aura { width: 78%; height: 78%; border-radius: 50%; filter: blur(60px); opacity: 0.7; will-change: transform;
-  background: radial-gradient(38% 50% at 28% 36%, rgba(212,160,176,0.72), transparent 70%),
-              radial-gradient(40% 52% at 74% 30%, rgba(184,160,212,0.6), transparent 70%),
-              radial-gradient(46% 56% at 52% 82%, rgba(170,190,230,0.5), transparent 70%); }
-
-/* 3D stack */
-.rk-m-parallax { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; }
-.rk-m-stage { transform-style: preserve-3d; will-change: transform, opacity; }
-.rk-m-float { position: relative; width: min(360px, 86%); transform-style: preserve-3d; will-change: transform; }
-
-.rk-m-ghost { position: absolute; inset: 0; border-radius: 16px; border: 1px solid var(--rk-border-2);
-  background: linear-gradient(160deg, #ffffff 0%, var(--rk-surface) 100%); box-shadow: 0 30px 60px -42px rgba(17,17,17,0.5); }
-.rk-m-ghost--1 { transform: translate3d(-22px, 14px, -70px) rotate(-5deg); opacity: 0.55; }
-.rk-m-ghost--2 { transform: translate3d(20px, 24px, -130px) rotate(4.5deg); opacity: 0.32; }
-
-.rk-m-window { position: relative; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--rk-border);
-  box-shadow: 0 50px 90px -45px rgba(17,17,17,0.55), 0 0 0 1px rgba(226,196,210,0.35);
-  transform: rotateX(6deg) rotateY(-10deg); transform-style: preserve-3d; backface-visibility: hidden; }
-
-.rk-montage .rk-bar { display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.9rem; background: var(--rk-surface-2); border-bottom: 1px solid var(--rk-border-2); }
-.rk-montage .rk-dots { display: flex; gap: 6px; }
-.rk-montage .rk-dots i { width: 9px; height: 9px; border-radius: 50%; background: #E6D4DC; display: block; }
-.rk-montage .rk-url { font-size: 0.68rem; color: var(--rk-muted); background: #fff; border: 1px solid var(--rk-border-2); border-radius: 100px; padding: 0.18rem 0.8rem; margin-left: auto; }
-
-.rk-m-body { position: relative; height: clamp(250px, 33vh, 318px); padding: 10px; overflow: hidden;
-  background: radial-gradient(82% 60% at 85% 0%, rgba(212,160,176,0.12), transparent 60%), #fff; }
-
-.rk-m-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 55%; z-index: 4; pointer-events: none; will-change: transform;
-  background: linear-gradient(112deg, transparent 0%, rgba(255,255,255,0.55) 48%, transparent 100%); mix-blend-mode: screen; }
-
-/* Booking card */
-.rk-m-cardwrap { position: absolute; inset: 10px; display: flex; will-change: transform, opacity, filter; }
-.rk-montage .rk-card { position: relative; width: 100%; height: 100%; background: #fff; border: 1px solid var(--rk-border); border-radius: 13px; padding: clamp(0.9rem, 2vw, 1.25rem); box-shadow: 0 10px 34px rgba(17,17,17,0.06); display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
-.rk-montage .rk-card > * { position: relative; z-index: 1; }
-.rk-m-cardaura { position: absolute; inset: -40% -20% -20% -20%; z-index: 0; filter: blur(34px); pointer-events: none; will-change: transform, opacity;
-  background: radial-gradient(40% 55% at 24% 36%, rgba(212,160,176,0.7), transparent 70%),
-              radial-gradient(42% 55% at 76% 28%, rgba(184,160,212,0.6), transparent 70%),
-              radial-gradient(50% 60% at 50% 86%, rgba(170,190,230,0.5), transparent 70%); }
-
-.rk-m-beat { width: 100%; }
-.rk-m-stack { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; text-align: center; }
-.rk-m-btn-wrap { width: 100%; }
-.rk-m-cap { font-size: 0.62rem; line-height: 1.45; color: var(--rk-muted); max-width: 26ch; }
-
-.rk-montage .rk-btn { width: 100%; padding: 0.7rem 1rem; border: none; border-radius: 100px; background: var(--rk-ink); color: #fff; font-size: 0.82rem; font-weight: 500; cursor: default; }
-.rk-montage .rk-chip { display: inline-flex; align-items: center; gap: 0.45rem; background: #fff; border: 1px solid var(--rk-border); border-radius: 100px; padding: 0.45rem 0.85rem; font-size: 0.78rem; color: var(--rk-ink); width: max-content; }
-.rk-montage .rk-check { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--rk-rose); color: #fff; flex-shrink: 0; }
-.rk-m-check svg { display: block; }
-.rk-montage .rk-badge { display: flex; align-items: center; gap: 0.7rem; background: var(--rk-surface); border: 1px solid var(--rk-border); border-radius: 13px; padding: 0.7rem 0.9rem; }
-.rk-montage .rk-badge-icon { width: 30px; height: 30px; border-radius: 50%; background: #F7EEF2; display: flex; align-items: center; justify-content: center; color: var(--rk-rose-deep); font-size: 0.88rem; flex-shrink: 0; }
-.rk-montage .rk-badge b { display: block; font-size: 1.05rem; color: var(--rk-ink); font-family: var(--font-cormorant), serif; font-weight: 400; }
-.rk-montage .rk-badge span { font-size: 0.56rem; color: var(--rk-muted); letter-spacing: 0.1em; text-transform: uppercase; }
-
-.rk-montage .rk-cal-head { display: flex; align-items: center; justify-content: space-between; }
-.rk-montage .rk-cal-title { font-size: 1.22rem; color: var(--rk-ink); }
-.rk-montage .rk-cal-nav { color: var(--rk-faint); font-size: 1rem; padding: 0 0.35rem; }
-.rk-montage .rk-week { display: grid; grid-template-columns: repeat(7, 1fr); margin-top: 0.55rem; }
-.rk-montage .rk-week span { text-align: center; font-size: 0.5rem; letter-spacing: 0.06em; color: var(--rk-faint); text-transform: uppercase; padding-bottom: 0.4rem; }
-.rk-montage .rk-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-.rk-montage .rk-day { position: relative; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 0.7rem; border-radius: 6px; color: #8a8a8a; }
-.rk-montage .rk-day i { width: 4px; height: 4px; border-radius: 50%; display: block; }
-.rk-montage .rk-day--open i { background: #34D399; }
-.rk-montage .rk-day--fill { color: #555; } .rk-montage .rk-day--fill i { background: #F0C27A; }
-.rk-montage .rk-day--sel { background: var(--rk-ink); color: #fff; border-radius: 5px; }
-.rk-m-day14 { color: #fff; }
-.rk-m-selfill { position: absolute; inset: 0; background: var(--rk-ink); border-radius: 5px; transform-origin: center; z-index: 0; will-change: transform; }
-.rk-m-ripple { position: absolute; inset: -1px; border-radius: 7px; box-shadow: 0 0 0 1.5px var(--rk-rose-deep); z-index: 2; pointer-events: none; will-change: transform, opacity; }
-.rk-m-day-num { position: relative; z-index: 1; }
-
-.rk-montage .rk-req { border: 1px solid rgba(212,160,176,0.4); border-radius: 12px; padding: 0.65rem 0.9rem; background: linear-gradient(100deg, rgba(212,160,176,0.12), rgba(184,160,212,0.12)); text-align: left; width: 100%; }
-.rk-montage .rk-req span { font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rk-rose-deep); }
-.rk-montage .rk-req b { display: block; font-family: var(--font-cormorant), serif; font-weight: 400; font-size: 1.25rem; color: var(--rk-ink); margin-top: 0.15rem; }
-
-.rk-m-confirm { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
-.rk-m-confirm-h { font-size: clamp(1.8rem, 4.6vw, 2.4rem); color: var(--rk-ink); line-height: 1.05; }
-.rk-m-confirm-d { font-size: 1.1rem; font-style: italic; color: var(--rk-rose-deep); }
-
-/* Signature */
-.rk-m-sig { position: absolute; inset: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.7rem; text-align: center; }
-.rk-m-sig-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0 0.28em; font-size: clamp(2rem, 5.5vw, 3rem); color: var(--rk-ink); line-height: 1.02; margin: 0; }
-.rk-m-sig-word-mask { display: inline-block; overflow: hidden; padding-bottom: 0.1em; }
-.rk-m-sig-word { display: inline-block; will-change: transform, opacity, filter; }
-.rk-m-sig-rule { width: clamp(48px, 22%, 90px); height: 1px; background: linear-gradient(90deg, transparent, var(--rk-rose-deep), transparent); will-change: transform; }
-.rk-m-sig-live { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rk-rose-deep); }
-.rk-m-sig-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rk-rose-deep); animation: rk-m-dot 2.4s ease-out infinite; }
-@keyframes rk-m-dot { 0% { box-shadow: 0 0 0 0 rgba(196,132,154,0.5); } 70% { box-shadow: 0 0 0 7px rgba(196,132,154,0); } 100% { box-shadow: 0 0 0 0 rgba(196,132,154,0); } }
-
-/* Hover cue */
-.rk-m-visit-wrap { position: absolute; left: 0; right: 0; bottom: clamp(0.9rem, 2.4vw, 1.5rem); display: flex; justify-content: center; z-index: 6; pointer-events: none; }
-.rk-m-visit { box-shadow: 0 14px 34px rgba(17,17,17,0.16); }
-
-@media (prefers-reduced-motion: reduce) { .rk-m-sig-dot { animation: none; } }
 `;
 
 /* ── The eye + red laser. The eye sleeps (closed) until the cursor stirs, then

@@ -108,7 +108,7 @@ export default function Capabilities() {
                       <p style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.65, color: "var(--ink-soft)", maxWidth: "60ch" }}>{it.body}</p>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                         {it.tags.map((t) => (
-                          <span key={t} style={{ fontSize: "0.72rem", letterSpacing: "0.02em", padding: "0.34rem 0.85rem", borderRadius: 100, border: "1px solid var(--line)", background: "var(--surface)", color: "var(--ink-soft)" }}>{t}</span>
+                          <span key={t} className="spec-tag">{t}</span>
                         ))}
                       </div>
                     </div>
