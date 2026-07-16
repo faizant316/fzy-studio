@@ -11,7 +11,7 @@ const links = [
   { label: "Work", id: "work" },
   { label: "Process", id: "process" },
   { label: "Studio", id: "studio" },
-  { label: "Start a Project", id: "contact" },
+  { label: "Get a Quote", id: "contact" },
 ];
 
 export default function Nav() {

@@ -30,13 +30,24 @@ export default function Statement() {
             One considered product that replaces the spreadsheets and DMs a business outgrows, and runs without you.
           </motion.p>
 
-          {/* Who's behind it: people hire people, so put a name on the studio. */}
-          <motion.div {...fade(0.26)} style={{ marginTop: "0.8rem", paddingTop: "1.6rem", borderTop: "1px solid var(--line)" }}>
+          {/* Who's behind it: a face on the studio, in the studio's voice. */}
+          <motion.div {...fade(0.26)} style={{ marginTop: "0.8rem", paddingTop: "1.75rem", borderTop: "1px solid var(--line)" }}>
             <span className="eyebrow" style={{ color: "var(--accent)" }}>Behind the studio</span>
-            <p style={{ marginTop: "0.9rem", fontSize: "1.08rem", fontWeight: 500, color: "var(--ink)" }}>Faizan Tariq</p>
-            <p style={{ marginTop: "0.15rem", fontSize: "0.85rem", color: "var(--gray)" }}>Founder &amp; engineer</p>
-            <p style={{ marginTop: "0.9rem", fontSize: "0.98rem", lineHeight: 1.65, color: "var(--gray)" }}>
-              FZY is run by one engineer, not an agency floor. Every project is scoped, designed, and built by the same person you talk to on day one. Based in Sacramento, working with clients anywhere.
+            <div style={{ marginTop: "1.15rem", display: "flex", alignItems: "center", gap: "0.95rem" }}>
+              {/* Monogram avatar; swap for a real photo when there is one. */}
+              <span aria-hidden style={{
+                flexShrink: 0, width: 48, height: 48, borderRadius: "50%",
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                background: "var(--accent-soft)", border: "1px solid rgba(122,162,227,0.35)",
+                color: "var(--accent)", fontSize: "0.85rem", fontWeight: 600, letterSpacing: "0.08em",
+              }}>FT</span>
+              <div>
+                <p style={{ fontSize: "1.08rem", fontWeight: 500, color: "var(--ink)" }}>Faizan Tariq</p>
+                <p style={{ marginTop: "0.15rem", fontSize: "0.85rem", color: "var(--gray)" }}>Founder &amp; lead engineer</p>
+              </div>
+            </div>
+            <p style={{ marginTop: "1rem", fontSize: "0.98rem", lineHeight: 1.65, color: "var(--gray)" }}>
+              FZY is a small studio that designs, engineers, and ships every build in-house. No handoffs and no account managers: you work directly with the team building your product, from first call to launch.
             </p>
             <div style={{ marginTop: "1.1rem", display: "flex", flexWrap: "wrap", gap: "0.5rem 1.5rem" }}>
               <a href="https://faizantariq.dev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ fontSize: "0.88rem", color: "var(--ink-soft)" }}>Portfolio ↗</a>

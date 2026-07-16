@@ -72,6 +72,13 @@ function useScrollLock(active: boolean, onClose: () => void) {
 export default function ContactReveal() {
   const [formOpen, setFormOpen] = useState(false);
 
+  // The hero's "Get a quote" opens the form directly from anywhere on the page.
+  useEffect(() => {
+    const open = () => setFormOpen(true);
+    window.addEventListener("fzy:quote", open);
+    return () => window.removeEventListener("fzy:quote", open);
+  }, []);
+
   return (
     <section
       id="contact"
@@ -82,41 +89,51 @@ export default function ContactReveal() {
         borderTop: "1px solid var(--line)",
         borderTopLeftRadius: "clamp(1.75rem, 4.5vw, 3.5rem)",
         borderTopRightRadius: "clamp(1.75rem, 4.5vw, 3.5rem)",
-        padding: "clamp(5rem, 11vw, 9rem) clamp(1.25rem, 4vw, 3rem) clamp(4.5rem, 9vw, 7.5rem)",
+        padding: "clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 4vw, 3rem) clamp(4rem, 8vw, 6.5rem)",
       }}
     >
-      <div style={{ maxWidth: 880, margin: "0 auto", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto", position: "relative" }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -80px 0px" }}
           transition={{ duration: 0.8, ease }}
-          style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
         >
-          <span className="eyebrow" style={{ color: "var(--accent)" }}>Work with us</span>
-          <h2 className="display" style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.4rem)", color: "var(--ink)", marginTop: "1rem", letterSpacing: "-0.035em", maxWidth: "16ch" }}>
-            Tell us what you&rsquo;re building.
-          </h2>
-          <p style={{ marginTop: "1.4rem", fontSize: "clamp(1.02rem, 1.5vw, 1.15rem)", lineHeight: 1.65, color: "var(--gray)", maxWidth: "46ch" }}>
-            No packages, no menus. Every build is scoped to you: send one detailed request with your budget, and we&rsquo;ll reply within 24 hours with a clear next step.
-          </p>
+          {/* Editorial header: headline left, supporting copy right */}
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "1.5rem 3rem" }}>
+            <div>
+              <span className="eyebrow" style={{ color: "var(--accent)" }}>Work with us</span>
+              <h2 className="display" style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.6rem)", color: "var(--ink)", marginTop: "1rem", letterSpacing: "-0.035em", maxWidth: "13ch" }}>
+                Tell us what you&rsquo;re building.
+              </h2>
+            </div>
+            <p style={{ fontSize: "clamp(1rem, 1.4vw, 1.12rem)", lineHeight: 1.65, color: "var(--gray)", maxWidth: "38ch", paddingBottom: "0.4rem" }}>
+              No packages, no menus. Every build is scoped to you: one detailed request with your budget, and you&rsquo;ll hear back within 24 hours with a clear next step.
+            </p>
+          </div>
 
-          <button
-            onClick={() => setFormOpen(true)}
-            className="pill-solid"
-            style={{ marginTop: "clamp(2rem, 4vw, 2.75rem)", padding: "1.1rem 2.4rem", fontSize: "1.02rem" }}
-          >
-            Start your request
-            <span style={{ fontSize: "0.88rem" }}>↗</span>
-          </button>
-
-          <div style={{ marginTop: "clamp(2.25rem, 4.5vw, 3.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "0.85rem 2rem" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", fontSize: "0.9rem", color: "var(--ink-soft)" }}>
+          {/* The action row */}
+          <div style={{ marginTop: "clamp(2.25rem, 4.5vw, 3.5rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.25rem 2.25rem" }}>
+            <button
+              onClick={() => setFormOpen(true)}
+              className="pill-solid"
+              style={{ padding: "1.1rem 2.4rem", fontSize: "1.02rem", fontWeight: 600 }}
+            >
+              Get a quote
+              <span style={{ fontSize: "0.88rem" }}>↗</span>
+            </button>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", fontSize: "0.92rem", color: "var(--ink-soft)" }}>
               <span style={{ flexShrink: 0, width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 0 4px var(--accent-soft)" }} />
               We reply within 24 hours
             </span>
-            <a href="mailto:hello@fzydev.com" className="link-line" style={{ color: "var(--ink)", fontSize: "0.95rem" }}>hello@fzydev.com</a>
-            <a href="https://www.instagram.com/fzydev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ color: "var(--ink-soft)", fontSize: "0.95rem" }}>@fzydev</a>
+          </div>
+
+          {/* Quiet trust row along the bottom */}
+          <div style={{ marginTop: "clamp(2.75rem, 5.5vw, 4rem)", paddingTop: "1.4rem", borderTop: "1px solid var(--line)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "0.85rem 2rem" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.85rem 2rem" }}>
+              <a href="mailto:hello@fzydev.com" className="link-line" style={{ color: "var(--ink)", fontSize: "0.95rem" }}>hello@fzydev.com</a>
+              <a href="https://www.instagram.com/fzydev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ color: "var(--ink-soft)", fontSize: "0.95rem" }}>@fzydev</a>
+            </div>
             <span className="eyebrow" style={{ color: "var(--gray)" }}>Sacramento, CA · Available worldwide</span>
           </div>
         </motion.div>
@@ -187,7 +204,7 @@ function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
               <>
                 {/* Left: editorial intro + reassurance, sticky on desktop */}
                 <aside className="form-aside">
-                  <span className="eyebrow" style={{ color: "var(--accent)" }}>Start your request</span>
+                  <span className="eyebrow" style={{ color: "var(--accent)" }}>Get a quote</span>
                   <h2 className="display" style={{ fontSize: "clamp(2.3rem, 5vw, 3.4rem)", color: "var(--ink)", marginTop: "1rem" }}>Tell us about it</h2>
                   <p style={{ marginTop: "1.25rem", fontSize: "1.05rem", lineHeight: 1.65, color: "var(--gray)", maxWidth: "40ch" }}>
                     A few details about what you&rsquo;re building and where it&rsquo;s getting stuck. The more you share, the sharper our first reply.

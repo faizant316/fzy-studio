@@ -32,12 +32,14 @@ function Headline({ light, id }: { light: boolean; id?: string }) {
         style={{ marginTop: "clamp(1.5rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1rem" }}
       >
         <button
-          onClick={() => lenisScrollTo("#contact")}
-          className="pill-solid"
+          // Opens the request form directly (ContactReveal listens for this),
+          // so the primary CTA is one tap from the form, not scroll-then-click.
+          onClick={() => window.dispatchEvent(new Event("fzy:quote"))}
+          className="pill-solid hero-cta"
           style={light ? { background: "#fff", color: "#0a0a0a", borderColor: "#fff" } : undefined}
         >
-          Start a project
-          <span style={{ fontSize: "0.85rem" }}>↗</span>
+          Get a quote
+          <span style={{ fontSize: "0.88rem" }}>↗</span>
         </button>
         <OutlinePill light={light} onClick={() => lenisScrollTo("#work")}>View our work</OutlinePill>
       </motion.div>
@@ -73,6 +75,24 @@ const HeroStyles = () => (
   <style>{`
     @media (min-width: 880px) { .hero-grid { grid-template-columns: 1fr 1fr !important; align-items: stretch; } }
     @media (max-width: 879px) { .hero-right { order: -1; justify-content: flex-start !important; } }
+  `}</style>
+);
+
+/* The primary CTA gets extra presence: larger, with a soft light glow that
+   lifts on hover. Injected once, used by both hero variants. */
+const HeroCtaStyles = () => (
+  <style>{`
+    .pill-solid.hero-cta {
+      padding: 1.05rem 2.3rem;
+      font-size: 1.02rem;
+      font-weight: 600;
+      box-shadow: 0 14px 44px rgba(244,244,242,0.16);
+    }
+    .pill-solid.hero-cta:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+      box-shadow: 0 18px 54px rgba(244,244,242,0.26);
+    }
   `}</style>
 );
 
@@ -113,6 +133,7 @@ export default function Hero() {
         <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", minWidth: 0 }}>
           <Headline light id="hero-copy" />
         </div>
+        <HeroCtaStyles />
       </section>
     );
   }
@@ -132,6 +153,7 @@ export default function Hero() {
         </div>
       </div>
       <HeroStyles />
+      <HeroCtaStyles />
     </section>
   );
 }

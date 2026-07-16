@@ -17,7 +17,7 @@ export default function Footer() {
               { label: "Work", href: "#work" },
               { label: "Process", href: "#process" },
               { label: "FAQ", href: "#faq" },
-              { label: "Start a Project", href: "#contact" },
+              { label: "Get a Quote", href: "#contact" },
             ]} />
             <FooterCol title="Elsewhere" links={[
               { label: "hello@fzydev.com", href: "mailto:hello@fzydev.com" },
