@@ -15,25 +15,25 @@ const steps: Step[] = [
   {
     no: "01",
     title: "Scope",
-    body: "We map how you actually work — the goals, the bottlenecks, the must-haves — and turn it into a clear plan and a fixed scope before a single line of code.",
+    body: "We map your goals, bottlenecks, and must-haves, then lock a clear plan and a fixed scope before a single line of code.",
     detail: ["Goals & workflow", "Fixed scope", "Clear timeline"],
   },
   {
     no: "02",
     title: "Design",
-    body: "Every screen is designed before it's built — layout, type, motion, the small interactions. You see and sign off on the look before we engineer it.",
+    body: "Every screen is designed before it's built. You see the layout, type, and motion, and sign off before we engineer it.",
     detail: ["Wireframes → UI", "Mobile-first", "Your sign-off"],
   },
   {
     no: "03",
     title: "Build",
-    body: "We engineer the real thing end to end — accounts, dashboards, payments, the database underneath — and you watch it come together instead of waiting in the dark.",
+    body: "We engineer the real thing end to end: accounts, dashboards, payments, and the database underneath. You watch it come together in live previews.",
     detail: ["Full-stack build", "Live previews", "Built to scale"],
   },
   {
     no: "04",
     title: "Launch & support",
-    body: "We deploy it live on your domain and stay on after — so the thing keeps running, and you're never left to figure it out alone.",
+    body: "We deploy it live on your domain and stay on after launch, so it keeps running and you're never left to figure it out alone.",
     detail: ["Deployed live", "Handover", "Support window"],
   },
 ];
@@ -53,7 +53,7 @@ export default function Process() {
       style={{
         position: "relative",
         background: "var(--bg)",
-        padding: "clamp(5rem, 11vw, 9rem) clamp(1.25rem, 4vw, 3rem)",
+        padding: "clamp(4rem, 9vw, 7.5rem) clamp(1.25rem, 4vw, 3rem)",
       }}
     >
       <div className="proc-grid" style={{ maxWidth: 1180, margin: "0 auto", width: "100%" }}>
@@ -70,7 +70,7 @@ export default function Process() {
               From idea to live, end to end
             </h2>
             <p style={{ marginTop: "1.5rem", fontSize: "clamp(1rem, 1.4vw, 1.1rem)", lineHeight: 1.65, color: "var(--gray)", maxWidth: "34ch" }}>
-              No black box, no agency telephone game. One studio, four clear steps — you always know exactly where your build is.
+              No black box, no agency telephone game. One studio, four clear steps, and you always know exactly where your build is.
             </p>
           </motion.div>
         </div>
@@ -98,7 +98,7 @@ export default function Process() {
               viewport={{ once: true, margin: "0px 0px -22% 0px" }}
               transition={{ duration: 0.7, delay: idx * 0.05, ease }}
               variants={{ rest: { opacity: 0, y: 20 }, live: { opacity: 1, y: 0 } }}
-              style={{ position: "relative", paddingLeft: "clamp(2.25rem, 4vw, 3.25rem)", paddingTop: idx === 0 ? 0 : "clamp(2.5rem, 4.5vw, 3.75rem)" }}
+              style={{ position: "relative", paddingLeft: "clamp(2.25rem, 4vw, 3.25rem)", paddingTop: idx === 0 ? 0 : "clamp(1.75rem, 3.25vw, 2.75rem)" }}
             >
               {/* Node on the rail */}
               <motion.span
@@ -113,12 +113,12 @@ export default function Process() {
 
               <div style={{ display: "flex", alignItems: "baseline", gap: "clamp(0.85rem, 2vw, 1.5rem)" }}>
                 <span className="eyebrow" style={{ color: "var(--gray-light)" }}>{s.no}</span>
-                <h3 className="display" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)", color: "var(--ink)", letterSpacing: "-0.025em" }}>{s.title}</h3>
+                <h3 className="display" style={{ fontSize: "clamp(1.45rem, 2.7vw, 2.1rem)", color: "var(--ink)", letterSpacing: "-0.025em" }}>{s.title}</h3>
               </div>
 
-              <p style={{ marginTop: "0.9rem", fontSize: "clamp(1rem, 1.3vw, 1.12rem)", lineHeight: 1.65, color: "var(--ink-soft)", maxWidth: "52ch" }}>{s.body}</p>
+              <p style={{ marginTop: "0.7rem", fontSize: "clamp(0.98rem, 1.25vw, 1.08rem)", lineHeight: 1.6, color: "var(--ink-soft)", maxWidth: "52ch" }}>{s.body}</p>
 
-              <div style={{ marginTop: "1.1rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              <div style={{ marginTop: "0.9rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                 {s.detail.map((d) => (
                   <span key={d} className="spec-tag">{d}</span>
                 ))}
@@ -132,7 +132,7 @@ export default function Process() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "0px 0px -40px 0px" }}
             transition={{ duration: 0.7, ease }}
-            style={{ marginTop: "clamp(2.75rem, 5vw, 4rem)", paddingLeft: "clamp(2.25rem, 4vw, 3.25rem)", fontSize: "0.95rem", lineHeight: 1.6, color: "var(--gray)" }}
+            style={{ marginTop: "clamp(2rem, 3.5vw, 3rem)", paddingLeft: "clamp(2.25rem, 4vw, 3.25rem)", fontSize: "0.95rem", lineHeight: 1.6, color: "var(--gray)" }}
           >
             Most builds go from first call to live in <span style={{ color: "var(--ink)" }}>two to six weeks</span>.
           </motion.p>
@@ -143,7 +143,7 @@ export default function Process() {
         .proc-grid { display: grid; grid-template-columns: 1fr; gap: clamp(2.5rem, 5vw, 4rem); }
         @media (min-width: 900px) {
           .proc-grid { grid-template-columns: 0.82fr 1.18fr; gap: clamp(3rem, 6vw, 6rem); align-items: start; }
-          .proc-head { position: sticky; top: clamp(5rem, 14vh, 8rem); }
+          .proc-head { position: sticky; top: clamp(5rem, 14vh, 8rem); top: clamp(5rem, 14svh, 8rem); }
         }
       ` }} />
     </section>

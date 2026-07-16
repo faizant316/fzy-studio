@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 
 /* ── A coded, self-driving walkthrough of the live Makeup by Roko site, framed in
    browser chrome. Replaces the old screen recording: it renders the real flow as
@@ -21,7 +21,7 @@ const smooth = [0.62, 0, 0.2, 1] as const;
 // Section scroll glides on that same curve.
 const glide = { duration: 1.0, ease: smooth };
 // Cursor: a soft spring so the pointer drifts and settles like a real hand.
-const cursorSpring = { type: "spring" as const, stiffness: 110, damping: 19, mass: 0.8 };
+const CURSOR_SPRING = { stiffness: 130, damping: 20, mass: 0.7 };
 // Card press: a snappier spring so the click reads as a real tap.
 const pressSpring = { type: "spring" as const, stiffness: 360, damping: 22 };
 
@@ -29,14 +29,14 @@ type Phase = "hero" | "about" | "services" | "open" | "date" | "form" | "submit"
 
 // One pass of the loop — kept brisk so it's always in motion, never parked.
 const SEQUENCE: { phase: Phase; dur: number }[] = [
-  { phase: "hero", dur: 950 },
+  { phase: "hero", dur: 900 },
   { phase: "about", dur: 650 },   // glides past — never parks here
-  { phase: "services", dur: 1450 },
-  { phase: "open", dur: 1250 },   // zoom into the card, press, sheet opens
-  { phase: "date", dur: 1500 },   // zoom into the calendar, click 14
-  { phase: "form", dur: 2150 },   // zoom out → into the form, it fills
-  { phase: "submit", dur: 950 },
-  { phase: "confirm", dur: 1650 },
+  { phase: "services", dur: 1300 },
+  { phase: "open", dur: 1100 },   // zoom into the card, press, sheet opens
+  { phase: "date", dur: 1300 },   // zoom into the calendar, click 14
+  { phase: "form", dur: 1750 },   // zoom out → into the form, it fills
+  { phase: "submit", dur: 750 },
+  { phase: "confirm", dur: 1500 },
 ];
 
 const SCROLL_INDEX: Record<Phase, number> = {
@@ -46,14 +46,18 @@ const OVERLAY_PHASES: Phase[] = ["open", "date", "form", "submit", "confirm"];
 const CLICK_PHASES: Phase[] = ["open", "date", "submit"];
 const CURSOR_PHASES: Phase[] = ["services", "open", "date", "form", "submit"];
 
-// Cursor target as a % of the stage. Tuned against the zoomed states.
-const CURSOR: Partial<Record<Phase, { x: number; y: number }>> = {
-  services: { x: 17, y: 73 },    // the first card's "Inquire" button
-  open: { x: 17, y: 73 },
-  date: { x: 22, y: 52 },        // June 14, in the zoomed-in calendar
-  form: { x: 54, y: 56 },        // the zoomed-in form
-  submit: { x: 50, y: 82 },      // the submit button
+// The cursor aims at real elements, measured live from the DOM every frame, so
+// it lands exactly on the button / June 14 / the form in every layout (wide,
+// narrow, mid-zoom) instead of relying on hand-tuned percentages.
+const TARGET_SEL: Partial<Record<Phase, string>> = {
+  services: ".rw-card--target .rw-card-btn",
+  open: ".rw-card--target .rw-card-btn",
+  date: ".rw-day--sel",
+  form: ".rw-field-box",
+  submit: ".rw-submit",
 };
+// Click-ripple timing per phase; submit fires fast so it never feels laggy.
+const CLICK_DELAY: Partial<Record<Phase, number>> = { open: 0.4, date: 0.55, submit: 0.18 };
 
 // The book (calendar | form) zoom, by phase. Origin is the left edge, so scale +
 // translateX pan into either column. "form" keyframes zoom out, then into the form.
@@ -87,19 +91,55 @@ const SERVICE_CARDS = [
 export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean }) {
   const reduce = useReducedMotion();
   const [phase, setPhase] = useState<Phase>(reduce ? "services" : "hero");
-  // Wide frames (desktop + the case-study header) get the two-column calendar↦form
-  // with zooms; narrow frames (phones) play it as a clean cross-fade.
+  // Wide frames get the two-column calendar↦form with zooms and the 3-card
+  // services row; narrow frames (phones, tight columns) get one full-width
+  // featured card and a clean cross-fade. Follows the FRAME's real width, not
+  // the window, so the case-study column and tablets get the layout that fits.
   const [wide, setWide] = useState(true);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const running = useRef(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 760px)");
-    const sync = () => setWide(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    const el = rootRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setWide(entry.contentRect.width >= 620));
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
+
+  // Cursor position as motion values (percent of the stage), driven by live DOM
+  // measurement below — no React re-renders while it glides.
+  const cx = useMotionValue(50);
+  const cy = useMotionValue(82);
+  const sx = useSpring(cx, CURSOR_SPRING);
+  const sy = useSpring(cy, CURSOR_SPRING);
+  const cursorLeft = useMotionTemplate`${sx}%`;
+  const cursorTop = useMotionTemplate`${sy}%`;
+
+  // Aim the cursor at the real element for this phase, re-measured every frame
+  // so it tracks the zoom/pan transforms and lands precisely in every layout.
+  useEffect(() => {
+    if (reduce || !CURSOR_PHASES.includes(phase)) return;
+    let raf = 0;
+    const aim = () => {
+      const stage = stageRef.current;
+      const sel = TARGET_SEL[phase];
+      const el = sel && stage ? stage.querySelector<HTMLElement>(sel) : null;
+      if (stage && el) {
+        const s = stage.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+        if (s.width > 0 && s.height > 0) {
+          cx.set(((r.left + r.width / 2 - s.left) / s.width) * 100);
+          cy.set(((r.top + r.height / 2 - s.top) / s.height) * 100);
+        }
+      }
+      raf = requestAnimationFrame(aim);
+    };
+    raf = requestAnimationFrame(aim);
+    return () => cancelAnimationFrame(raf);
+  }, [phase, reduce, cx, cy]);
 
   const clear = () => {
     timers.current.forEach(clearTimeout);
@@ -133,14 +173,14 @@ export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean })
   const dateSelected = phase === "date" || phase === "form" || phase === "submit";
   const formFill = phase === "form" || phase === "submit";
   const cursorOn = !reduce && CURSOR_PHASES.includes(phase);
-  const cur = CURSOR[phase] ?? { x: 50, y: 82 };
   const cardState = phase === "open" ? "press" : phase === "services" ? "hover" : "idle";
 
   return (
     <motion.div
+      ref={rootRef}
       className={`rw ${chrome ? "rw--chrome" : "rw--bare"}`}
       role="img"
-      aria-label="Makeup by Roko — booking walkthrough"
+      aria-label="Makeup by Roko booking walkthrough"
       onViewportEnter={start}
       onViewportLeave={stop}
       viewport={{ amount: 0.3 }}
@@ -152,7 +192,7 @@ export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean })
         </div>
       )}
 
-      <div className="rw-stage">
+      <div className="rw-stage" ref={stageRef}>
         {/* Vertically-scrolling site: hero → about → services */}
         <motion.div
           className="rw-scroll"
@@ -190,7 +230,7 @@ export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean })
           <div className="rw-panel rw-services">
             <motion.div
               className="rw-svc-inner"
-              style={{ transformOrigin: "17% 70%" }}
+              style={{ transformOrigin: wide ? "17% 70%" : "50% 64%" }}
               animate={{ scale: phase === "open" ? 1.4 : 1 }}
               transition={{ duration: 0.9, ease: smooth }}
             >
@@ -203,9 +243,12 @@ export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean })
                   <span key={t} className={`rw-tab ${i === 0 ? "rw-tab--on" : ""}`}>{t}</span>
                 ))}
               </div>
-              <div className="rw-cards">
+              <div className={`rw-cards ${wide ? "" : "rw-cards--one"}`}>
                 {SERVICE_CARDS.map((c, i) => {
                   const active = i === 0;
+                  // Narrow frames show only the featured card, full width, like
+                  // the real site on a phone — three squeezed columns read as clutter.
+                  if (!active && !wide) return null;
                   const content = (
                     <>
                       <div className="rw-card-photo">
@@ -232,7 +275,7 @@ export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean })
                   return (
                     <motion.div
                       key={c.name}
-                      className={`rw-card ${cardState !== "idle" ? "rw-card--on" : ""}`}
+                      className={`rw-card rw-card--target ${cardState !== "idle" ? "rw-card--on" : ""}`}
                       animate={cardState === "press" ? { scale: 0.95, y: -1 } : cardState === "hover" ? { scale: 1, y: -7 } : { scale: 1, y: 0 }}
                       transition={pressSpring}
                     >
@@ -338,14 +381,12 @@ export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean })
           )}
         </AnimatePresence>
 
-        {/* Synthetic cursor — spring-driven so it glides naturally */}
+        {/* Synthetic cursor — spring-driven motion values, aimed at real elements */}
         {cursorOn && (
           <motion.div
             className="rw-cursor"
             aria-hidden
-            initial={false}
-            animate={{ left: `${cur.x}%`, top: `${cur.y}%` }}
-            transition={cursorSpring}
+            style={{ left: cursorLeft, top: cursorTop }}
           >
             <svg viewBox="0 0 24 24" width="22" height="22">
               <path d="M5 3l14 8-6 1.6 3.4 6.2-2.7 1.4-3.4-6.2L7 18z" fill="#111" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round" />
@@ -356,7 +397,7 @@ export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean })
                 className="rw-click"
                 initial={{ scale: 0.3, opacity: 0.55 }}
                 animate={{ scale: 2.1, opacity: 0 }}
-                transition={{ duration: 0.5, ease, delay: 0.45 }}
+                transition={{ duration: 0.5, ease, delay: CLICK_DELAY[phase] ?? 0.4 }}
               />
             )}
           </motion.div>
@@ -450,7 +491,7 @@ function BookForm({ fill }: { fill: boolean }) {
                 className="rw-field-val"
                 initial={false}
                 animate={{ opacity: fill ? 1 : 0 }}
-                transition={{ duration: 0.25, delay: fill ? 0.35 + i * 0.3 : 0, ease }}
+                transition={{ duration: 0.25, delay: fill ? 0.3 + i * 0.22 : 0, ease }}
               >
                 {r.value}
               </motion.span>
@@ -460,7 +501,7 @@ function BookForm({ fill }: { fill: boolean }) {
                   aria-hidden
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 1, 1, 0] }}
-                  transition={{ duration: 0.4, delay: 0.22 + i * 0.3, ease, times: [0, 0.1, 0.85, 1] }}
+                  transition={{ duration: 0.35, delay: 0.18 + i * 0.22, ease, times: [0, 0.1, 0.85, 1] }}
                 />
               )}
             </div>
@@ -532,10 +573,10 @@ const RW_CSS = `
 .rw-scroll { position: absolute; top: 0; left: 0; right: 0; height: 300%; }
 .rw-panel { height: 33.3333%; overflow: hidden; position: relative; }
 
-/* Hero — real capture. 'contain' on desktop shows the whole hero; mobile fills. */
+/* Hero — real capture, shown in full everywhere. The screenshot is dark-on-dark,
+   so 'contain' letterboxing blends invisibly instead of cropping on phones. */
 .rw-hero { background: #080607; }
-.rw-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
-@media (min-width: 760px) { .rw-hero-img { object-fit: contain; object-position: center; } }
+.rw-hero-img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; }
 
 /* About */
 .rw-about { background: #fff; display: grid; grid-template-columns: 0.82fr 1.18fr; gap: clamp(0.9rem, 2.4vw, 2rem); align-items: center; padding: clamp(1.1rem, 3.2vw, 2.6rem) clamp(1.1rem, 3.6vw, 3rem); }
@@ -556,6 +597,12 @@ const RW_CSS = `
 .rw-tab { font-size: clamp(0.58rem, 0.95vw, 0.72rem); letter-spacing: 0.08em; text-transform: uppercase; color: var(--rk-faint); padding-bottom: 0.3rem; }
 .rw-tab--on { color: var(--rk-ink); border-bottom: 1.5px solid var(--rk-rose-deep); }
 .rw-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.6rem, 1.5vw, 1.05rem); margin-top: clamp(0.8rem, 2vw, 1.35rem); align-items: start; }
+/* Narrow frames: one featured card, full width, with a proper photo. */
+.rw-cards--one { grid-template-columns: 1fr; max-width: 440px; }
+.rw-cards--one .rw-card-photo { height: clamp(110px, 30vw, 150px); }
+.rw-cards--one .rw-card-name { font-size: clamp(1.15rem, 5vw, 1.4rem); }
+.rw-cards--one .rw-card-price { font-size: clamp(0.66rem, 2.6vw, 0.8rem); }
+.rw-cards--one .rw-card-btn { font-size: clamp(0.64rem, 2.6vw, 0.78rem); padding: 0.6rem 0.5rem; }
 .rw-card { display: flex; flex-direction: column; border: 1px solid var(--rk-border-2); border-radius: 13px; background: #fff; overflow: hidden; transition: border-color 0.45s ease, box-shadow 0.45s ease; }
 .rw-card--on { border-color: var(--rk-rose); box-shadow: 0 18px 44px rgba(196,132,154,0.3); }
 .rw-card-photo { position: relative; height: clamp(64px, 9vw, 108px); overflow: hidden; background: #ede4e7; }

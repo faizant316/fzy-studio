@@ -272,8 +272,15 @@ function Feature({ p, index }: { p: Project; index: number }) {
         .work-feature__info { display: flex; flex-direction: column; justify-content: center; }
         .work-feature__media {
           position: relative;
+          /* svh, not vh: in-app browsers (Instagram) resize the viewport when
+             their chrome hides/shows mid-scroll; vh-sized blocks then reflow
+             and the page visibly jumps. svh stays constant. */
           min-height: clamp(380px, 56vh, 660px);
+          min-height: clamp(380px, 56svh, 660px);
           box-shadow: 0 50px 90px -50px rgba(0,0,0,0.8);
+        }
+        @media (max-width: 640px) {
+          .work-feature__media { min-height: clamp(430px, 118vw, 600px); }
         }
         .work-outline {
           display: inline-flex; align-items: center; gap: 0.5rem;
@@ -440,18 +447,18 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
                 </div>
               </div>
 
-              <div style={{ maxWidth: 1840, margin: "0 auto", padding: "clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 3.2vw, 3.5rem) clamp(4rem, 9vw, 7rem)" }}>
+              <div style={{ maxWidth: 1840, margin: "0 auto", padding: "clamp(2rem, 6vw, 5rem) clamp(1.25rem, 3.2vw, 3.5rem) clamp(4rem, 9vw, 7rem)" }}>
                 <span className="eyebrow" style={{ color: "var(--gray)" }}>{p.category} · {p.year}</span>
-                <h2 className="display" style={{ fontSize: "clamp(2.6rem, 7vw, 5.5rem)", letterSpacing: "-0.04em", marginTop: "0.7rem", color: "var(--ink)" }}>
+                <h2 className="display" style={{ fontSize: "clamp(2.2rem, 7vw, 5.5rem)", letterSpacing: "-0.04em", marginTop: "0.7rem", color: "var(--ink)" }}>
                   {p.client}
                 </h2>
-                <a href={p.url} target="_blank" rel="noopener noreferrer" className="pill-solid" style={{ marginTop: "clamp(1.5rem, 3vw, 2rem)", textDecoration: "none" }}>
+                <a href={p.url} target="_blank" rel="noopener noreferrer" className="pill-solid" style={{ marginTop: "clamp(1.25rem, 3vw, 2rem)", textDecoration: "none" }}>
                   Visit live site
                   <span style={{ fontSize: "0.85rem" }}>↗</span>
                 </a>
 
                 {/* A peek into the real product, Makeup by Roko's own brand world */}
-                <div style={{ marginTop: "clamp(2.5rem, 5vw, 4rem)" }}>
+                <div style={{ marginTop: "clamp(2rem, 5vw, 4rem)" }}>
                   <RokoPreview />
                 </div>
 
@@ -821,7 +828,7 @@ function RokoPreview() {
           The whole booking,<br />start to finish.
         </h3>
         <p style={{ marginTop: "1.1rem", fontSize: "1.04rem", lineHeight: 1.6, color: "var(--gray)", maxWidth: "34ch" }}>
-          Everything a bride taps through on the real site — browse the services, pick a wedding date,
+          Everything a bride taps through on the real site: browse the services, pick a wedding date,
           send the inquiry, and land on the branded confirmation. Recreated here, frame for frame.
         </p>
         <span style={{ marginTop: "1.3rem", display: "inline-block", fontSize: "0.8rem", letterSpacing: "0.04em", color: "var(--gray-light)" }}>
@@ -837,6 +844,11 @@ function RokoPreview() {
         .rk-walkframe { min-height: clamp(330px, 46vw, 500px); }
         @media (min-width: 900px) {
           .rk-walkwrap { grid-template-columns: 0.78fr 1.22fr; gap: clamp(2.25rem, 4.5vw, 3.75rem); }
+        }
+        /* Phones: a taller, portrait-ish frame so the walkthrough breathes
+           instead of squeezing the whole flow into a short letterbox. */
+        @media (max-width: 640px) {
+          .rk-walkframe { min-height: clamp(430px, 118vw, 560px); }
         }
       ` }} />
     </motion.div>
@@ -1479,7 +1491,9 @@ function GlitchBand({ top, bottom, seedBase }: { top: string; bottom: string; se
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        height: "clamp(170px, 24vh, 320px)",
+        // svh (not vh) so in-app browser chrome hiding/showing mid-scroll
+        // can't resize the band and shift the page under the reader.
+        height: "clamp(170px, 24svh, 320px)",
         overflow: "hidden",
         // ombre carries the old color smoothly into the new
         background: `linear-gradient(to bottom, ${top} 0%, ${bottom} 100%)`,

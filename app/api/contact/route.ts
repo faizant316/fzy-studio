@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       from: FROM,
       to: NOTIFY_TO,
       replyTo: email,
-      subject: `New project request — ${projectType} from ${name}`,
+      subject: `New project request: ${projectType} from ${name}`,
       html: `
         <div style="font-family: ui-monospace, monospace; background: #0a0a0a; color: #f5f0eb; padding: 2rem; border-radius: 12px; max-width: 560px;">
           <p style="font-size: 1.4rem; font-weight: 700; margin: 0 0 0.4rem; color: #c9a96a;">FZY</p>
@@ -50,13 +50,13 @@ export async function POST(req: NextRequest) {
       to: email,
       // hello@ has no inbox; route visitor replies to the real business inbox.
       replyTo: "faizan@fzydev.com",
-      subject: "We got your request — FZY",
+      subject: "We got your request · FZY",
       html: `
         <div style="font-family: ui-monospace, monospace; background: #0a0a0a; color: #f5f0eb; padding: 2rem; border-radius: 12px; max-width: 560px;">
           <p style="font-size: 1.4rem; font-weight: 700; margin: 0 0 1rem;">Hey ${name},</p>
           <p style="color: #aaa; line-height: 1.7; margin: 0 0 1rem;">Thanks for reaching out to <strong style="color: #c9a96a;">FZY</strong>. We got your request about a <strong style="color: #f5f0eb;">${projectType}</strong> and we'll be in touch within 24 hours with a clear next step.</p>
           <p style="color: #aaa; line-height: 1.7; margin: 0 0 2rem;">In the meantime, feel free to reply with any extra details.</p>
-          <p style="color: #f5f0eb; margin: 0;">— FZY Studio</p>
+          <p style="color: #f5f0eb; margin: 0;">FZY Studio</p>
           <p style="color: #444; font-size: 0.75rem; margin: 1.5rem 0 0;">FZY · fzydev.com</p>
         </div>
       `,

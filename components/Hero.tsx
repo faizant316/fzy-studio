@@ -102,7 +102,7 @@ export default function Hero() {
   // ── Video mode (Neuralink-style full-bleed background) ──
   if (HERO_VIDEO) {
     return (
-      <section id="hero" style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0b", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 5vw, 3rem) clamp(2.5rem, 6vh, 3.5rem)" }}>
+      <section id="hero" style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0b", padding: "clamp(6.5rem, 11svh, 8.5rem) clamp(1.25rem, 5vw, 3rem) clamp(2.5rem, 6svh, 3.5rem)" }}>
         <video ref={videoRef} autoPlay muted loop playsInline poster={HERO_POSTER || undefined} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}>
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
@@ -119,7 +119,7 @@ export default function Hero() {
 
   // ── Default: clean white hero with the animated FZY ──
   return (
-    <section style={{ position: "relative", minHeight: "100svh", display: "flex", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5vh, 3rem)", background: "var(--bg)", overflow: "hidden" }}>
+    <section style={{ position: "relative", minHeight: "100svh", display: "flex", padding: "clamp(6.5rem, 11svh, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 5svh, 3rem)", background: "var(--bg)", overflow: "hidden" }}>
       <div className="hero-grid" style={gridStyle}>
         <div className="hero-left" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", minWidth: 0 }}>
           <motion.span className="eyebrow" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15, ease }}>
