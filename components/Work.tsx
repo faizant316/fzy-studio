@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Lenis from "lenis";
 import { lenisScrollTo, lenisStart, lenisStop } from "./lenis";
+import RokoWalkthrough from "./RokoWalkthrough";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -155,8 +156,6 @@ export default function Work() {
             </span>
           </motion.div>
 
-          {/* Eye + laser overlay, sits high, tracks the cursor across the section */}
-          <EyeLaser />
         </div>
       </div>
 
@@ -176,8 +175,6 @@ export default function Work() {
           100% { box-shadow: 0 0 0 0 rgba(122,162,227,0); }
         }
         @media (prefers-reduced-motion: reduce) { .work-soon-dot { animation: none; } }
-        /* The laser needs a real cursor, hide it on touch / small screens. */
-        @media (hover: none), (max-width: 760px) { .work-laser { display: none !important; } }
       ` }} />
     </section>
   );
@@ -191,6 +188,13 @@ function Feature({ p, index }: { p: Project; index: number }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const yMedia = useTransform(scrollYProgress, [0, 1], [50, -50]);
   const [open, setOpen] = useState(false);
+
+  // Scroll-linked parallax runs on the main thread; on touch devices (esp.
+  // in-app browsers) scroll events land late and the card visibly stutters as
+  // it catches up. Static media on touch, parallax stays a desktop treat.
+  const [touch, setTouch] = useState(false);
+  useEffect(() => setTouch(window.matchMedia("(hover: none), (pointer: coarse)").matches), []);
+  const flat = reduce || touch;
 
   return (
     <div ref={ref} className="work-feature" style={{ position: "relative" }}>
@@ -245,7 +249,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${p.client}, open live site`}
-          style={reduce ? { display: "block", height: "100%" } : { display: "block", height: "100%", y: yMedia }}
+          style={flat ? { display: "block", height: "100%" } : { display: "block", height: "100%", y: yMedia }}
         >
           {p.image ? (
             <img src={p.image} alt={`${p.client} platform`} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
@@ -306,12 +310,14 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
     html.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
 
-    // Give the overlay its own momentum scroll so it feels like the rest of the site.
+    // Give the overlay its own momentum scroll so it feels like the rest of the
+    // site. Desktop-only, matching the page: on touch, native scroll is smoother.
     let raf = 0;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const touch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
     const wrap = wrapRef.current;
     const content = wrap?.firstElementChild as HTMLElement | undefined;
-    if (!reduce && wrap && content) {
+    if (!reduce && !touch && wrap && content) {
       const lenis = new Lenis({
         wrapper: wrap,
         content,
@@ -795,58 +801,44 @@ function MetaBlock({ label, values }: { label: string; values: string[] }) {
   );
 }
 
-const ROKO_ASSETS = {
-  heroShot: "/roko-hero-screenshot.png", // poster: shown until the video loads / for reduced-motion
-  heroVideo: "/roko-hero.mp4",           // drop a screen recording here in /public to make the preview play
-  roko: "https://makeupby-roko.vercel.app/roko_pic.png",
-  bridal: "https://makeupby-roko.vercel.app/bridal_trial.png",
-};
-
 const rkViewport = { once: false, amount: 0.45 };
 
-/* The preview pane plays a screen recording of the live Roko site (poster falls
-   back to the still hero capture until the video loads, or for reduced-motion). */
+/* The case-study header: a coded walkthrough of the live Roko site, framed
+   smaller than a full-bleed hero with supporting copy beside it. */
 function RokoPreview() {
   const reduce = useReducedMotion();
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true; // ensure the muted property is set so browsers allow autoplay
-    if (!reduce) v.play().catch(() => {}); // ignore autoplay rejection — the poster stays up
-  }, [reduce]);
-
   return (
     <motion.div
-      className="rk rk-frame rk-preview"
+      className="rk-walkwrap"
       initial={reduce ? false : { opacity: 0, y: 20 }}
       whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.35 }}
+      viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.7, ease }}
     >
-      <div className="rk-bar">
-        <span className="rk-dots" aria-hidden><i /><i /><i /></span>
-        <span className="rk-url">makeupby-roko.vercel.app</span>
+      <div className="rk-walkcopy">
+        <span className="eyebrow" style={{ color: "var(--gray)" }}>Live walkthrough</span>
+        <h3 className="display" style={{ fontSize: "clamp(1.7rem, 3.2vw, 2.8rem)", letterSpacing: "-0.03em", color: "var(--ink)", margin: "0.8rem 0 0", lineHeight: 1.05 }}>
+          The whole booking,<br />start to finish.
+        </h3>
+        <p style={{ marginTop: "1.1rem", fontSize: "1.04rem", lineHeight: 1.6, color: "var(--gray)", maxWidth: "34ch" }}>
+          Everything a bride taps through on the real site — browse the services, pick a wedding date,
+          send the inquiry, and land on the branded confirmation. Recreated here, frame for frame.
+        </p>
+        <span style={{ marginTop: "1.3rem", display: "inline-block", fontSize: "0.8rem", letterSpacing: "0.04em", color: "var(--gray-light)" }}>
+          ↳ makeupby-roko.vercel.app
+        </span>
       </div>
-      <div className="rk-hero-shot">
-        <motion.video
-          ref={videoRef}
-          className="rk-hero-shot-img"
-          src={ROKO_ASSETS.heroVideo}
-          poster={ROKO_ASSETS.heroShot}
-          aria-label="Makeup by Roko site walkthrough"
-          muted
-          loop
-          playsInline
-          autoPlay={!reduce}
-          preload="metadata"
-          initial={reduce ? false : { opacity: 0, scale: 1.015 }}
-          whileInView={reduce ? undefined : { opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.72, ease }}
-        />
+      <div className="rk-walkframe">
+        <RokoWalkthrough chrome />
       </div>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .rk-walkwrap { display: grid; grid-template-columns: 1fr; gap: clamp(1.75rem, 3.5vw, 2.75rem); align-items: center; }
+        .rk-walkcopy { display: flex; flex-direction: column; }
+        .rk-walkframe { min-height: clamp(330px, 46vw, 500px); }
+        @media (min-width: 900px) {
+          .rk-walkwrap { grid-template-columns: 0.78fr 1.22fr; gap: clamp(2.25rem, 4.5vw, 3.75rem); }
+        }
+      ` }} />
     </motion.div>
   );
 }
@@ -1391,46 +1383,27 @@ function PhoneMock() {
   );
 }
 
-/* The preview plays a screen recording of the live Makeup by Roko site, framed in
-   minimal browser chrome. It plays only while in view; reduced motion holds the
-   poster still. The whole media is already the live-site link (see Feature). */
+/* The flagship preview: a coded walkthrough of the live Makeup by Roko site,
+   framed in minimal browser chrome. Pure DOM + Framer Motion, so it stays crisp
+   and loads instantly everywhere. The whole media is the live-site link (see
+   Feature); the walkthrough sits behind the hover "Visit live site" CTA. */
 function Placeholder({ p }: { p: Project }) {
-  const reduce = useReducedMotion();
-  const videoRef = useRef<HTMLVideoElement>(null);
   const host = p.url.replace(/^https?:\/\//, "");
 
-  useEffect(() => {
-    const v = videoRef.current;
-    if (v) v.muted = true; // set the property too, so browsers allow autoplay
-  }, []);
-
   return (
-    <motion.div
-      className="rk-vid"
-      onViewportEnter={() => { const v = videoRef.current; if (v && !reduce) v.play().catch(() => {}); }}
-      onViewportLeave={() => { const v = videoRef.current; if (v) v.pause(); }}
-      viewport={{ amount: 0.3 }}
-    >
+    <div className="rk-vid">
       <div className="rk-vid-bar" aria-hidden>
         <span className="rk-vid-dots"><i /><i /><i /></span>
         <span className="rk-vid-url">{host}</span>
       </div>
       <div className="rk-vid-screen">
-        <video
-          ref={videoRef}
-          className="rk-vid-media"
-          src="/0625.mp4"
-          poster="/roko-hero-screenshot.png"
-          aria-label={`${p.client} site walkthrough`}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
+        <div className="rk-vid-walk">
+          <RokoWalkthrough chrome={false} />
+        </div>
         <span className="rk-vid-cta" aria-hidden>Visit live site <span>↗</span></span>
       </div>
       <style dangerouslySetInnerHTML={{ __html: PREVIEW_CSS }} />
-    </motion.div>
+    </div>
   );
 }
 
@@ -1441,208 +1414,15 @@ const PREVIEW_CSS = `
 .rk-vid-dots i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.16); display: block; }
 .rk-vid-url { margin-left: auto; font-size: 0.72rem; color: rgba(255,255,255,0.62); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 100px; padding: 0.2rem 0.95rem; }
 .rk-vid-screen { position: relative; flex: 1; min-height: 0; overflow: hidden; }
-.rk-vid-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transform: scale(1.001); transition: transform 1s cubic-bezier(0.22,1,0.36,1); }
-.rk-vid:hover .rk-vid-media { transform: scale(1.045); }
+.rk-vid-walk { position: absolute; inset: 0; transform: scale(1.001); transition: transform 1s cubic-bezier(0.22,1,0.36,1); }
+.rk-vid:hover .rk-vid-walk { transform: scale(1.03); }
 .rk-vid-cta { position: absolute; left: 50%; bottom: clamp(1rem, 3vw, 1.7rem); transform: translate(-50%, 10px); display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.62rem 1.2rem; border-radius: 100px; background: rgba(255,255,255,0.94); color: #0a0a0a; font-size: 0.86rem; font-weight: 500; box-shadow: 0 16px 38px rgba(0,0,0,0.34); opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; pointer-events: none; z-index: 3; }
 .rk-vid:hover .rk-vid-cta { opacity: 1; transform: translate(-50%, 0); }
 @media (prefers-reduced-motion: reduce) {
-  .rk-vid-media, .rk-vid-cta { transition: none; }
-  .rk-vid:hover .rk-vid-media { transform: none; }
+  .rk-vid-walk, .rk-vid-cta { transition: none; }
+  .rk-vid:hover .rk-vid-walk { transform: none; }
 }
 `;
-
-/* ── The eye + red laser. The eye sleeps (closed) until the cursor stirs, then
-   blinks open, tracks the cursor, and fires a detailed red beam at it. ── */
-function EyeLaser() {
-  const reduce = useReducedMotion();
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const eyeRef = useRef<HTMLDivElement>(null);
-  const target = useRef({ x: 0, y: 0 });
-  const cur = useRef({ x: 0, y: 0 });
-  const eyeRest = useRef({ x: 0, y: 0 });
-  const raf = useRef<number>();
-  const awakeRef = useRef(false);
-  const lastMove = useRef(0);
-
-  const [eye, setEye] = useState({ x: 0, y: 0 });
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [active, setActive] = useState(false);
-  const [awake, setAwake] = useState(false);
-  const [lid, setLid] = useState(0); // 0 = closed/asleep, 1 = open
-
-  // Measure the eye pupil within the overlay.
-  useEffect(() => {
-    const measure = () => {
-      const ov = overlayRef.current;
-      const ey = eyeRef.current;
-      if (!ov || !ey) return;
-      const o = ov.getBoundingClientRect();
-      const e = ey.getBoundingClientRect();
-      const ex = e.left - o.left + e.width / 2;
-      const ey2 = e.top - o.top + e.height / 2;
-      setEye({ x: ex, y: ey2 });
-      eyeRest.current = { x: ex, y: ey2 };
-      target.current = { x: ex, y: ey2 };
-      cur.current = { x: ex, y: ey2 };
-      setPos({ x: ex, y: ey2 });
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    const t = setTimeout(measure, 400);
-    return () => {
-      window.removeEventListener("resize", measure);
-      clearTimeout(t);
-    };
-  }, []);
-
-  // Reduced motion: just hold the eye open, no laser, no blinking.
-  useEffect(() => {
-    if (reduce) {
-      awakeRef.current = true;
-      setAwake(true);
-      setLid(1);
-    }
-  }, [reduce]);
-
-  // Track the cursor; wake + open the eye on first stir.
-  useEffect(() => {
-    if (reduce) return;
-    const onMove = (ev: MouseEvent) => {
-      const ov = overlayRef.current;
-      if (!ov) return;
-      const r = ov.getBoundingClientRect();
-      const x = ev.clientX - r.left;
-      const y = ev.clientY - r.top;
-      const inside = x >= 0 && y >= 0 && x <= r.width && y <= r.height;
-      setActive(inside);
-      target.current = inside ? { x, y } : eyeRest.current;
-      lastMove.current = performance.now();
-      if (!awakeRef.current) {
-        awakeRef.current = true;
-        setAwake(true);
-        setLid(1); // wake = eye opens
-      }
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [reduce]);
-
-  // Doze off after a few seconds of stillness (eye closes).
-  useEffect(() => {
-    if (reduce) return;
-    const id = setInterval(() => {
-      if (awakeRef.current && performance.now() - lastMove.current > 3600) {
-        awakeRef.current = false;
-        setAwake(false);
-        setLid(0);
-      }
-    }, 500);
-    return () => clearInterval(id);
-  }, [reduce]);
-
-  // Occasional blink while awake.
-  useEffect(() => {
-    if (reduce || !awake) return;
-    let t: ReturnType<typeof setTimeout>;
-    const schedule = () => {
-      t = setTimeout(() => {
-        setLid(0);
-        setTimeout(() => { if (awakeRef.current) setLid(1); }, 115);
-        schedule();
-      }, 3800 + Math.random() * 3600);
-    };
-    schedule();
-    return () => clearTimeout(t);
-  }, [reduce, awake]);
-
-  // Smooth follow.
-  useEffect(() => {
-    if (reduce) return;
-    const loop = () => {
-      const t = target.current;
-      const c = cur.current;
-      const nx = c.x + (t.x - c.x) * 0.16;
-      const ny = c.y + (t.y - c.y) * 0.16;
-      if (Math.abs(nx - c.x) > 0.05 || Math.abs(ny - c.y) > 0.05) {
-        c.x = nx;
-        c.y = ny;
-        setPos({ x: nx, y: ny });
-      }
-      raf.current = requestAnimationFrame(loop);
-    };
-    raf.current = requestAnimationFrame(loop);
-    return () => {
-      if (raf.current) cancelAnimationFrame(raf.current);
-    };
-  }, [reduce]);
-
-  const dx = pos.x - eye.x;
-  const dy = pos.y - eye.y;
-  const dist = Math.hypot(dx, dy) || 1;
-  const pmag = Math.min(dist / 16, 2.8);
-  const px = awake ? (dx / dist) * pmag : 0;
-  const py = awake ? (dy / dist) * pmag : 0;
-  const laserOn = active && awake && !reduce;
-
-  return (
-    <div ref={overlayRef} aria-hidden className="work-laser" style={{ position: "absolute", inset: 0, zIndex: 4, pointerEvents: "none", overflow: "visible" }}>
-      <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, overflow: "visible" }}>
-        <g style={{ opacity: laserOn ? 1 : 0, transition: "opacity 0.35s ease" }}>
-          <line x1={eye.x} y1={eye.y} x2={pos.x} y2={pos.y} stroke="#ff3b30" strokeWidth={5} strokeLinecap="round" opacity={0.12} />
-          <line x1={eye.x} y1={eye.y} x2={pos.x} y2={pos.y} stroke="#ff4d3d" strokeWidth={1.7} strokeLinecap="round" opacity={0.55} />
-          <line x1={eye.x} y1={eye.y} x2={pos.x} y2={pos.y} stroke="#ffd7cf" strokeWidth={0.7} strokeLinecap="round" opacity={0.95} />
-          <circle cx={pos.x} cy={pos.y} r={7} fill="#ff3b30" opacity={0.14} />
-          <circle cx={pos.x} cy={pos.y} r={2.4} fill="#ff5446" />
-          <circle cx={pos.x} cy={pos.y} r={0.9} fill="#fff" />
-        </g>
-      </svg>
-
-      <div ref={eyeRef} className="work-eye" style={{ position: "absolute", top: "clamp(-6px, -0.5vw, 4px)", right: "clamp(-2px, 0.4vw, 8px)" }}>
-        <svg viewBox="0 0 48 32" width="100%" height="100%" style={{ display: "block", overflow: "visible" }}>
-          <defs>
-            <clipPath id="eyeClip">
-              <path d="M3,16 Q24,3 45,16 Q24,29 3,16 Z" />
-            </clipPath>
-            <radialGradient id="irisGrad" cx="0.5" cy="0.4" r="0.62">
-              <stop offset="0" stopColor="#ff8a78" />
-              <stop offset="0.55" stopColor="#ff3b30" />
-              <stop offset="1" stopColor="#a51c10" />
-            </radialGradient>
-          </defs>
-
-          {/* lashes */}
-          <g stroke="rgba(244,244,242,0.5)" strokeWidth={1.3} strokeLinecap="round">
-            <line x1={24} y1={6} x2={24} y2={0.5} />
-            <line x1={15} y1={7.5} x2={12.5} y2={2.5} />
-            <line x1={33} y1={7.5} x2={35.5} y2={2.5} />
-            <line x1={7.5} y1={11} x2={3.5} y2={7.5} />
-            <line x1={40.5} y1={11} x2={44.5} y2={7.5} />
-          </g>
-
-          {/* open eyeball, vertical aperture follows `lid` */}
-          <g style={{ transform: `scaleY(${lid})`, transformBox: "fill-box", transformOrigin: "center", transition: "transform 0.13s ease" }}>
-            <g clipPath="url(#eyeClip)">
-              <path d="M3,16 Q24,3 45,16 Q24,29 3,16 Z" fill="#f4f4f2" opacity={0.94} />
-              <g style={{ transform: `translate(${px}px, ${py}px)` }}>
-                <circle cx={24} cy={16} r={7.4} fill="url(#irisGrad)" />
-                <circle cx={24} cy={16} r={7.4} fill="none" stroke="#7d160b" strokeWidth={0.6} opacity={0.55} />
-                <circle cx={24} cy={16} r={3.1} fill="#0c0908" />
-                <circle cx={22.1} cy={14.1} r={1.25} fill="#fff" />
-                <circle cx={25.4} cy={17.4} r={0.6} fill="#fff" opacity={0.7} />
-              </g>
-            </g>
-          </g>
-
-          {/* socket outline + closed lid line */}
-          <path d="M3,16 Q24,3 45,16 Q24,29 3,16 Z" fill="none" stroke="rgba(244,244,242,0.7)" strokeWidth={1.4} opacity={0.45 + 0.3 * lid} style={{ transition: "opacity 0.13s ease" }} />
-          <path d="M4,16 Q24,20.5 44,16" fill="none" stroke="rgba(244,244,242,0.72)" strokeWidth={1.4} strokeLinecap="round" opacity={(1 - lid) * 0.9} style={{ transition: "opacity 0.13s ease" }} />
-        </svg>
-      </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `.work-eye { width: clamp(52px, 5.8vw, 76px); }` }} />
-    </div>
-  );
-}
 
 /* Glitch dissolve, an OMBRE gradient (old color carried into the new) with
    scattered `top`-colored pixels raining over it, thinning out as it descends so

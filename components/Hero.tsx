@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Wordmark from "./Wordmark";
 import { HERO_VIDEO, HERO_POSTER } from "./heroConfig";
@@ -75,12 +76,34 @@ const HeroStyles = () => (
   `}</style>
 );
 
+// Pauses the hero video whenever it's scrolled out of view, so it isn't
+// decoding frames (and stealing frame budget) under the rest of the page —
+// a big source of scroll choppiness on phones / in-app browsers.
+function useOffscreenPause(ref: React.RefObject<HTMLVideoElement>) {
+  useEffect(() => {
+    const vid = ref.current;
+    if (!vid) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) vid.play().catch(() => {});
+        else vid.pause();
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(vid);
+    return () => io.disconnect();
+  }, [ref]);
+}
+
 export default function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useOffscreenPause(videoRef);
+
   // ── Video mode (Neuralink-style full-bleed background) ──
   if (HERO_VIDEO) {
     return (
       <section id="hero" style={{ position: "relative", minHeight: "100svh", display: "flex", overflow: "hidden", background: "#0a0a0b", padding: "clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 5vw, 3rem) clamp(2.5rem, 6vh, 3.5rem)" }}>
-        <video autoPlay muted loop playsInline poster={HERO_POSTER || undefined} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}>
+        <video ref={videoRef} autoPlay muted loop playsInline poster={HERO_POSTER || undefined} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}>
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
         {/* Vertical wash — fades the video into the dark page color at the bottom. */}
