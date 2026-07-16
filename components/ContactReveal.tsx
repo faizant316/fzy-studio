@@ -116,6 +116,7 @@ export default function ContactReveal() {
               We reply within 24 hours
             </span>
             <a href="mailto:hello@fzydev.com" className="link-line" style={{ color: "var(--ink)", fontSize: "0.95rem" }}>hello@fzydev.com</a>
+            <a href="https://www.instagram.com/fzydev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ color: "var(--ink-soft)", fontSize: "0.95rem" }}>@fzydev</a>
             <span className="eyebrow" style={{ color: "var(--gray)" }}>Sacramento, CA · Available worldwide</span>
           </div>
         </motion.div>

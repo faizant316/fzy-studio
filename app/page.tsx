@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Statement from "@/components/Statement";
 import Work from "@/components/Work";
 import Process from "@/components/Process";
+import FAQ from "@/components/FAQ";
 import ContactReveal from "@/components/ContactReveal";
 import Footer from "@/components/Footer";
 
@@ -14,6 +15,7 @@ export default function Home() {
       <Statement />
       <Work />
       <Process />
+      <FAQ />
       <ContactReveal />
       <Footer />
     </main>

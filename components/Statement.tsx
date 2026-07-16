@@ -29,6 +29,21 @@ export default function Statement() {
           <motion.p {...fade(0.18)} style={{ fontSize: "clamp(1.05rem, 1.5vw, 1.25rem)", lineHeight: 1.65, color: "var(--gray)" }}>
             One considered product that replaces the spreadsheets and DMs a business outgrows, and runs without you.
           </motion.p>
+
+          {/* Who's behind it: people hire people, so put a name on the studio. */}
+          <motion.div {...fade(0.26)} style={{ marginTop: "0.8rem", paddingTop: "1.6rem", borderTop: "1px solid var(--line)" }}>
+            <span className="eyebrow" style={{ color: "var(--accent)" }}>Behind the studio</span>
+            <p style={{ marginTop: "0.9rem", fontSize: "1.08rem", fontWeight: 500, color: "var(--ink)" }}>Faizan Tariq</p>
+            <p style={{ marginTop: "0.15rem", fontSize: "0.85rem", color: "var(--gray)" }}>Founder &amp; engineer</p>
+            <p style={{ marginTop: "0.9rem", fontSize: "0.98rem", lineHeight: 1.65, color: "var(--gray)" }}>
+              FZY is run by one engineer, not an agency floor. Every project is scoped, designed, and built by the same person you talk to on day one. Based in Sacramento, working with clients anywhere.
+            </p>
+            <div style={{ marginTop: "1.1rem", display: "flex", flexWrap: "wrap", gap: "0.5rem 1.5rem" }}>
+              <a href="https://faizantariq.dev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ fontSize: "0.88rem", color: "var(--ink-soft)" }}>Portfolio ↗</a>
+              <a href="https://www.linkedin.com/in/faizantariq916/" target="_blank" rel="noopener noreferrer" className="link-line" style={{ fontSize: "0.88rem", color: "var(--ink-soft)" }}>LinkedIn ↗</a>
+              <a href="https://www.instagram.com/fzydev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ fontSize: "0.88rem", color: "var(--ink-soft)" }}>@fzydev ↗</a>
+            </div>
+          </motion.div>
         </div>
       </div>
 

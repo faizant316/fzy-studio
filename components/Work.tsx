@@ -25,6 +25,8 @@ type CaseStudy = {
   projectType: string[];
   tech: string[];
   description: string;
+  // System-true results: claims the platform enforces by design, not vanity metrics.
+  results?: { value: string; label: string }[];
   sections: { title: string; body: string; bullets?: string[]; image?: string }[];
 };
 
@@ -33,6 +35,7 @@ type Project = {
   category: string;
   year: string;
   quote: string;
+  quoteBy?: { name: string; role: string; img?: string };
   services: string[];
   url: string;
   image?: string; // drop a screenshot in /public and set this to swap the placeholder
@@ -47,11 +50,17 @@ const projects: Project[] = [
     category: "Bridal booking platform",
     year: "2025",
     quote: "It took my whole business out of my DMs and built something that runs itself.",
+    quoteBy: { name: "Roqia Moshref", role: "Founder, Makeup by Roko", img: "/roko_pic.png" },
     services: ["UI/UX design", "Booking & automation", "Full-stack development"],
     url: "https://makeupby-roko.vercel.app",
     detail: {
       projectType: ["Booking platform", "Website", "Automation"],
       tech: ["Next.js", "Supabase", "Stripe", "Automated email"],
+      results: [
+        { value: "0", label: "double-bookings possible, the calendar locks confirmed dates" },
+        { value: "100%", label: "of dates secured by a deposit before the day" },
+        { value: "24-48h", label: "from inquiry to a confirmed booking" },
+      ],
       description:
         "FZY designed and engineered Makeup by Roko end to end, a full bridal booking platform that replaced a tangle of Instagram DMs, screenshots, and a paper calendar with one system: clients request a date and send a Zelle deposit, and Roko confirms the exact time from a single dashboard.",
       sections: [
@@ -231,9 +240,12 @@ function Feature({ p, index }: { p: Project; index: number }) {
           )}
         </div>
 
-        <p style={{ marginTop: "clamp(1.6rem, 3vw, 2.2rem)", fontSize: "0.98rem", lineHeight: 1.6, color: "var(--gray)", maxWidth: "34ch" }}>
-          &ldquo;{p.quote}&rdquo;
-        </p>
+        <div style={{ marginTop: "clamp(1.6rem, 3vw, 2.2rem)" }}>
+          <p style={{ fontSize: "0.98rem", lineHeight: 1.6, color: "var(--gray)", maxWidth: "34ch" }}>
+            &ldquo;{p.quote}&rdquo;
+          </p>
+          {p.quoteBy && <QuoteBy by={p.quoteBy} />}
+        </div>
       </motion.div>
 
       {/* Right, big clickable preview */}
@@ -481,9 +493,12 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
                     <p style={{ fontSize: "clamp(1.5rem, 2.7vw, 2.6rem)", lineHeight: 1.38, color: "var(--ink)", letterSpacing: "-0.02em" }}>
                       {d.description}
                     </p>
-                    <p style={{ marginTop: "clamp(1.4rem, 2.5vw, 2rem)", fontSize: "1.08rem", lineHeight: 1.6, color: "var(--gray)", maxWidth: "46ch" }}>
-                      &ldquo;{p.quote}&rdquo;, {p.client}
-                    </p>
+                    <div style={{ marginTop: "clamp(1.4rem, 2.5vw, 2rem)" }}>
+                      <p style={{ fontSize: "1.08rem", lineHeight: 1.6, color: "var(--gray)", maxWidth: "46ch" }}>
+                        &ldquo;{p.quote}&rdquo;
+                      </p>
+                      {p.quoteBy && <QuoteBy by={p.quoteBy} />}
+                    </div>
                     <div style={{ marginTop: "clamp(1.75rem, 3vw, 2.25rem)", display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
                       {d.sections.map((s, i) => (
                         <button key={s.title} type="button" onClick={() => scrollToSec(i)} className="cs-tag">
@@ -493,6 +508,30 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
                     </div>
                   </div>
                 </div>
+
+                {/* Results, enforced by the system rather than promised */}
+                {d.results && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+                    transition={{ duration: 0.7, ease }}
+                    style={{ marginTop: "clamp(3.5rem, 7vw, 6rem)", paddingTop: "clamp(1.75rem, 3.5vw, 2.5rem)", borderTop: "1px solid var(--line)" }}
+                  >
+                    <span className="eyebrow" style={{ color: "var(--gray)" }}>The result</span>
+                    <div className="cs-results">
+                      {d.results.map((r) => (
+                        <div key={r.label}>
+                          <span className="display" style={{ display: "block", fontSize: "clamp(2.4rem, 5vw, 4rem)", color: "var(--ink)", letterSpacing: "-0.03em" }}>{r.value}</span>
+                          <p style={{ marginTop: "0.6rem", fontSize: "0.95rem", lineHeight: 1.55, color: "var(--gray)", maxWidth: "26ch" }}>{r.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p style={{ marginTop: "clamp(1.5rem, 3vw, 2rem)", fontSize: "0.85rem", color: "var(--gray-light)" }}>
+                      Enforced by the system, not by willpower.
+                    </p>
+                  </motion.div>
+                )}
 
                 {/* Sections, alternating screenshot / text */}
                 <div style={{ marginTop: "clamp(4.5rem, 9vw, 8rem)", display: "grid", gap: "clamp(5rem, 10vw, 9rem)" }}>
@@ -571,6 +610,8 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
               display: grid; grid-template-columns: 1fr; gap: clamp(2rem, 4vw, 3rem);
             }
             .cs-meta { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.25rem, 3vw, 2rem); }
+            .cs-results { margin-top: clamp(1.5rem, 3vw, 2.25rem); display: grid; grid-template-columns: 1fr; gap: clamp(1.75rem, 3.5vw, 2.5rem); }
+            @media (min-width: 720px) { .cs-results { grid-template-columns: repeat(3, 1fr); gap: clamp(2rem, 4vw, 4rem); } }
             .cs-sec { display: grid; grid-template-columns: 1fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: center; }
             .cs-sec__media { min-width: 0; }
             .cs-sec__text { min-width: 0; }
@@ -792,6 +833,26 @@ function CaseStudy({ p, open, onClose }: { p: Project; open: boolean; onClose: (
       )}
     </AnimatePresence>,
     document.body
+  );
+}
+
+/* Testimonial attribution: a small round photo + name + role, so the quote
+   reads as a real person vouching, not anonymous marketing copy. */
+function QuoteBy({ by }: { by: NonNullable<Project["quoteBy"]> }) {
+  return (
+    <div style={{ marginTop: "0.9rem", display: "flex", alignItems: "center", gap: "0.7rem" }}>
+      {by.img && (
+        <img
+          src={by.img}
+          alt={by.name}
+          style={{ width: 38, height: 38, borderRadius: "50%", objectFit: "cover", objectPosition: "center 20%", border: "1px solid var(--line-strong)", flexShrink: 0 }}
+        />
+      )}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
+        <span style={{ fontSize: "0.88rem", fontWeight: 500, color: "var(--ink)" }}>{by.name}</span>
+        <span style={{ fontSize: "0.78rem", color: "var(--gray)" }}>{by.role}</span>
+      </div>
+    </div>
   );
 }
 

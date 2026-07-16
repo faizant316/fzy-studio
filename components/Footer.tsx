@@ -15,11 +15,14 @@ export default function Footer() {
           <div style={{ display: "flex", gap: "clamp(2rem, 5vw, 4rem)", flexWrap: "wrap" }}>
             <FooterCol title="Studio" links={[
               { label: "Work", href: "#work" },
-              { label: "Capabilities", href: "#capabilities" },
+              { label: "Process", href: "#process" },
+              { label: "FAQ", href: "#faq" },
               { label: "Start a Project", href: "#contact" },
             ]} />
             <FooterCol title="Elsewhere" links={[
               { label: "hello@fzydev.com", href: "mailto:hello@fzydev.com" },
+              { label: "Instagram ↗", href: "https://www.instagram.com/fzydev", external: true },
+              { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/faizantariq916/", external: true },
               { label: "Founder's portfolio ↗", href: PORTFOLIO_URL, external: true },
             ]} />
           </div>
