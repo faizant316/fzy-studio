@@ -29,7 +29,7 @@ export default function Footer() {
         </div>
 
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "1rem", marginTop: "3rem" }}>
-          <span style={{ fontSize: "0.78rem", color: "var(--gray)" }}>© {new Date().getFullYear()} FZY Studio. All rights reserved.</span>
+          <span style={{ fontSize: "0.78rem", color: "var(--gray)" }}>© {new Date().getFullYear()} FZY Dev. All rights reserved.</span>
           <span style={{ fontSize: "0.78rem", color: "var(--gray)" }}>Sacramento, CA</span>
         </div>
       </div>

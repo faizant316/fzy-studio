@@ -1,4 +1,4 @@
-# FZY Studio
+# FZY Dev
 
 Marketing site for **FZY**, a web development studio building custom platforms for real businesses. This is the agency-facing site (the QR code on the business card points here). The personal portfolio for recruiters lives in a separate repo.
 

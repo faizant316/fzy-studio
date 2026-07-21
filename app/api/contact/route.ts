@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Notification inbox for new project requests.
 const NOTIFY_TO = "faizant316@gmail.com";
 // Verified Resend sender on fzydev.com.
-const FROM = "FZY Studio <hello@fzydev.com>";
+const FROM = "FZY Dev <hello@fzydev.com>";
 
 export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
           <p style="font-size: 1.4rem; font-weight: 700; margin: 0 0 1rem;">Hey ${name},</p>
           <p style="color: #aaa; line-height: 1.7; margin: 0 0 1rem;">Thanks for reaching out to <strong style="color: #c9a96a;">FZY</strong>. We got your request about a <strong style="color: #f5f0eb;">${projectType}</strong> and we'll be in touch within 24 hours with a clear next step.</p>
           <p style="color: #aaa; line-height: 1.7; margin: 0 0 2rem;">In the meantime, feel free to reply with any extra details.</p>
-          <p style="color: #f5f0eb; margin: 0;">FZY Studio</p>
+          <p style="color: #f5f0eb; margin: 0;">FZY Dev</p>
           <p style="color: #444; font-size: 0.75rem; margin: 1.5rem 0 0;">FZY · fzydev.com</p>
         </div>
       `,

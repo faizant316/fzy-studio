@@ -1,6 +1,6 @@
-# FZY Studio — Agent Guide
+# FZY Dev — Agent Guide
 
-FZY Studio is a Next.js agency portfolio site. Case studies live in `components/Work.tsx`.
+FZY Dev is a Next.js agency portfolio site. Case studies live in `components/Work.tsx`.
 The site is viewed locally during development with `npm run dev`.
 
 ## Featured case study: Makeup by Roko (bridal booking platform)
