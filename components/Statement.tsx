@@ -34,17 +34,20 @@ export default function Statement() {
           <motion.div {...fade(0.26)} style={{ marginTop: "0.8rem", paddingTop: "1.75rem", borderTop: "1px solid var(--line)" }}>
             <span className="eyebrow" style={{ color: "var(--accent)" }}>Behind the studio</span>
             <div style={{ marginTop: "1.15rem", display: "flex", alignItems: "center", gap: "0.95rem" }}>
-              {/* Source photo is full-body, so the img is scaled about the face to crop to a headshot. */}
+              {/* Source photo is full-body. The img is laid out oversized and offset so the
+                  circle frames the head: sizing it up (rather than transform: scale) keeps the
+                  browser resampling from the full-res source, so it stays sharp. */}
               <span style={{
-                flexShrink: 0, width: 56, height: 56, borderRadius: "50%", overflow: "hidden",
-                display: "block", background: "var(--accent-soft)", border: "1px solid rgba(122,162,227,0.35)",
+                position: "relative", flexShrink: 0, width: 56, height: 56, borderRadius: "50%",
+                overflow: "hidden", display: "block",
+                background: "var(--accent-soft)", border: "1px solid rgba(122,162,227,0.35)",
               }}>
                 <img
                   src="/founder.jpg"
                   alt=""
                   style={{
-                    width: "100%", height: "100%", display: "block", objectFit: "cover",
-                    transform: "scale(2.2)", transformOrigin: "53% 27%",
+                    position: "absolute", width: 90, height: "auto", maxWidth: "none",
+                    left: -19, top: -24, display: "block",
                   }}
                 />
               </span>
