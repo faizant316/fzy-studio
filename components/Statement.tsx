@@ -34,13 +34,20 @@ export default function Statement() {
           <motion.div {...fade(0.26)} style={{ marginTop: "0.8rem", paddingTop: "1.75rem", borderTop: "1px solid var(--line)" }}>
             <span className="eyebrow" style={{ color: "var(--accent)" }}>Behind the studio</span>
             <div style={{ marginTop: "1.15rem", display: "flex", alignItems: "center", gap: "0.95rem" }}>
-              {/* Monogram avatar; swap for a real photo when there is one. */}
-              <span aria-hidden style={{
-                flexShrink: 0, width: 48, height: 48, borderRadius: "50%",
-                display: "inline-flex", alignItems: "center", justifyContent: "center",
-                background: "var(--accent-soft)", border: "1px solid rgba(122,162,227,0.35)",
-                color: "var(--accent)", fontSize: "0.85rem", fontWeight: 600, letterSpacing: "0.08em",
-              }}>FT</span>
+              {/* Source photo is full-body, so the img is scaled about the face to crop to a headshot. */}
+              <span style={{
+                flexShrink: 0, width: 56, height: 56, borderRadius: "50%", overflow: "hidden",
+                display: "block", background: "var(--accent-soft)", border: "1px solid rgba(122,162,227,0.35)",
+              }}>
+                <img
+                  src="/founder.jpg"
+                  alt=""
+                  style={{
+                    width: "100%", height: "100%", display: "block", objectFit: "cover",
+                    transform: "scale(2.2)", transformOrigin: "53% 27%",
+                  }}
+                />
+              </span>
               <div>
                 <p style={{ fontSize: "1.08rem", fontWeight: 500, color: "var(--ink)" }}>Faizan Tariq</p>
                 <p style={{ marginTop: "0.15rem", fontSize: "0.85rem", color: "var(--gray)" }}>Founder &amp; lead engineer</p>
