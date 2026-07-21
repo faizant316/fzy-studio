@@ -6,33 +6,15 @@ import { lenisStop, lenisStart } from "./lenis";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const fieldStyle: React.CSSProperties = {
-  width: "100%", background: "rgba(255,255,255,0.025)", border: "1px solid var(--line)",
-  borderRadius: 10, padding: "0.8rem 0.95rem",
-  fontSize: "0.98rem", fontFamily: "var(--font-inter)", color: "var(--ink)", outline: "none", transition: "border-color 0.3s ease, background 0.3s ease",
-};
-const labelStyle: React.CSSProperties = {
-  display: "block", fontSize: "0.68rem", fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gray)", marginBottom: "0.55rem",
-};
-const hintStyle: React.CSSProperties = {
-  display: "block", fontSize: "0.78rem", lineHeight: 1.4, color: "var(--gray-light)", marginTop: "0.5rem",
-};
-
 const projectTypes = ["Website", "Web app / platform", "Booking / automation", "Not sure yet"];
 const budgets = ["< $2k", "$2k-$5k", "$5k-$10k", "$10k+"];
 const timelines = ["ASAP", "1-3 months", "Just exploring"];
 
-function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+// Monochrome selectable tag. Selected inverts to solid ink, so the choice reads
+// at a glance without a colored fill.
+function Option({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick}
-      style={{
-        fontFamily: "var(--font-inter)", fontSize: "0.85rem", padding: "0.55rem 0.95rem", borderRadius: 9, cursor: "pointer",
-        border: active ? "1px solid var(--accent)" : "1px solid var(--line)",
-        background: active ? "var(--accent-soft)" : "transparent",
-        color: active ? "var(--ink)" : "var(--gray)", transition: "border-color 0.25s ease, background 0.25s ease, color 0.25s ease",
-      }}
-      onMouseEnter={(e) => { if (!active) e.currentTarget.style.borderColor = "var(--line-strong)"; }}
-      onMouseLeave={(e) => { if (!active) e.currentTarget.style.borderColor = "var(--line)"; }}>
+    <button type="button" onClick={onClick} aria-pressed={active} className="opt" data-active={active || undefined}>
       {label}
     </button>
   );
@@ -120,11 +102,9 @@ export default function ContactReveal() {
               style={{ padding: "1.1rem 2.4rem", fontSize: "1.02rem", fontWeight: 600 }}
             >
               Get a quote
-              <span style={{ fontSize: "0.88rem" }}>↗</span>
             </button>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", fontSize: "0.92rem", color: "var(--ink-soft)" }}>
-              <span style={{ flexShrink: 0, width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 0 4px var(--accent-soft)" }} />
-              We reply within 24 hours
+            <span style={{ fontSize: "0.92rem", color: "var(--gray)", letterSpacing: "0.01em" }}>
+              Replies within 24 hours
             </span>
           </div>
 
@@ -144,21 +124,34 @@ export default function ContactReveal() {
   );
 }
 
+const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+
 function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [mounted, setMounted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", company: "", project: "", budget: "", timeline: "", message: "" });
+  const [missing, setMissing] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   useEffect(() => setMounted(true), []);
   useScrollLock(open, onClose);
-  useEffect(() => { if (open) setStatus("idle"); }, [open]);
+  useEffect(() => { if (open) { setStatus("idle"); setMissing([]); } }, [open]);
 
-  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
-  const focus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.background = "rgba(255,255,255,0.04)"; };
-  const blur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => { e.currentTarget.style.borderColor = "var(--line)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; };
+  // Editing a flagged field clears its own flag, so the form stops nagging.
+  const set = (k: string, v: string) => {
+    setForm((f) => ({ ...f, [k]: v }));
+    setMissing((m) => (m.includes(k) ? m.filter((x) => x !== k) : m));
+  };
+  const bad = (k: string) => (missing.includes(k) ? "field field-bad" : "field");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.budget || !form.message) { setStatus("error"); return; }
+    const gaps: string[] = [];
+    if (!form.name.trim()) gaps.push("name");
+    if (!emailOk(form.email)) gaps.push("email");
+    if (!form.budget) gaps.push("budget");
+    if (form.message.trim().length < 10) gaps.push("message");
+    if (gaps.length) { setMissing(gaps); setStatus("error"); return; }
+
+    setMissing([]);
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
@@ -173,6 +166,15 @@ function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
     } catch { setStatus("error"); }
   };
 
+  // Tells the visitor exactly what is missing rather than a generic complaint.
+  const errorText = () => {
+    if (!missing.length) return "Something went wrong on our end. Email hello@fzydev.com and we'll pick it up there.";
+    const labels: Record<string, string> = { name: "your name", email: "a valid email", budget: "a budget range", message: "a few details about the project" };
+    const parts = missing.map((k) => labels[k]);
+    const list = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0];
+    return `Still need ${list}.`;
+  };
+
   if (!mounted) return null;
 
   return createPortal(
@@ -180,139 +182,190 @@ function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
       {open && (
         <motion.div data-lenis-prevent
           initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ duration: 0.55, ease }}
-          style={{ position: "fixed", inset: 0, zIndex: 210, overflowY: "auto", willChange: "transform", WebkitOverflowScrolling: "touch",
-            background: "radial-gradient(110% 70% at 85% 0%, rgba(122,162,227,0.10) 0%, rgba(10,10,11,0) 50%), linear-gradient(170deg, #101013 0%, #070708 100%)" }}
+          style={{ position: "fixed", inset: 0, zIndex: 210, overflowY: "auto", willChange: "transform", WebkitOverflowScrolling: "touch", background: "#08080a" }}
         >
-          <button onClick={onClose} aria-label="Back" className="modal-icon-btn" style={{ position: "fixed", top: "max(1.25rem, env(safe-area-inset-top))", left: "clamp(1.25rem, 4vw, 3rem)", zIndex: 2, width: 44, height: 44 }}>
-            <svg width="17" height="17" viewBox="0 0 16 16" fill="none"><path d="M10 3l-5 5 5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </button>
-          <button onClick={onClose} aria-label="Close" className="modal-icon-btn" style={{ position: "fixed", top: "max(1.25rem, env(safe-area-inset-top))", right: "clamp(1.25rem, 4vw, 3rem)", zIndex: 2, width: 44, height: 44 }}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+          <button onClick={onClose} aria-label="Close" className="modal-close">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
           </button>
 
           <div className="form-shell">
             {status === "done" ? (
               <motion.div className="form-done" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-                <span className="eyebrow" style={{ color: "var(--accent)" }}>Request sent</span>
-                <h2 className="display" style={{ fontSize: "clamp(2.4rem, 6vw, 3.8rem)", color: "var(--ink)", marginTop: "1rem" }}>Got it.</h2>
-                <p style={{ marginTop: "1.25rem", fontSize: "1.1rem", lineHeight: 1.65, color: "var(--gray)", maxWidth: "44ch" }}>
-                  Thanks, {form.name.split(" ")[0] || "there"}. Your request landed and we&rsquo;ll be in touch within 24 hours.
+                <span className="eyebrow" style={{ color: "var(--gray)" }}>Request sent</span>
+                <h2 className="display" style={{ fontSize: "clamp(2.6rem, 7vw, 4.2rem)", color: "var(--ink)", marginTop: "1.1rem" }}>Got it.</h2>
+                <p style={{ marginTop: "1.5rem", fontSize: "1.08rem", lineHeight: 1.7, color: "var(--gray)", maxWidth: "42ch" }}>
+                  Thanks, {form.name.trim().split(" ")[0] || "there"}. Your request is in and a confirmation is on its way to {form.email.trim()}. We&rsquo;ll come back to you within 24 hours.
                 </p>
-                <button onClick={onClose} className="pill-solid" style={{ marginTop: "2rem" }}>Back to site</button>
+                <button onClick={onClose} className="pill-solid" style={{ marginTop: "2.25rem" }}>Back to site</button>
               </motion.div>
             ) : (
               <>
-                {/* Left: editorial intro + reassurance, sticky on desktop */}
+                {/* Left: editorial intro, sticky on desktop */}
                 <aside className="form-aside">
-                  <span className="eyebrow" style={{ color: "var(--accent)" }}>Get a quote</span>
-                  <h2 className="display" style={{ fontSize: "clamp(2.3rem, 5vw, 3.4rem)", color: "var(--ink)", marginTop: "1rem" }}>Tell us about it</h2>
-                  <p style={{ marginTop: "1.25rem", fontSize: "1.05rem", lineHeight: 1.65, color: "var(--gray)", maxWidth: "40ch" }}>
-                    A few details about what you&rsquo;re building and where it&rsquo;s getting stuck. The more you share, the sharper our first reply.
+                  <span className="eyebrow" style={{ color: "var(--gray)" }}>Get a quote</span>
+                  <h2 className="display" style={{ fontSize: "clamp(2.5rem, 5vw, 3.6rem)", color: "var(--ink)", marginTop: "1.1rem" }}>Tell us<br />about it</h2>
+                  <p style={{ marginTop: "1.4rem", fontSize: "1.02rem", lineHeight: 1.7, color: "var(--gray)", maxWidth: "34ch" }}>
+                    A few details about the project and where it&rsquo;s getting stuck. The more you share, the sharper our first reply.
                   </p>
-                  <div className="form-aside-foot">
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
-                      <span style={{ flexShrink: 0, width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 0 4px var(--accent-soft)" }} />
-                      <span style={{ fontSize: "0.92rem", color: "var(--ink-soft)" }}>We reply within 24 hours</span>
-                    </div>
-                    <a href="mailto:hello@fzydev.com" className="link-line" style={{ color: "var(--ink)", fontSize: "1rem", width: "max-content" }}>hello@fzydev.com</a>
-                    <span className="eyebrow" style={{ color: "var(--gray)" }}>Sacramento, CA · Available worldwide</span>
-                  </div>
                 </aside>
 
-                {/* Right: the request form in a clean panel */}
-                <form onSubmit={submit} className="form-panel">
-                  <div className="form-row">
-                    <div>
-                      <label style={labelStyle}>Name *</label>
-                      <input style={fieldStyle} value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Your name" onFocus={focus} onBlur={blur} />
-                    </div>
-                    <div>
-                      <label style={labelStyle}>Email *</label>
-                      <input type="email" style={fieldStyle} value={form.email} onChange={(e) => set("email", e.target.value)} placeholder="you@email.com" onFocus={focus} onBlur={blur} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label style={labelStyle}>Business <span style={{ textTransform: "none", letterSpacing: 0, color: "var(--gray-light)" }}>(optional)</span></label>
-                    <input style={fieldStyle} value={form.company} onChange={(e) => set("company", e.target.value)} placeholder="Company / brand" onFocus={focus} onBlur={blur} />
-                  </div>
-
-                  <div className="form-divider" />
-
-                  <div>
-                    <label style={labelStyle}>What do you need?</label>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.15rem" }}>
-                      {projectTypes.map((p) => <Chip key={p} label={p} active={form.project === p} onClick={() => set("project", form.project === p ? "" : p)} />)}
-                    </div>
-                    <span style={hintStyle}>Pick the closest. We&rsquo;ll figure out the exact fit together.</span>
-                  </div>
-
-                  <div className="form-row">
-                    <div>
-                      <label style={labelStyle}>Budget *</label>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.15rem" }}>
-                        {budgets.map((b) => <Chip key={b} label={b} active={form.budget === b} onClick={() => set("budget", b)} />)}
+                {/* Right: the request, grouped into three quiet passes */}
+                <form onSubmit={submit} className="form-body" noValidate>
+                  <section className="grp">
+                    <div className="grp-head"><span>01</span>About you</div>
+                    <div className="pair">
+                      <div>
+                        <label htmlFor="q-name" className="lbl">Name</label>
+                        <input id="q-name" className={bad("name")} value={form.name} onChange={(e) => set("name", e.target.value)} autoComplete="name" />
                       </div>
-                      <span style={hintStyle}>A range is enough. It shapes what we propose.</span>
-                    </div>
-                    <div>
-                      <label style={labelStyle}>Timeline</label>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.15rem" }}>
-                        {timelines.map((t) => <Chip key={t} label={t} active={form.timeline === t} onClick={() => set("timeline", t)} />)}
+                      <div>
+                        <label htmlFor="q-email" className="lbl">Email</label>
+                        <input id="q-email" type="email" inputMode="email" className={bad("email")} value={form.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" />
                       </div>
                     </div>
+                    <div>
+                      <label htmlFor="q-co" className="lbl">Business <span className="lbl-opt">optional</span></label>
+                      <input id="q-co" className="field" value={form.company} onChange={(e) => set("company", e.target.value)} autoComplete="organization" />
+                    </div>
+                  </section>
+
+                  <section className="grp">
+                    <div className="grp-head"><span>02</span>The project</div>
+                    <div>
+                      <span className="lbl">What do you need</span>
+                      <div className="opts">
+                        {projectTypes.map((p) => <Option key={p} label={p} active={form.project === p} onClick={() => set("project", form.project === p ? "" : p)} />)}
+                      </div>
+                    </div>
+                    <div className="pair">
+                      <div>
+                        <span className="lbl">Budget</span>
+                        <div className="opts" data-bad={missing.includes("budget") || undefined}>
+                          {budgets.map((b) => <Option key={b} label={b} active={form.budget === b} onClick={() => set("budget", b)} />)}
+                        </div>
+                        <span className="hint">A range is enough.</span>
+                      </div>
+                      <div>
+                        <span className="lbl">Timeline <span className="lbl-opt">optional</span></span>
+                        <div className="opts">
+                          {timelines.map((t) => <Option key={t} label={t} active={form.timeline === t} onClick={() => set("timeline", form.timeline === t ? "" : t)} />)}
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section className="grp">
+                    <div className="grp-head"><span>03</span>The request</div>
+                    <div>
+                      <label htmlFor="q-msg" className="lbl">What you&rsquo;re building</label>
+                      <textarea id="q-msg" rows={5} className={bad("message")} value={form.message} onChange={(e) => set("message", e.target.value)}
+                        placeholder={"Who it’s for, what it needs to do, and what success looks like. Links to anything you already have are welcome."} />
+                    </div>
+                  </section>
+
+                  <div className="send">
+                    <button type="submit" disabled={status === "sending"} className="pill-solid">
+                      {status === "sending" ? "Sending" : "Send request"}
+                    </button>
+                    {status === "error" && <p className="err">{errorText()}</p>}
                   </div>
-
-                  <div className="form-divider" />
-
-                  <div>
-                    <label style={labelStyle}>The request *</label>
-                    <textarea rows={6} style={{ ...fieldStyle, resize: "vertical", lineHeight: 1.6 }} value={form.message} onChange={(e) => set("message", e.target.value)}
-                      placeholder="What you're building, who it's for, what it needs to do, and what success looks like. Links to anything you already have are welcome." onFocus={focus} onBlur={blur} />
-                  </div>
-
-                  {status === "error" && <p style={{ fontSize: "0.85rem", color: "var(--accent-red)" }}>Please add your name, email, a budget range, and a few details about the project.</p>}
-
-                  <button type="submit" disabled={status === "sending"} className="pill-solid" style={{ alignSelf: "flex-start", opacity: status === "sending" ? 0.6 : 1 }}>
-                    {status === "sending" ? "Sending…" : "Send request"}
-                    {status !== "sending" && <span style={{ fontSize: "0.85rem" }}>↗</span>}
-                  </button>
                 </form>
+
+                {/* Sits under the intro on desktop, and after the form on mobile,
+                    so a phone drops straight into the fields. */}
+                <div className="form-foot">
+                  <a href="mailto:hello@fzydev.com" className="link-line" style={{ color: "var(--ink)", fontSize: "1rem", width: "max-content" }}>hello@fzydev.com</a>
+                  <span style={{ fontSize: "0.9rem", color: "var(--gray)" }}>Replies within 24 hours</span>
+                  <span className="eyebrow" style={{ color: "var(--gray-light)" }}>Sacramento, CA · Available worldwide</span>
+                </div>
               </>
             )}
           </div>
 
           <style dangerouslySetInnerHTML={{ __html: `
-            .modal-icon-btn {
-              border-radius: 50%;
+            .modal-close {
+              position: fixed; z-index: 2;
+              top: max(1.1rem, env(safe-area-inset-top)); right: clamp(1rem, 4vw, 2.5rem);
+              width: 42px; height: 42px; border-radius: 50%;
               display: inline-flex; align-items: center; justify-content: center;
-              border: 1px solid var(--line-strong); background: rgba(10,10,11,0.55);
-              backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-              color: var(--ink); cursor: pointer;
-              transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+              border: 1px solid var(--line); background: transparent;
+              color: var(--gray); cursor: pointer;
+              transition: color 0.3s ease, border-color 0.3s ease;
             }
-            .modal-icon-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--ink); }
-            .modal-icon-btn:active { transform: scale(0.94); }
+            .modal-close:hover { color: var(--ink); border-color: var(--line-strong); }
+
             .form-shell {
-              max-width: 1080px; margin: 0 auto;
-              padding: clamp(5rem, 12svh, 7.5rem) clamp(1.25rem, 5vw, 3rem) clamp(3rem, 6vw, 5rem);
-              display: grid; grid-template-columns: 1fr; gap: clamp(2.25rem, 5vw, 3.5rem);
+              max-width: 1120px; margin: 0 auto;
+              padding: clamp(4.5rem, 11svh, 7rem) clamp(1.35rem, 5vw, 3rem) clamp(4rem, 8vw, 6rem);
+              display: flex; flex-direction: column; gap: clamp(2.75rem, 6vw, 4rem);
             }
-            .form-done { grid-column: 1 / -1; }
-            .form-aside-foot { margin-top: clamp(1.75rem, 4vw, 2.75rem); display: flex; flex-direction: column; gap: 1rem; }
-            .form-panel {
-              background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
-              padding: clamp(1.4rem, 3vw, 2.25rem);
-              display: flex; flex-direction: column; gap: 1.5rem;
-              box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+            .form-foot {
+              padding-top: 1.6rem; border-top: 1px solid var(--line);
+              display: flex; flex-direction: column; gap: 0.85rem;
             }
-            .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
-            .form-divider { height: 1px; background: var(--line); margin: 0.15rem 0; }
+
+            .form-body { display: flex; flex-direction: column; gap: clamp(2.5rem, 5vw, 3.5rem); }
+            .grp { display: flex; flex-direction: column; gap: 1.75rem; }
+            .grp-head {
+              display: flex; align-items: baseline; gap: 0.85rem;
+              padding-bottom: 0.9rem; border-bottom: 1px solid var(--line);
+              font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);
+            }
+            .grp-head span { font-size: 0.7rem; letter-spacing: 0.12em; color: var(--gray-light); }
+
+            .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; align-items: start; }
+
+            .lbl {
+              display: block; margin-bottom: 0.7rem;
+              font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em;
+              text-transform: uppercase; color: var(--gray);
+            }
+            .lbl-opt { text-transform: none; letter-spacing: 0.02em; font-size: 0.72rem; color: var(--gray-light); }
+            .hint { display: block; margin-top: 0.7rem; font-size: 0.78rem; color: var(--gray-light); }
+
+            /* Underline fields: no boxes, no fills, no shadows. */
+            .field {
+              width: 100%; display: block;
+              background: transparent; border: 0; border-bottom: 1px solid var(--line-strong);
+              border-radius: 0; padding: 0.55rem 0 0.7rem;
+              font-family: var(--font-inter); font-size: 1rem; color: var(--ink);
+              outline: none; transition: border-color 0.35s ease;
+            }
+            .field::placeholder { color: var(--gray-light); }
+            .field:hover { border-bottom-color: rgba(255,255,255,0.28); }
+            .field:focus { border-bottom-color: var(--ink); }
+            .field-bad { border-bottom-color: var(--accent-red); }
+            textarea.field { resize: vertical; min-height: 8.5rem; line-height: 1.65; }
+
+            .opts { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+            .opt {
+              font-family: var(--font-inter); font-size: 0.88rem; line-height: 1;
+              padding: 0.7rem 1.05rem; border-radius: 6px; cursor: pointer;
+              border: 1px solid var(--line); background: transparent; color: var(--gray);
+              transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+            }
+            @media (hover: hover) { .opt:hover { border-color: var(--line-strong); color: var(--ink-soft); } }
+            .opt[data-active] { background: var(--ink); border-color: var(--ink); color: var(--bg); font-weight: 500; }
+            .opts[data-bad] .opt { border-color: var(--accent-red); }
+
+            .send { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+            .err { font-size: 0.86rem; color: var(--accent-red); max-width: 34ch; line-height: 1.5; }
+
             @media (min-width: 900px) {
-              .form-shell { grid-template-columns: 0.82fr 1.18fr; gap: clamp(3rem, 6vw, 5rem); align-items: start; }
-              .form-aside { position: sticky; top: clamp(4.5rem, 13svh, 7rem); }
+              .form-shell {
+                display: grid; align-items: start;
+                grid-template-columns: 0.78fr 1.22fr;
+                grid-template-rows: auto 1fr;
+                grid-template-areas: "aside form" "foot form";
+                column-gap: clamp(3.5rem, 7vw, 6rem);
+                row-gap: clamp(2rem, 4vw, 3rem);
+              }
+              .form-aside { grid-area: aside; }
+              .form-body { grid-area: form; }
+              .form-foot { grid-area: foot; }
+              .form-done { grid-column: 1 / -1; grid-row: 1; }
             }
-            @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+            @media (max-width: 640px) { .pair { grid-template-columns: 1fr; } }
           ` }} />
         </motion.div>
       )}
