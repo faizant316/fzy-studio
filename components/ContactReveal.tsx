@@ -7,7 +7,6 @@ import { lenisStop, lenisStart } from "./lenis";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const projectTypes = ["Website", "Web app / platform", "Booking / automation", "Not sure yet"];
-const budgets = ["< $2k", "$2k-$5k", "$5k-$10k", "$10k+"];
 const timelines = ["ASAP", "1-3 months", "Just exploring"];
 
 // Monochrome selectable tag. Selected inverts to solid ink, so the choice reads
@@ -49,8 +48,8 @@ function useScrollLock(active: boolean, onClose: () => void) {
 }
 
 /* ── Work with us: a calm invitation on the page, and one detailed request form
-   that slides up when you're ready. No packages, no tiers: you describe the
-   build, set your budget, and send it. ── */
+   that slides up when you're ready. No packages, no tiers, and no budget field:
+   you describe the build and send it, and pricing comes out of the reply. ── */
 export default function ContactReveal() {
   const [formOpen, setFormOpen] = useState(false);
 
@@ -90,7 +89,7 @@ export default function ContactReveal() {
               </h2>
             </div>
             <p style={{ fontSize: "clamp(1rem, 1.4vw, 1.12rem)", lineHeight: 1.65, color: "var(--gray)", maxWidth: "38ch", paddingBottom: "0.4rem" }}>
-              No packages, no menus. Every build is scoped to you: one detailed request with your budget, and you&rsquo;ll hear back within 24 hours with a clear next step.
+              No packages, no menus. Every build is scoped to you: send one detailed request, and you&rsquo;ll hear back within 24 hours with a clear next step.
             </p>
           </div>
 
@@ -114,7 +113,7 @@ export default function ContactReveal() {
               <a href="mailto:hello@fzydev.com" className="link-line" style={{ color: "var(--ink)", fontSize: "0.95rem" }}>hello@fzydev.com</a>
               <a href="https://www.instagram.com/fzydev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ color: "var(--ink-soft)", fontSize: "0.95rem" }}>@fzydev</a>
             </div>
-            <span className="eyebrow" style={{ color: "var(--gray)" }}>Sacramento, CA · Available worldwide</span>
+            <span className="eyebrow" style={{ color: "var(--gray)" }}>Available worldwide</span>
           </div>
         </motion.div>
       </div>
@@ -128,7 +127,7 @@ const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
 
 function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [mounted, setMounted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", company: "", project: "", budget: "", timeline: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", company: "", project: "", timeline: "", message: "" });
   const [missing, setMissing] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   useEffect(() => setMounted(true), []);
@@ -147,7 +146,6 @@ function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
     const gaps: string[] = [];
     if (!form.name.trim()) gaps.push("name");
     if (!emailOk(form.email)) gaps.push("email");
-    if (!form.budget) gaps.push("budget");
     if (form.message.trim().length < 10) gaps.push("message");
     if (gaps.length) { setMissing(gaps); setStatus("error"); return; }
 
@@ -159,7 +157,7 @@ function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
         body: JSON.stringify({
           name: form.name, email: form.email, company: form.company,
           projectType: form.project || "General request",
-          budget: form.budget, timeline: form.timeline, description: form.message,
+          timeline: form.timeline, description: form.message,
         }),
       });
       setStatus(res.ok ? "done" : "error");
@@ -169,7 +167,7 @@ function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
   // Tells the visitor exactly what is missing rather than a generic complaint.
   const errorText = () => {
     if (!missing.length) return "Something went wrong on our end. Email hello@fzydev.com and we'll pick it up there.";
-    const labels: Record<string, string> = { name: "your name", email: "a valid email", budget: "a budget range", message: "a few details about the project" };
+    const labels: Record<string, string> = { name: "your name", email: "a valid email", message: "a few details about the project" };
     const parts = missing.map((k) => labels[k]);
     const list = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0];
     return `Still need ${list}.`;
@@ -237,19 +235,10 @@ function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
                         {projectTypes.map((p) => <Option key={p} label={p} active={form.project === p} onClick={() => set("project", form.project === p ? "" : p)} />)}
                       </div>
                     </div>
-                    <div className="pair">
-                      <div>
-                        <span className="lbl">Budget</span>
-                        <div className="opts" data-bad={missing.includes("budget") || undefined}>
-                          {budgets.map((b) => <Option key={b} label={b} active={form.budget === b} onClick={() => set("budget", b)} />)}
-                        </div>
-                        <span className="hint">A range is enough.</span>
-                      </div>
-                      <div>
-                        <span className="lbl">Timeline <span className="lbl-opt">optional</span></span>
-                        <div className="opts">
-                          {timelines.map((t) => <Option key={t} label={t} active={form.timeline === t} onClick={() => set("timeline", form.timeline === t ? "" : t)} />)}
-                        </div>
+                    <div>
+                      <span className="lbl">Timeline <span className="lbl-opt">optional</span></span>
+                      <div className="opts">
+                        {timelines.map((t) => <Option key={t} label={t} active={form.timeline === t} onClick={() => set("timeline", form.timeline === t ? "" : t)} />)}
                       </div>
                     </div>
                   </section>
@@ -276,7 +265,7 @@ function FormOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
                 <div className="form-foot">
                   <a href="mailto:hello@fzydev.com" className="link-line" style={{ color: "var(--ink)", fontSize: "1rem", width: "max-content" }}>hello@fzydev.com</a>
                   <span style={{ fontSize: "0.9rem", color: "var(--gray)" }}>Replies within 24 hours</span>
-                  <span className="eyebrow" style={{ color: "var(--gray-light)" }}>Sacramento, CA · Available worldwide</span>
+                  <span className="eyebrow" style={{ color: "var(--gray-light)" }}>Available worldwide</span>
                 </div>
               </>
             )}

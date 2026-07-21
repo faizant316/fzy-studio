@@ -26,7 +26,7 @@ const cormorant = Cormorant_Garamond({
   style: ["normal", "italic"],
 });
 
-const SITE = "https://fzystudio.dev";
+const SITE = "https://fzydev.com";
 const TITLE = "FZY · Web Development Studio";
 const DESCRIPTION =
   "FZY is a web development studio building custom platforms for real businesses. Booking systems, dashboards, and automation, designed and engineered end to end. Sacramento, CA.";

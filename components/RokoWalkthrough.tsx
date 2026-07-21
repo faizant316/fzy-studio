@@ -188,7 +188,7 @@ export default function RokoWalkthrough({ chrome = true }: { chrome?: boolean })
       {chrome && (
         <div className="rw-bar" aria-hidden>
           <span className="rw-dots"><i /><i /><i /></span>
-          <span className="rw-url">makeupby-roko.vercel.app</span>
+          <span className="rw-url">makeupbyroko.org</span>
         </div>
       )}
 

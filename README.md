@@ -41,5 +41,5 @@ Single-page site for now. Each section is a component in `components/`. Built to
 
 ## Notes
 
-- The contact form posts to `app/api/contact/route.ts` and emails both the studio and the client (Resend). It currently sends from `onboarding@resend.dev`; swap to a verified domain sender once `fzystudio.dev` (or final domain) is registered and verified in Resend.
-- Footer links back to the founder's portfolio. Update `PORTFOLIO_URL` in `components/Footer.tsx` if the portfolio domain changes.
+- The contact form posts to `app/api/contact/route.ts` and emails both the studio and the client (Resend), sending from the verified sender `FZY Dev <hello@fzydev.com>`. `hello@` has no inbox, so the client confirmation sets `replyTo` to the real business inbox.
+- The form deliberately has no budget field, and no page quotes a price. Pricing comes out of the reply to a request, so keep dollar figures out of the FAQ and contact copy.

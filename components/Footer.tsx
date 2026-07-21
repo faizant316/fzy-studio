@@ -1,7 +1,5 @@
 "use client";
 
-const PORTFOLIO_URL = "https://faizantariq.dev";
-
 export default function Footer() {
   return (
     <footer className="grain" style={{ position: "relative", zIndex: 2, background: "var(--tone-b)", padding: "clamp(2.5rem, 5vw, 4rem) clamp(1.25rem, 4vw, 3rem) 2.5rem" }}>
@@ -23,14 +21,13 @@ export default function Footer() {
               { label: "hello@fzydev.com", href: "mailto:hello@fzydev.com" },
               { label: "Instagram ↗", href: "https://www.instagram.com/fzydev", external: true },
               { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/faizantariq916/", external: true },
-              { label: "Founder's portfolio ↗", href: PORTFOLIO_URL, external: true },
             ]} />
           </div>
         </div>
 
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "1rem", marginTop: "3rem" }}>
           <span style={{ fontSize: "0.78rem", color: "var(--gray)" }}>© {new Date().getFullYear()} FZY Dev. All rights reserved.</span>
-          <span style={{ fontSize: "0.78rem", color: "var(--gray)" }}>Sacramento, CA</span>
+          <span style={{ fontSize: "0.78rem", color: "var(--gray)" }}>Available worldwide</span>
         </div>
       </div>
     </footer>

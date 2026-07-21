@@ -7,7 +7,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 const faqs = [
   {
     q: "How much does a build cost?",
-    a: "It depends entirely on scope. Marketing sites usually start around $2.5k, and full platforms with booking, accounts, and payments start around $6k. Send a request with your budget range and we'll tell you exactly what it buys.",
+    a: "It depends entirely on scope. A focused marketing site and a full platform with booking, accounts, and payments are very different pieces of work. Send a request describing what you need and we'll come back with a fixed scope and a firm price before anything starts.",
   },
   {
     q: "How long does it take?",

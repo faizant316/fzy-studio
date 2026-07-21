@@ -60,7 +60,6 @@ export default function Statement() {
               FZY is a small studio that designs, engineers, and ships every build in-house. No handoffs and no account managers: you work directly with the team building your product, from first call to launch.
             </p>
             <div style={{ marginTop: "1.1rem", display: "flex", flexWrap: "wrap", gap: "0.5rem 1.5rem" }}>
-              <a href="https://faizantariq.dev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ fontSize: "0.88rem", color: "var(--ink-soft)" }}>Portfolio ↗</a>
               <a href="https://www.linkedin.com/in/faizantariq916/" target="_blank" rel="noopener noreferrer" className="link-line" style={{ fontSize: "0.88rem", color: "var(--ink-soft)" }}>LinkedIn ↗</a>
               <a href="https://www.instagram.com/fzydev" target="_blank" rel="noopener noreferrer" className="link-line" style={{ fontSize: "0.88rem", color: "var(--ink-soft)" }}>@fzydev ↗</a>
             </div>

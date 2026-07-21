@@ -52,7 +52,7 @@ const projects: Project[] = [
     quote: "It took my whole business out of my DMs and built something that runs itself.",
     quoteBy: { name: "Roqia Moshref", role: "Founder, Makeup by Roko", img: "/roko_pic.png" },
     services: ["UI/UX design", "Booking & automation", "Full-stack development"],
-    url: "https://makeupby-roko.vercel.app",
+    url: "https://makeupbyroko.org",
     detail: {
       projectType: ["Booking platform", "Website", "Automation"],
       tech: ["Next.js", "Supabase", "Stripe", "Automated email"],
@@ -143,48 +143,12 @@ export default function Work() {
 
           <Feature p={p} index={0} />
 
-          {/* More coming soon */}
-          <motion.div
-            initial={false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "0px 0px -40px 0px" }}
-            transition={{ duration: 0.8, ease }}
-            style={{
-              marginTop: "clamp(3rem, 6vw, 5rem)",
-              paddingTop: "clamp(1.5rem, 3vw, 2rem)",
-              borderTop: "1px solid var(--line)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0.7rem",
-            }}
-          >
-            <span className="work-soon-dot" aria-hidden />
-            <span className="eyebrow" style={{ color: "var(--gray)" }}>
-              More platforms in the studio, shipping soon
-            </span>
-          </motion.div>
-
         </div>
       </div>
 
       {/* blue to black (ombre glitch) */}
       <GlitchBand top={BLUE} bottom={BLACK} seedBase={2} />
 
-      <style dangerouslySetInnerHTML={{ __html: `
-        .work-soon-dot {
-          width: 7px; height: 7px; border-radius: 50%;
-          background: var(--accent);
-          box-shadow: 0 0 0 0 rgba(122,162,227,0.5);
-          animation: work-pulse 2.4s ease-out infinite;
-        }
-        @keyframes work-pulse {
-          0% { box-shadow: 0 0 0 0 rgba(122,162,227,0.45); }
-          70% { box-shadow: 0 0 0 9px rgba(122,162,227,0); }
-          100% { box-shadow: 0 0 0 0 rgba(122,162,227,0); }
-        }
-        @media (prefers-reduced-motion: reduce) { .work-soon-dot { animation: none; } }
-      ` }} />
     </section>
   );
 }
@@ -893,7 +857,7 @@ function RokoPreview() {
           send the inquiry, and land on the branded confirmation. Recreated here, frame for frame.
         </p>
         <span style={{ marginTop: "1.3rem", display: "inline-block", fontSize: "0.8rem", letterSpacing: "0.04em", color: "var(--gray-light)" }}>
-          ↳ makeupby-roko.vercel.app
+          ↳ makeupbyroko.org
         </span>
       </div>
       <div className="rk-walkframe">

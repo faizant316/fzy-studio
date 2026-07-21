@@ -186,7 +186,7 @@ export default function Nav() {
               <a href="mailto:hello@fzydev.com" className="link-line" style={{ color: "var(--ink-soft)", fontSize: "0.95rem" }}>
                 hello@fzydev.com
               </a>
-              <span className="eyebrow" style={{ color: "var(--gray)" }}>Sacramento, CA</span>
+              <span className="eyebrow" style={{ color: "var(--gray)" }}>Available worldwide</span>
             </motion.div>
           </motion.div>
         )}
