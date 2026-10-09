@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, animate, motion, useInView, useReducedMotion } from "framer-motion";
 import Lenis from "lenis";
 import { lenisScrollTo, lenisStart, lenisStop } from "./lenis";
-import RokoWalkthrough from "./RokoWalkthrough";
+import RokoFilm from "./RokoFilm";
 import IPhone from "./IPhone";
 import {
   AdminPhone, BookDateScreen, DMScreen, InquiryEmailScreen, ReviewSignScreen, UploadScreen, ROKO_SCREENS_CSS,
@@ -162,7 +162,7 @@ export default function CaseStudy({ p, open, onClose }: { p: Project; open: bool
                     </p>
                   </div>
                   <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.75rem" }}>
-                    <span className="cs-chip"><i />Live at makeupbyroko.org</span>
+                    <span className="cs-chip"><i />Live since July 2026</span>
                     <a href={p.url} target="_blank" rel="noopener noreferrer" className="pill-solid" style={{ textDecoration: "none" }}>
                       Visit live site
                       <span style={{ fontSize: "0.85rem" }}>↗</span>
@@ -316,21 +316,23 @@ function MetaBlock({ label, values }: { label: string; values: string[] }) {
   );
 }
 
-/* The walkthrough of the live site, with supporting copy beside it. */
+/* The whole booking played on a laptop, full width, with copy above it. */
 function RokoPreview() {
   return (
     <div className="rk-walkwrap">
       <div className="rk-walkcopy">
-        <span className="eyebrow" style={{ color: "var(--gray)" }}>Live walkthrough</span>
-        <h3 className="display" style={{ fontSize: "clamp(1.7rem, 3.2vw, 2.8rem)", letterSpacing: "-0.03em", margin: "0.8rem 0 0", lineHeight: 1.05 }}>
-          The whole booking,<br />start to finish.
-        </h3>
-        <p style={{ marginTop: "1.1rem", fontSize: "1.04rem", lineHeight: 1.6, color: "var(--gray)", maxWidth: "34ch" }}>
-          What a bride taps through on the real site: browse the services, pick a wedding date, fill in the details,
-          sign the agreement and get the deposit link. Recreated here, screen for screen.
+        <div>
+          <span className="eyebrow" style={{ color: "var(--gray)" }}>Live walkthrough</span>
+          <h3 className="display" style={{ fontSize: "clamp(1.9rem, 3.6vw, 3.2rem)", letterSpacing: "-0.035em", margin: "0.8rem 0 0", lineHeight: 1.02 }}>
+            The whole booking,<br />start to finish.
+          </h3>
+        </div>
+        <p style={{ fontSize: "clamp(1rem, 1.3vw, 1.1rem)", lineHeight: 1.6, color: "var(--gray)", maxWidth: "40ch" }}>
+          One full booking on the real site: browse the services, pick a wedding date, fill in the details, sign the
+          agreement, then get the email and upload the Zelle deposit. Recreated screen for screen. Tap a step to jump.
         </p>
       </div>
-      <div className="rk-walkframe"><RokoWalkthrough chrome /></div>
+      <div className="rk-walkframe"><RokoFilm /></div>
     </div>
   );
 }
@@ -621,11 +623,10 @@ const CS_CSS = `
 .cs-meta { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.25rem, 3vw, 2rem); }
 @media (min-width: 860px) { .cs-hero { grid-template-columns: 0.8fr 1.2fr; gap: clamp(3rem, 7vw, 7rem); align-items: start; } }
 
-.rk-walkwrap { display: grid; grid-template-columns: 1fr; gap: clamp(1.75rem, 3.5vw, 2.75rem); align-items: center; }
-.rk-walkcopy { display: flex; flex-direction: column; }
-.rk-walkframe { min-height: clamp(330px, 46vw, 520px); }
-@media (min-width: 900px) { .rk-walkwrap { grid-template-columns: 0.72fr 1.28fr; gap: clamp(2.25rem, 4.5vw, 3.75rem); } }
-@media (max-width: 640px) { .rk-walkframe { min-height: clamp(440px, 120vw, 580px); } }
+.rk-walkwrap { display: grid; gap: clamp(1.75rem, 3.5vw, 2.75rem); }
+.rk-walkcopy { display: grid; gap: 1rem; align-items: end; }
+@media (min-width: 900px) { .rk-walkcopy { grid-template-columns: 1fr auto; gap: 3rem; } }
+.rk-walkframe { width: 100%; max-width: 1240px; margin: 0 auto; }
 
 /* build card */
 .cs-build { margin-top: clamp(4rem, 8vw, 7rem); padding-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--paper-line); }
@@ -667,13 +668,12 @@ const CS_CSS = `
   .cs-row--flip .cs-row__text { order: 2; }
   .cs-row--flip .cs-row__stage { order: 1; }
 }
+/* Phones sit straight on the paper: one clean background, no panel. */
 .cs-stage {
   position: relative; display: flex; justify-content: center; align-items: center; gap: clamp(0.8rem, 2.6vw, 2.5rem);
-  padding: clamp(1.75rem, 4.5vw, 3.75rem) clamp(1rem, 3vw, 2.5rem);
-  border-radius: clamp(20px, 2.4vw, 32px);
-  background: radial-gradient(70% 60% at 50% 0%, rgba(255,255,255,0.75), rgba(255,255,255,0) 70%), var(--paper-2);
+  padding: clamp(0.5rem, 2vw, 1.5rem) 0;
 }
-.cs-stage--wide { padding: clamp(1.25rem, 3.5vw, 3rem); }
+.cs-stage--wide { padding: 0; }
 .cs-ph { width: clamp(150px, 19vw, 290px); flex-shrink: 0; }
 .cs-ph--low { margin-top: clamp(2rem, 5vw, 4.5rem); }
 .cs-ph--hero { width: clamp(220px, 23vw, 320px); }

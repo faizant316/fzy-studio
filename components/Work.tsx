@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import RokoWalkthrough from "./RokoWalkthrough";
+import RokoFilm from "./RokoFilm";
 import CaseStudy from "./CaseStudy";
 import { WeddedPlanPhone, WeddedTourPhone, WEDDED_CSS } from "./WeddedScreens";
 import { projects, type Project } from "./projects";
@@ -99,10 +99,12 @@ function Feature({ p, index }: { p: Project; index: number }) {
           <span className="eyebrow" style={{ color: "var(--gray)" }}>
             {String(index + 1).padStart(2, "0")} · {p.category}
           </span>
-          <span className={`work-status ${live ? "work-status--live" : ""}`}>
-            {live && <i aria-hidden />}
-            {p.statusLabel}
-          </span>
+          {live && (
+            <span className="work-status work-status--live">
+              <i aria-hidden />
+              {p.statusLabel}
+            </span>
+          )}
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginTop: "clamp(1.25rem, 2.6vw, 1.9rem)" }}>
@@ -111,6 +113,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
             {p.client}
           </h3>
         </div>
+        {!live && <DevStatus label={p.statusLabel} />}
         <p style={{ marginTop: "1rem", fontSize: "clamp(1.02rem, 1.35vw, 1.15rem)", lineHeight: 1.6, color: "var(--gray)", maxWidth: "40ch" }}>
           {p.summary}
         </p>
@@ -156,7 +159,7 @@ function Feature({ p, index }: { p: Project; index: number }) {
         className="work-feature__media"
       >
         <motion.div style={flat ? { height: "100%" } : { height: "100%", y: yMedia }}>
-          {p.client === "Makeup by Roko" ? <RokoMedia p={p} /> : <WeddedMedia />}
+          {p.client === "Makeup by Roko" ? <RokoMedia /> : <WeddedMedia />}
         </motion.div>
       </motion.div>
 
@@ -165,32 +168,46 @@ function Feature({ p, index }: { p: Project; index: number }) {
   );
 }
 
-/* Makeup by Roko: the coded walkthrough of the live site in light browser
-   chrome. The whole frame is the live-site link. */
-function RokoMedia({ p }: { p: Project }) {
-  const host = p.url.replace(/^https?:\/\//, "");
+/* Makeup by Roko: the full booking played on a laptop, with a chapter rail
+   to jump between steps. */
+function RokoMedia() {
+  return <RokoFilm />;
+}
+
+/* An unmissable "in development" block for projects still being built: a big
+   status pill and where the build sits on the road to launch. */
+const DEV_STAGES = ["Prototype", "Build", "Beta", "Launch"];
+const DEV_CURRENT = 1;
+
+function DevStatus({ label }: { label: string }) {
   return (
-    <a href={p.url} target="_blank" rel="noopener noreferrer" aria-label={`${p.client}, open live site`} className="wk-browser">
-      <span className="wk-bar" aria-hidden>
-        <span className="wk-dots"><i /><i /><i /></span>
-        <span className="wk-url">
-          <svg width="10" height="10" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="2.4" /><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" strokeWidth="2.4" /></svg>
-          {host}
-        </span>
-        <span className="wk-dots wk-dots--ghost"><i /><i /><i /></span>
-      </span>
-      <span className="wk-screen">
-        <span className="wk-walk"><RokoWalkthrough chrome={false} /></span>
-        <span className="wk-cta" aria-hidden>Visit live site <span>↗</span></span>
-      </span>
-    </a>
+    <div className="dev-status">
+      <div className="dev-pill">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden>
+          <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" />
+        </svg>
+        {label}
+      </div>
+      <p className="dev-note">Early stage. Not public yet, so there is nothing to click through.</p>
+      <ol className="dev-track" aria-label={`Stage: ${DEV_STAGES[DEV_CURRENT]}`}>
+        {DEV_STAGES.map((s, i) => (
+          <li key={s} className={i < DEV_CURRENT ? "done" : i === DEV_CURRENT ? "now" : ""}>
+            <i aria-hidden>{i < DEV_CURRENT ? "✓" : ""}</i>
+            <span>{s}</span>
+            {i === DEV_CURRENT && <em>We are here</em>}
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
-/* Wedded App: two phones on a soft stage, the app tour and the family plan. */
+/* Wedded App: two phones on the paper, the app tour and the family plan. */
 function WeddedMedia() {
   return (
     <div className="wk-stage" role="img" aria-label="Wedded App screens: home, vendor inquiry and the shared family plan">
+      <span className="wk-stage-tag" aria-hidden>Early build preview · screens will change</span>
       <div className="wk-phone wk-phone--a"><WeddedTourPhone /></div>
       <div className="wk-phone wk-phone--b"><WeddedPlanPhone /></div>
     </div>
@@ -235,6 +252,18 @@ const WORK_CSS = `
 }
 .work-status i { width: 6px; height: 6px; border-radius: 50%; background: var(--live); display: block; }
 .work-status--live { color: var(--paper-ink); }
+.dev-status { margin-top: clamp(1.1rem, 2.2vw, 1.5rem); padding: clamp(1rem, 2vw, 1.3rem); border-radius: 18px; background: #fff8ec; box-shadow: 0 0 0 1px #f1d7a8; }
+.dev-pill { display: inline-flex; align-items: center; gap: 0.55rem; font-size: clamp(1rem, 1.5vw, 1.15rem); font-weight: 600; letter-spacing: -0.01em; color: #8a5a0a; }
+.dev-note { margin-top: 0.4rem; font-size: 0.9rem; line-height: 1.5; color: #8f7650; }
+.dev-track { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); position: relative; }
+.dev-track::before { content: ""; position: absolute; left: 9px; right: 12%; top: 9px; height: 2px; background: #f0dcb6; }
+.dev-track li { position: relative; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem; color: #b39a72; }
+.dev-track li i { position: relative; z-index: 1; width: 20px; height: 20px; border-radius: 50%; background: #fff8ec; box-shadow: inset 0 0 0 2px #ecd3a6; display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-size: 0.66rem; color: #fff; }
+.dev-track li.done i { background: #c88a1c; box-shadow: none; }
+.dev-track li.now i { background: #fff8ec; box-shadow: inset 0 0 0 2px #c88a1c, 0 0 0 4px rgba(200,138,28,0.16); }
+.dev-track li.now i::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #c88a1c; }
+.dev-track li.done span, .dev-track li.now span { color: #6e4806; font-weight: 600; }
+.dev-track li em { font-style: normal; font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase; color: #c88a1c; }
 .work-appicon { width: clamp(46px, 4.4vw, 58px); height: clamp(46px, 4.4vw, 58px); border-radius: 22.5%; background: #fff; box-shadow: 0 0 0 1px var(--paper-line), 0 10px 22px -14px rgba(20,20,20,0.5); flex-shrink: 0; }
 .work-services { list-style: none; margin: clamp(1.4rem, 2.6vw, 1.9rem) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .work-services li { font-size: 0.86rem; padding: 0.5rem 0.95rem; border-radius: 100px; background: #fff; color: var(--paper-ink); box-shadow: 0 0 0 1px var(--paper-line); }
@@ -253,32 +282,16 @@ const WORK_CSS = `
   .work-feature--flip .work-feature__media { order: 1; }
 }
 
-/* Light Safari-style frame around the Roko walkthrough */
-.wk-browser {
-  position: relative; display: flex; flex-direction: column; text-decoration: none;
-  height: clamp(380px, 52vw, 640px); height: clamp(380px, 46svh + 12vw, 660px);
-  border-radius: 18px; overflow: hidden; background: #fff;
-  box-shadow: 0 0 0 1px rgba(20,20,20,0.08), 0 40px 80px -40px rgba(20,20,20,0.45), 0 18px 36px -24px rgba(20,20,20,0.25);
-}
-.wk-bar { display: flex; align-items: center; gap: 0.8rem; flex-shrink: 0; padding: 0.7rem 1rem; background: #f7f6f3; border-bottom: 1px solid rgba(20,20,20,0.07); }
-.wk-dots { display: flex; gap: 7px; }
-.wk-dots i { width: 11px; height: 11px; border-radius: 50%; background: #dedcd6; display: block; }
-.wk-dots--ghost { visibility: hidden; }
-.wk-url { margin: 0 auto; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.74rem; color: #55544f; background: #fff; border-radius: 8px; padding: 0.3rem 1.4rem; box-shadow: 0 0 0 1px rgba(20,20,20,0.06); }
-.wk-screen { position: relative; flex: 1; min-height: 0; overflow: hidden; display: block; }
-.wk-walk { position: absolute; inset: 0; display: block; transition: transform 1s cubic-bezier(0.22,1,0.36,1); }
-.wk-browser:hover .wk-walk { transform: scale(1.02); }
-.wk-cta { position: absolute; left: 50%; bottom: clamp(1rem, 3vw, 1.6rem); transform: translate(-50%, 10px); display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.62rem 1.2rem; border-radius: 100px; background: #141414; color: #f2f1ed; font-size: 0.86rem; font-weight: 500; box-shadow: 0 16px 38px rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; pointer-events: none; z-index: 9; }
-.wk-browser:hover .wk-cta { opacity: 1; transform: translate(-50%, 0); }
-@media (max-width: 640px) { .wk-browser { height: clamp(440px, 120vw, 600px); } }
-
-/* Soft stage for the Wedded phones, like the carousel's grey panel */
+/* The Wedded phones sit straight on the paper, no panel behind them */
 .wk-stage {
   position: relative; display: flex; align-items: center; justify-content: center; gap: clamp(0.9rem, 3vw, 2.6rem);
-  padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1rem, 3vw, 2.5rem);
-  border-radius: clamp(20px, 2.4vw, 30px);
-  background: radial-gradient(70% 60% at 50% 0%, rgba(255,255,255,0.7), rgba(255,255,255,0) 70%), var(--paper-2);
+  padding: clamp(2.25rem, 4vw, 3.25rem) 0 clamp(1rem, 2vw, 1.5rem);
   min-height: clamp(420px, 52vw, 660px);
+}
+.wk-stage-tag {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 2; white-space: nowrap;
+  font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #8a5a0a; background: #fff6e6; border: 1px dashed #e7b665; border-radius: 100px; padding: 0.35rem 0.8rem;
 }
 .wk-phone { width: clamp(150px, 19vw, 280px); flex-shrink: 0; }
 .wk-phone--a { transform: translateY(-3%); }
@@ -286,10 +299,6 @@ const WORK_CSS = `
 @media (max-width: 640px) {
   .wk-stage { min-height: 0; }
   .wk-phone { width: 44vw; max-width: 220px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .wk-walk, .wk-cta { transition: none; }
-  .wk-browser:hover .wk-walk { transform: none; }
 }
 `;
 

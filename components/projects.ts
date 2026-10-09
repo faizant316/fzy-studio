@@ -35,7 +35,7 @@ export const projects: Project[] = [
     category: "Bridal booking platform",
     year: "2026",
     status: "live",
-    statusLabel: "Live",
+    statusLabel: "Live since July 2026",
     summary:
       "Online booking, signed agreements, Zelle deposits and an admin dashboard for a bridal makeup artist with 185K followers.",
     services: ["UI/UX design", "Booking & automation", "Full-stack development"],
@@ -74,7 +74,7 @@ export const projects: Project[] = [
         { title: "Build", when: "May to July 2026", body: "Designed mobile-first, then built the booking flow and admin dashboard with Next.js, Supabase, Stripe and Resend.", note: "10 weeks · 414 commits" },
         { title: "Launch", when: "July 2026", body: "Went live at makeupbyroko.org. Clients now book, sign and send their deposit without the back-and-forth.", note: "Still shipping updates" },
       ],
-      timelineChips: ["Live at makeupbyroko.org", "550+ commits since May"],
+      timelineChips: ["Live at makeupbyroko.org since July 2026", "550+ commits since May"],
     },
   },
   {
@@ -84,7 +84,7 @@ export const projects: Project[] = [
     status: "building",
     statusLabel: "In development",
     summary:
-      "A mobile app for South Asian weddings. Families find every vendor for every event, from roka to reception, ask for prices and dates in one tap, and plan together in one shared plan.",
+      "An all-in-one wedding planner in a single app. Find every vendor, ask for prices and dates in one tap, and plan the whole wedding together with family.",
     services: ["Product design", "iOS & Android app", "Backend & cloud"],
     tech: ["React Native", "Expo", "Supabase", "AWS"],
     url: "",

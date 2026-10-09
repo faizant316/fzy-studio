@@ -3,6 +3,8 @@
 FZY Dev is a Next.js agency portfolio site. Project data lives in `components/projects.ts`,
 the Selected Work section in `components/Work.tsx`, and the Roko case study in `components/CaseStudy.tsx`.
 Phone mockups use `components/IPhone.tsx` with screens in `RokoScreens.tsx` / `WeddedScreens.tsx`.
+The full Roko booking film (home card + case study) is `components/RokoFilm.tsx`, played on
+`components/Laptop.tsx`, with an iPhone version for narrow screens. Roko has been live since July 2026.
 The site is viewed locally during development with `npm run dev`.
 
 Selected Work and the case study sit on warm "paper" (`#F2F1ED`, ink `#141414`), matching the
