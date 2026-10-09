@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Inter, Cormorant_Garamond, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 
@@ -26,6 +26,22 @@ const cormorant = Cormorant_Garamond({
   style: ["normal", "italic"],
 });
 
+// Monospace labels on the paper sections, matching the LinkedIn carousel.
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "500"],
+});
+
+// Display serif inside the Wedded App mockups (the app's own welcome font).
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  display: "swap",
+  weight: ["400", "500"],
+});
+
 const SITE = "https://fzydev.com";
 const TITLE = "FZY · Web Development Studio";
 const DESCRIPTION =
@@ -42,7 +58,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} ${cormorant.variable} antialiased`}>
+      <body className={`${inter.variable} ${cormorant.variable} ${mono.variable} ${fraunces.variable} antialiased`}>
         <SmoothScroll />
         {children}
       </body>

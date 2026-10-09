@@ -40,7 +40,7 @@ export default function Statement() {
               <span style={{
                 position: "relative", flexShrink: 0, width: 56, height: 56, borderRadius: "50%",
                 overflow: "hidden", display: "block",
-                background: "var(--accent-soft)", border: "1px solid rgba(122,162,227,0.35)",
+                background: "var(--accent-soft)", border: "1px solid rgba(200,183,154,0.35)",
               }}>
                 <img
                   src="/founder.jpg"

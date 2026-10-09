@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { HERO_VIDEO } from "./heroConfig";
 import { lenisScrollTo } from "./lenis";
+import { useOnPaper } from "./useOnPaper";
 
 // FZY home button — a compact wordmark that matches the nav. Over the dark video
 // hero it shows in white, then settles to soft ink once the hero scrolls out under
@@ -21,7 +22,8 @@ export default function Brand({ forceLight = false }: { forceLight?: boolean }) 
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const color = forceLight || dark ? "#fff" : "var(--ink)";
+  const onPaper = useOnPaper();
+  const color = forceLight || dark ? "#fff" : onPaper ? "var(--paper-ink)" : "var(--ink)";
 
   return (
     <button

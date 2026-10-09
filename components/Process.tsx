@@ -105,7 +105,7 @@ export default function Process() {
                 aria-hidden
                 variants={{
                   rest: { background: "#0a0a0b", borderColor: "rgba(255,255,255,0.18)" },
-                  live: { background: "#7aa2e3", borderColor: "#7aa2e3" },
+                  live: { background: "#c8b79a", borderColor: "#c8b79a" },
                 }}
                 transition={{ duration: 0.5, ease }}
                 style={{ position: "absolute", left: 0, top: "0.35rem", width: 14, height: 14, borderRadius: "50%", border: "2px solid", boxSizing: "border-box" }}

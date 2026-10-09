@@ -25,24 +25,46 @@
   --tone-a: #0e0e10;      /* lifted section (Work) */
   --tone-b: #0c0c0d;      /* deep section (Contact / Footer) */
 
-  /* accents — refined blue (primary) + warm coral/red (secondary) */
-  --accent: #7aa2e3;
-  --accent-deep: #5d84c6;
-  --accent-soft: rgba(122,162,227,0.14);
+  /* accents — warm tan (primary) + coral/red (errors only) */
+  --accent: #c8b79a;
+  --accent-deep: #a8977b;
+  --accent-soft: rgba(200,183,154,0.14);
   --accent-red: #e0786c;
   --accent-red-deep: #c85f53;
   --accent-red-soft: rgba(224,120,108,0.14);
 
-  /* ── Warm "preview card" tokens — dark ink on the light project placeholder
-     that sits inside the dark navy Selected Work interlude. */
-  --cream-ink: #17140f;         /* warm near-black text on the light card */
-  --cream-ink-soft: #5a544b;    /* secondary text on the light card */
-  --cream-line: rgba(23,20,15,0.14);
-  --cream-line-strong: rgba(23,20,15,0.30);
-
-  /* ── Selected Work interlude background — deep navy (not black) ── */
-  --navy: #0a1330;
+  /* ── Paper: the warm off-white of the Roko LinkedIn carousel. Holds the
+     Selected Work interlude and the case study, black ink on top. ── */
+  --paper: #f2f1ed;
+  --paper-2: #e9e7e1;
+  --paper-card: #ffffff;
+  --paper-ink: #141414;
+  --paper-ink-soft: #3b3b38;
+  --paper-gray: #686864;
+  --paper-faint: #8c8b86;
+  --paper-line: rgba(20,20,20,0.10);
+  --paper-line-strong: rgba(20,20,20,0.20);
+  --live: #1a8752;           /* "live / shipped" green, used sparingly */
 }
+
+/* Inside a paper section the shared tokens flip to ink-on-paper, so inline
+   styles written against var(--ink) / var(--gray) / var(--line) just work. */
+.on-paper {
+  --bg: var(--paper);
+  --ink: var(--paper-ink);
+  --ink-soft: var(--paper-ink-soft);
+  --gray: var(--paper-gray);
+  --gray-light: var(--paper-faint);
+  --line: var(--paper-line);
+  --line-strong: var(--paper-line-strong);
+  --accent: var(--paper-ink);
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+.on-paper ::selection { background: var(--paper-ink); color: var(--paper); }
+/* Carousel-style labels: monospace, uppercase, airy. */
+.on-paper .eyebrow { font-family: var(--font-mono), ui-monospace, monospace; font-weight: 400; letter-spacing: 0.1em; font-size: 0.74rem; }
+.mono { font-family: var(--font-mono), ui-monospace, monospace; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 

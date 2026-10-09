@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HERO_VIDEO } from "./heroConfig";
 import { lenisScrollTo, lenisStop, lenisStart } from "./lenis";
 import Brand from "./Brand";
+import { useOnPaper } from "./useOnPaper";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -48,7 +49,8 @@ export default function Nav() {
     };
   }, [open]);
 
-  const linkColor = overHero ? "rgba(255,255,255,0.82)" : "var(--ink-soft)";
+  const onPaper = useOnPaper();
+  const linkColor = overHero ? "rgba(255,255,255,0.82)" : onPaper ? "var(--paper-ink)" : "var(--ink-soft)";
 
   const go = (id: string) => lenisScrollTo("#" + id);
 
@@ -59,7 +61,7 @@ export default function Nav() {
   };
 
   // Over the dark menu the burger should always read white; otherwise follow the hero/scroll state.
-  const burgerColor = open ? "#ffffff" : overHero ? "rgba(255,255,255,0.92)" : "var(--ink)";
+  const burgerColor = open ? "#ffffff" : overHero ? "rgba(255,255,255,0.92)" : onPaper ? "var(--paper-ink)" : "var(--ink)";
 
   return (
     <>
@@ -144,7 +146,7 @@ export default function Nav() {
             transition={{ duration: 0.45, ease }}
             style={{
               position: "fixed", inset: 0, zIndex: 70,
-              background: "radial-gradient(120% 90% at 85% 0%, rgba(122,162,227,0.10) 0%, rgba(10,10,11,0) 55%), linear-gradient(160deg, #101013 0%, #070708 100%)",
+              background: "radial-gradient(120% 90% at 85% 0%, rgba(200,183,154,0.09) 0%, rgba(10,10,11,0) 55%), linear-gradient(160deg, #101013 0%, #070708 100%)",
               display: "flex", flexDirection: "column",
               padding: "calc(env(safe-area-inset-top) + 5.5rem) clamp(1.5rem, 7vw, 3rem) calc(env(safe-area-inset-bottom) + 2rem)",
             }}
